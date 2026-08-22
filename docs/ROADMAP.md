@@ -9,7 +9,8 @@ comunica como entregada cuando existe código, prueba, documentación y gate.
 - separación entre observación, hallazgo, hipótesis y decisión;
 - evidencia `rootcause.evidence.qr.v1` redactada por defecto;
 - captura, parsers, historial e inventario cifrados heredados y adaptados;
-- Android, iOS, macOS y PWA como targets de build;
+- Android e iOS como targets de aplicación; web solo como canal de demostración;
+- validación en tablet Android e iPad antes de ampliar el soporte móvil;
 - CI, SBOM, inventario de licencias, landing y documentación de límites.
 
 El cierre binario de 0.1 requiere completar la matriz física, firma y revisión

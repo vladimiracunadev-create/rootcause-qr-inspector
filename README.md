@@ -32,7 +32,7 @@
 
 ---
 
-**RootCause QR Inspector es una app Android de la familia RootCause para la
+**RootCause QR Inspector es una app móvil de la familia RootCause para la
 superficie QR:** convierte una instrucción visual opaca en hechos observables,
 hipótesis separadas, una decisión controlada y evidencia exportable. Todo se
 analiza en el dispositivo: **telemetría cero**.
@@ -45,8 +45,9 @@ QR puede ser peligroso y deja que la persona decida después de ver la evidencia
 
 > **Estado de 0.1.0:** producto publicado como **APK Android** en GitHub
 > Releases, con checksum SHA-256 y verificación técnica del paquete APK. La
-> firma comercial de tienda, Play Store/App Store, iOS, macOS y una PWA usable
-> como producto final siguen pendientes.
+> firma comercial de tienda, Play Store/App Store, iOS y la matriz física móvil
+> completa siguen pendientes. La web es un canal de demostración, no una
+> aplicación objetivo.
 
 ## 🔍 Qué problema resuelve
 
@@ -157,8 +158,9 @@ Comprobación del artefacto público: `adb install -r` devolvió `Success`, Andr
 abrió `dev.vladimiracuna.rootcause_qr_inspector`, `apksigner` verificó la firma
 técnica del APK con Signature Scheme v2 y el SHA-256 local coincidió con el publicado:
 `78ed8e2194488029218f73aa17fdfa0fb9075e1d0dd110db1981b16c4418c51b`.
-Esto no equivale a firma comercial pagada, Play App Signing, notarización de
-Apple ni firma de instalador de escritorio; esas firmas siguen en trámite.
+Esto no equivale a firma comercial de Play Store/App Store. La firma y
+distribución de este producto se evalúan únicamente para Android e iOS;
+Windows, macOS y Linux no son plataformas objetivo.
 La cámara virtual del AVD no entregó sensor y la app mostró un error recuperable;
 la importación desde Photo Picker sí completó el análisis de extremo a extremo.
 
@@ -276,14 +278,14 @@ Requiere Flutter 3.44.7 y Dart 3.12 o superior.
 ```bash
 flutter pub get
 python3 tool/bootstrap.py --platforms android,web
-python3 tool/validate_structure.py --require-lock
+uv run --with pyyaml python tool/validate_structure.py --require-lock
 flutter analyze --fatal-infos
 flutter test
 flutter run
 ```
 
-Las carpetas nativas se generan de forma reproducible con `tool/bootstrap.py`.
-En macOS puede generar también `ios,macos`.
+Las carpetas móviles se generan de forma reproducible con `tool/bootstrap.py`.
+En macOS puede generar el target iOS con `--platforms ios`.
 
 ## 🚀 Validación automática
 
@@ -305,15 +307,26 @@ inventario de licencias y checksums— y el APK instalable de release. El tag
 `v0.1.0` publica el APK Android y su SHA-256 en un GitHub Release verificable.
 Otros targets que compile Flutter no se presentan como producto publicado.
 
-## 📱 Plataformas y firmas
+## 📱 Plataformas móviles y firmas
 
 | Plataforma | Estado 0.1.0 | Limitación principal |
 |---|---|---|
-| Android 7+ | **producto publicado** como [APK v0.1.0](https://github.com/vladimiracunadev-create/rootcause-qr-inspector/releases/tag/v0.1.0) | SHA-256 publicado y firma técnica APK v2; firma comercial/Play Store en trámite |
-| iOS | no publicado como producto | firma, tienda y validación en dispositivo pendientes |
-| macOS | no publicado como producto | firma/notarización y validación en dispositivo pendientes |
-| Web / PWA | no publicada como producto | la landing existe; app web usable como entrega final pendiente |
-| Windows / Linux | no publicado como producto | sin paquete nativo en 0.1.0 |
+| Teléfono Android 7+ | **producto publicado** como [APK v0.1.0](https://github.com/vladimiracunadev-create/rootcause-qr-inspector/releases/tag/v0.1.0) | SHA-256 publicado y firma técnica APK v2; prueba física amplia y Play Store pendientes |
+| iPhone / iOS | objetivo móvil, no publicado | firma, App Store y validación en iPhone pendientes |
+| Tablet Android | layout móvil grande verificado en emulación 1600×2560/320 dpi | falta confirmar cámara, galería y rotación en tablet física |
+| iPad | candidato móvil, no declarado compatible | instalación, cámara, galería, rotación y diseño adaptable pendientes |
+
+**No aplica a escritorio:** Windows, macOS y Linux no forman parte de las
+plataformas del producto. La landing y la demo web documentan el proyecto, pero
+no se contabilizan como aplicaciones soportadas ni requieren firma de app.
+
+<p align="center">
+  <img src="docs/images/android/android-tablet-generator.png" width="520" alt="APK Android ejecutándose con layout de tablet móvil 1600 por 2560" />
+</p>
+
+La captura anterior pertenece al mismo APK público `v0.1.0`. Comprueba el
+arranque y la adaptación visual a una pantalla móvil grande; no sustituye una
+prueba en hardware físico de tablet.
 
 ## 📦 Estado de entrega del repositorio
 
@@ -328,8 +341,8 @@ Otros targets que compile Flutter no se presentan como producto publicado.
 
 ### ❌ Todavía no incluye
 
-- firma comercial, publicación en Play Store/App Store y paquetes instalables para iOS/macOS;
-- PWA usable como producto final;
+- firma comercial, publicación en Play Store/App Store y paquete instalable para iOS;
+- validación específica en tablet Android e iPad antes de declarar compatibilidad;
 - validación completa de cámara, biometría y ciclo de vida en dispositivo físico;
 - reputación, DNS, certificados o seguimiento de redirecciones en red;
 - editor visual de política organizacional ni correlación automática entre

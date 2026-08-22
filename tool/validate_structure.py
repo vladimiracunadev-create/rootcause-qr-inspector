@@ -178,6 +178,7 @@ def check_landing() -> None:
         "assets/android/android-generator.png": ROOT / "docs" / "images" / "android" / "android-generator.png",
         "assets/android/android-settings.png": ROOT / "docs" / "images" / "android" / "android-settings.png",
         "assets/android/android-analysis-result.png": ROOT / "docs" / "images" / "android" / "android-analysis-result.png",
+        "assets/android/android-tablet-generator.png": ROOT / "docs" / "images" / "android" / "android-tablet-generator.png",
     }
     for html in sorted(landing.glob("*.html")):
         text = html.read_text(encoding="utf-8")
@@ -212,7 +213,6 @@ def check_launcher_assets() -> None:
         "assets/launcher/web/Icon-512.png",
         "assets/launcher/web/Icon-maskable-512.png",
         "assets/launcher/ios/Icon-App-1024x1024@1x.png",
-        "assets/launcher/macos/app_icon_1024.png",
         "landing/assets/favicon.svg",
     )
     for relative in required:
@@ -221,9 +221,31 @@ def check_launcher_assets() -> None:
             fail(f"Falta un icono de producto requerido: {relative}")
 
     bootstrap = (ROOT / "tool" / "bootstrap.py").read_text(encoding="utf-8")
-    for required_call in ('patch_android_icons()', 'patch_web_icons()', 'patch_apple_icons("ios")', 'patch_apple_icons("macos")'):
+    for required_call in ('patch_android_icons()', 'patch_web_icons()', 'patch_apple_icons("ios")'):
         if required_call not in bootstrap:
             fail(f"El bootstrap no instala el icono de producto: {required_call}")
+
+
+def check_mobile_product_scope() -> None:
+    """Prevent desktop app targets from returning to product builds or claims."""
+    bootstrap = (ROOT / "tool" / "bootstrap.py").read_text(encoding="utf-8")
+    if 'PRODUCT_PLATFORMS = ("android", "ios")' not in bootstrap:
+        fail("El bootstrap debe declarar Android/iOS como únicas plataformas del producto.")
+    if 'GENERATABLE_TARGETS = (*PRODUCT_PLATFORMS, "web")' not in bootstrap:
+        fail("El target web debe estar separado como canal técnico de demostración.")
+
+    workflow = "\n".join(
+        path.read_text(encoding="utf-8")
+        for path in sorted((ROOT / ".github" / "workflows").glob("*.yml"))
+    )
+    for forbidden in ("flutter build macos", "--platforms ios,macos", "--platforms macos"):
+        if forbidden in workflow:
+            fail(f"Un workflow intenta generar una aplicación de escritorio fuera de alcance: {forbidden}")
+
+    readme = (ROOT / "README.md").read_text(encoding="utf-8")
+    for forbidden_row in ("| macOS |", "| Windows / Linux |", "| Windows |", "| Linux |"):
+        if forbidden_row in readme:
+            fail(f"README vuelve a presentar escritorio como plataforma del producto: {forbidden_row}")
 
 
 def check_source_sbom() -> None:
@@ -254,6 +276,7 @@ def main() -> None:
     check_markdown_links()
     check_landing()
     check_launcher_assets()
+    check_mobile_product_scope()
     check_source_sbom()
     if args.require_lock and not (ROOT / "pubspec.lock").exists():
         fail("Falta pubspec.lock. Ejecuta flutter pub get en la versión fijada de Flutter y confirma el archivo.")

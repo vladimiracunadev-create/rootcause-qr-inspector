@@ -14,15 +14,17 @@ env:
 
 jobs:
   quality:
-    name: Analyze, test and build (Android + web)
+    name: Analyze/test + Android artifact + web demo
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version: '3.12'
-      - name: Install Python tooling
-        run: python3 -m pip install --upgrade pyyaml
+      - name: Install uv
+        uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
+        with:
+          version: "0.12.5"
       - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
         with:
           flutter-version: ${{ env.FLUTTER_VERSION }}
@@ -30,9 +32,9 @@ jobs:
           cache: true
       - name: Offline structure checks
         run: |
-          python3 tool/validate_structure.py --require-lock
+          uv run --with pyyaml python tool/validate_structure.py --require-lock
           python3 tool/verify_rootcause_contract.py
-      - name: Generate Android and web projects
+      - name: Generate Android project and web demo
         run: python3 tool/bootstrap.py --platforms android,web
       - name: Verify dependency resolution
         run: |
@@ -46,7 +48,7 @@ jobs:
         run: |
           python3 tool/generate_sbom.py
           python3 tool/generate_license_inventory.py
-      - name: Build web
+      - name: Build web demo
         run: flutter build web --release
       - name: Build Android installable release APK
         run: flutter build apk --release
@@ -65,8 +67,9 @@ jobs:
             pubspec.lock
             test_assets/manifest.json
 
-  apple:
-    name: Build (iOS + macOS)
+  ios:
+    name: Build (iOS simulator)
+    # Xcode exige un host macOS; este runner solo compila iOS y no genera una app macOS.
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -78,13 +81,7 @@ jobs:
           flutter-version: ${{ env.FLUTTER_VERSION }}
           channel: stable
           cache: true
-      - name: Generate Apple projects
-        run: python3 tool/bootstrap.py --platforms ios,macos
+      - name: Generate iOS project
+        run: python3 tool/bootstrap.py --platforms ios
       - name: Build iOS simulator (no signing identity required)
         run: flutter build ios --debug --simulator
-      - name: Build macOS
-        run: flutter build macos --release
-      # The startup integration test is intentionally not run here: GitHub's
-      # macOS runners have no interactive graphical session, so the built app
-      # launches without ever establishing a debug connection. Run it locally
-      # with `flutter test integration_test/app_launch_test.dart -d macos`.

@@ -10,10 +10,11 @@ Android puede pedir autorización para instalar desde el navegador o gestor de
 archivos usado. El Release incluye el archivo `.sha256` para comprobar la
 descarga.
 
-La PWA pública está disponible en
+La demo técnica web está disponible en
 [`https://vladimiracunadev-create.github.io/rootcause-qr-inspector/app/`](https://vladimiracunadev-create.github.io/rootcause-qr-inspector/app/).
-En móvil y escritorio, la aplicación nativa añade cámara, imágenes y PDF según
-la plataforma.
+No se considera una aplicación soportada ni sustituye las pruebas móviles. Las
+únicas aplicaciones objetivo son Android e iOS, con cámara, imágenes y PDF
+según las capacidades de cada sistema.
 
 ## Antes de inspeccionar
 

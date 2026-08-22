@@ -10,8 +10,7 @@ projects.
 Requires Pillow. It is not needed to build the application, only to redraw the
 icon:
 
-    python3 -m pip install pillow
-    python3 tool/generate_launcher_icons.py
+    uv run --with pillow python tool/generate_launcher_icons.py
 """
 from __future__ import annotations
 
@@ -52,7 +51,6 @@ IOS_SIZES = {
     "Icon-App-83.5x83.5@2x.png": 167,
     "Icon-App-1024x1024@1x.png": 1024,
 }
-MACOS_SIZES = {f"app_icon_{size}.png": size for size in (16, 32, 64, 128, 256, 512, 1024)}
 
 
 def rounded_background(size: int) -> Image.Image:
@@ -186,8 +184,6 @@ def main() -> None:
 
     for name, size in IOS_SIZES.items():
         save(store_icon(CANVAS).resize((size, size), Image.LANCZOS), f"ios/{name}")
-    for name, size in MACOS_SIZES.items():
-        save(store_icon(CANVAS).resize((size, size), Image.LANCZOS), f"macos/{name}")
 
 
 if __name__ == "__main__":

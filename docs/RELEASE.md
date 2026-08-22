@@ -1,30 +1,25 @@
 # Lista de publicación
 
-Esta lista describe lo necesario para llevar la aplicación a las tiendas. **No
-forma parte del alcance de 0.1.0**, que se entrega como código fuente con
-validación offline
-sin firma ni artefactos distribuibles. El estado real de verificación de la
-versión actual está en [`../VALIDATION.md`](../VALIDATION.md).
+Esta lista describe lo necesario para llevar las aplicaciones móviles a las
+tiendas. La 0.1.0 ya distribuye un APK Android directo mediante GitHub Release;
+Play Store, App Store e iOS instalable siguen pendientes. El estado real de
+verificación está en [`../VALIDATION.md`](../VALIDATION.md).
 
 ## Calidad
 
-- [ ] `flutter pub get`
-- [ ] `flutter analyze`
-- [ ] `flutter test`
-- [ ] `flutter build apk --release`
+- [x] `flutter pub get`
+- [x] `flutter analyze`
+- [x] `flutter test`
+- [x] `flutter build apk --release`
 - [ ] `flutter build appbundle --release`
-- [ ] `flutter build web --release`
+- [x] `flutter build web --release` como canal de demostración
 - [ ] `flutter build ipa --release` en macOS
-- [ ] `flutter build macos --release` en macOS
 
 ## Dispositivos
 
 - [ ] Android API 24, versión actual y tres gamas de hardware.
 - [ ] iPhone con Touch ID y Face ID.
 - [ ] iPad y rotación.
-- [ ] macOS Intel y Apple Silicon cuando sea posible.
-- [ ] Chrome, Safari, Edge y Firefox para PWA.
-- [ ] HTTPS, HSTS, CSP y cabeceras de seguridad para la PWA.
 - [ ] Cámara denegada, revocada y restaurada.
 - [ ] Galería, PDF y memoria limitada.
 

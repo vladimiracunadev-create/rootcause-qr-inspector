@@ -13,7 +13,8 @@ import tempfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-SUPPORTED_PLATFORMS = ("android", "ios", "web", "macos")
+PRODUCT_PLATFORMS = ("android", "ios")
+GENERATABLE_TARGETS = (*PRODUCT_PLATFORMS, "web")  # web solo alimenta la demo
 
 
 def run(command: list[str], cwd: Path | None = None) -> None:
@@ -271,36 +272,6 @@ def patch_ios() -> None:
         project.write_text(project_text, encoding="utf-8")
 
 
-def patch_macos() -> None:
-    patch_apple_icons("macos")
-    info = ROOT / "macos/Runner/Info.plist"
-    text = info.read_text(encoding="utf-8")
-    additions = """
-	<key>NSCameraUsageDescription</key>
-	<string>La cámara se utiliza para leer códigos QR y códigos de barras.</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>La galería se utiliza para analizar códigos presentes en imágenes seleccionadas.</string>""".strip()
-    text = insert_before(text, "</dict>", additions)
-    info.write_text(text, encoding="utf-8")
-
-    for filename in ("DebugProfile.entitlements", "Release.entitlements"):
-        entitlement = ROOT / "macos/Runner" / filename
-        text = entitlement.read_text(encoding="utf-8")
-        camera = """
-	<key>com.apple.security.device.camera</key>
-	<true/>""".strip()
-        file_access = """
-	<key>com.apple.security.files.user-selected.read-only</key>
-	<true/>""".strip()
-        keychain = """
-	<key>keychain-access-groups</key>
-	<array/>""".strip()
-        text = insert_before(text, "</dict>", camera)
-        text = insert_before(text, "</dict>", file_access)
-        text = insert_before(text, "</dict>", keychain)
-        entitlement.write_text(text, encoding="utf-8")
-
-
 def patch_web() -> None:
     patch_web_icons()
     manifest_path = ROOT / "web/manifest.json"
@@ -332,9 +303,9 @@ def patch_web() -> None:
 
 def default_platforms() -> tuple[str, ...]:
     return (
-        ("android", "ios", "web", "macos")
+        ("android", "ios")
         if platform.system() == "Darwin"
-        else ("android", "web")
+        else ("android",)
     )
 
 
@@ -381,7 +352,7 @@ def main() -> None:
     parser.add_argument("--skip-pub-get", action="store_true")
     parser.add_argument(
         "--platforms",
-        help="Lista separada por comas: android,ios,web,macos",
+        help="Lista separada por comas: android,ios; web genera solo la demo",
     )
     args = parser.parse_args()
 
@@ -390,7 +361,7 @@ def main() -> None:
         for item in (args.platforms or ",".join(default_platforms())).split(",")
         if item.strip()
     )
-    invalid = sorted(set(selected) - set(SUPPORTED_PLATFORMS))
+    invalid = sorted(set(selected) - set(GENERATABLE_TARGETS))
     if invalid:
         raise SystemExit(f"Plataformas no válidas: {', '.join(invalid)}")
     if not selected:
@@ -401,8 +372,6 @@ def main() -> None:
         patch_android()
     if (ROOT / "ios").exists():
         patch_ios()
-    if (ROOT / "macos").exists():
-        patch_macos()
     if (ROOT / "web").exists():
         patch_web()
 

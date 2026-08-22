@@ -3,7 +3,7 @@
 ## La cámara no aparece
 
 - Comprueba que el sistema o navegador concedió permiso al sitio/aplicación.
-- En PWA usa la URL HTTPS de GitHub Pages; una cámara web suele estar bloqueada
+- En la demo web usa la URL HTTPS de GitHub Pages; una cámara del navegador puede estar bloqueada
   en orígenes inseguros.
 - Cierra otra aplicación que esté usando la cámara y vuelve a abrir el sensor.
 - Si la plataforma no ofrece cámara nativa compatible, importa una imagen.
@@ -15,13 +15,13 @@
 - Aleja la cámara si no logra enfocar.
 - El estado visible y el tono indican captura; no seguridad del resultado.
 
-## Un PDF no se procesa en la PWA
+## Un PDF no se procesa en la demo web
 
 El renderer PDF de 0.1.0 no está disponible en web. Usa una imagen exportada del
 PDF o ejecuta una plataforma nativa compatible. Esta limitación es deliberada y
 se muestra en [`rootcause/LIMITATIONS.md`](rootcause/LIMITATIONS.md).
 
-## La PWA muestra una página vacía o recursos 404
+## La demo web muestra una página vacía o recursos 404
 
 - Abre la ruta publicada completa:
   `https://vladimiracunadev-create.github.io/rootcause-qr-inspector/app/`.

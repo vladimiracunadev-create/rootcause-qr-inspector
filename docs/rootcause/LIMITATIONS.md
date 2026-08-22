@@ -84,17 +84,16 @@ una cadena autenticada.
 ## Plataformas
 
 - Android: cámara real y biometría requieren prueba en dispositivo físico.
-- iOS/macOS: compilación y permisos requieren entorno Apple y firma para
-  distribución.
-- Web: el origen y las políticas del navegador condicionan cámara y
-  almacenamiento seguro; PDF local no se procesa en la implementación actual.
-- Windows/Linux: solo PWA en 0.1.0.
+- iOS: compilación y permisos requieren entorno Apple y firma para distribución.
+- Web: es un canal de demostración; el origen y las políticas del navegador
+  condicionan cámara y almacenamiento seguro.
+- Windows, macOS y Linux: no aplican; no son plataformas objetivo del producto.
 
 ## Distribución
 
-El repositorio no incluye firma de publicación, ficha de tienda ni garantía de
-actualización compatible. Una firma de depuración sirve para evaluación, no
-para una tienda.
+La 0.1.0 publica un APK Android directo en GitHub con checksum. No incluye ficha
+de Play Store/App Store ni paquete iOS instalable. El soporte de distribución se
+limita a las aplicaciones móviles Android/iOS.
 
 ## Frase de salida obligatoria
 

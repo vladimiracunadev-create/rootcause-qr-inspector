@@ -18,18 +18,18 @@
     },
     {
       "path": ".github/workflows/android-release.yml",
-      "size": 2930,
-      "sha256": "34a9318875cd328ac2edec025fc0491bdb3fbb0f69dd17945d62752e87d0c471"
+      "size": 3030,
+      "sha256": "20ed1a026fa083d1ac047cfa531a0ab7c95872db5de828356d6f3f50d040d0d4"
     },
     {
       "path": ".github/workflows/deploy-landing.yml",
-      "size": 3406,
-      "sha256": "0a11f4440b6be40aeebc4456a9781e25726567e58747a7c023e004726196e39c"
+      "size": 3609,
+      "sha256": "c0e23385337be4a8e36a31c3a855935cb743bee0337b0c57737ef784a6c2e707"
     },
     {
       "path": ".github/workflows/flutter-ci.yml",
-      "size": 3351,
-      "sha256": "aa9f7c2e8f5ce5db716c9a957b67b56a913cd091d59c2e6fcf3ab6127d134711"
+      "size": 3145,
+      "sha256": "dabe3446e8ccbfa8ed83c29c99ec61130f26fdf1bf4714aa5f8ff5588ce44c41"
     },
     {
       "path": ".gitignore",
@@ -172,44 +172,9 @@
       "sha256": "b9b467926e583f17e4d25653d33b930e86c846494f824fecd26d6a06f800180d"
     },
     {
-      "path": "assets/launcher/macos/app_icon_1024.png",
-      "size": 10967,
-      "sha256": "7a4be4a8b80795b17b0e5c817572f8349facad39d6a1478c24bac7677200ef48"
-    },
-    {
-      "path": "assets/launcher/macos/app_icon_128.png",
-      "size": 6385,
-      "sha256": "044643c63e6f7fbda26479a4238ace61e99e3753d890004f30181465091e9661"
-    },
-    {
-      "path": "assets/launcher/macos/app_icon_16.png",
-      "size": 685,
-      "sha256": "50a053b343dc1372902d266000d25b092d35601f6470c510e4fca671aa2f2c3d"
-    },
-    {
-      "path": "assets/launcher/macos/app_icon_256.png",
-      "size": 10891,
-      "sha256": "a1d2d71828c4569fb16909df8172f0224b7adf54161dd83993ff98dba3759519"
-    },
-    {
-      "path": "assets/launcher/macos/app_icon_32.png",
-      "size": 1555,
-      "sha256": "8aaf42befd48f88c3b71d5af71b52384869e4f140b378b4f2d7fbe1647d19b34"
-    },
-    {
-      "path": "assets/launcher/macos/app_icon_512.png",
-      "size": 21088,
-      "sha256": "13af02e0f3cab7b103755bb771bc4702dbc93cc972efb1e6d62a0ae2194a2e75"
-    },
-    {
-      "path": "assets/launcher/macos/app_icon_64.png",
-      "size": 3542,
-      "sha256": "2ff6af4d60499a5132110bf36d9930802ed4c5446903bbc57e36be2ae35fbb59"
-    },
-    {
       "path": "assets/launcher/README.md",
-      "size": 1434,
-      "sha256": "f0a0f375950da408eaa0cec3326b99f769d47189de7d88bb060d247b3512c03f"
+      "size": 1366,
+      "sha256": "6964cb593ca621cbc06fa68e71b5554e18173a513e579bffd2b50956bf4d2dbb"
     },
     {
       "path": "assets/launcher/web/favicon.png",
@@ -258,18 +223,18 @@
     },
     {
       "path": "docs/ARCHITECTURE.md",
-      "size": 3613,
-      "sha256": "a8747f53f986df890bede3e6cf536b1c8cef16ee8c5208873aec35ad887b1778"
+      "size": 3466,
+      "sha256": "70a2f60eb910a8a6241a9630f4967d54019471a39a2f0d6a536cbaec6f823207"
     },
     {
       "path": "docs/CATALOGO_PRODUCTO.md",
-      "size": 3625,
-      "sha256": "f3860c7b9a572d166e1452a078b37c81f294c9385a448f652161c5afae398cfb"
+      "size": 3765,
+      "sha256": "20d2f875ad1fafc2e2a6a41eac3a6de25914c6f3b09babe2359dfce695c54828"
     },
     {
       "path": "docs/CI_GITHUB.md",
-      "size": 2620,
-      "sha256": "d21ac24d8fc37271bd463df65c806312448e103c3f8cf60c09d14b5b1d20c3fe"
+      "size": 2818,
+      "sha256": "092fe0582c672b8d979f8b9359de346b3584a93b971ae1dabce190083145d439"
     },
     {
       "path": "docs/DETECCION_AMENAZAS.md",
@@ -278,8 +243,8 @@
     },
     {
       "path": "docs/FAMILIA_ROOTCAUSE.md",
-      "size": 2980,
-      "sha256": "5e28569672e70f43378d24ea6bc2236906d4758929a32f4709f6489eb835ed8d"
+      "size": 3027,
+      "sha256": "a36eac0d506607a1b8a58f684e2218afe12d353f1aab45ddf074cb39bb548986"
     },
     {
       "path": "docs/images/android/android-analysis-result.png",
@@ -300,6 +265,11 @@
       "path": "docs/images/android/android-settings.png",
       "size": 208435,
       "sha256": "7cc9ebf617b8dee22440278b7b16bdc7d8943f290b47eb59f8c8bd30a90ab4ba"
+    },
+    {
+      "path": "docs/images/android/android-tablet-generator.png",
+      "size": 140396,
+      "sha256": "591b13c22839bc27a159c4d24584c3ae858df43016c31d8a81b1ff70213f8bfe"
     },
     {
       "path": "docs/images/arquitectura.svg",
@@ -343,13 +313,13 @@
     },
     {
       "path": "docs/INDEX.md",
-      "size": 3042,
-      "sha256": "d0224b3d4cc3a05816842982894fbbddc78fa50dbbead34aacebd6f12f8b8ee6"
+      "size": 3054,
+      "sha256": "b62c800e56a30c4e35e6bfdbe971f0176666dd8187892c3ca61c66b753771dda"
     },
     {
       "path": "docs/MANUAL_USUARIO.md",
-      "size": 3491,
-      "sha256": "8bc31e5aeb20d5ee6d0cb92401cdbd7c9fad6e839573bcec6baaf92a4c742f26"
+      "size": 3595,
+      "sha256": "034a09b2377416113428b0e77940e3b9dde9a3a277680a493edf20f8b1a06db0"
     },
     {
       "path": "docs/PRIVACY_POLICY.md",
@@ -368,8 +338,8 @@
     },
     {
       "path": "docs/quality/DEVICE_TEST_MATRIX.md",
-      "size": 2805,
-      "sha256": "83fafa19cc904bb7cb68e63a91273608ae45b4c39af37412f4d9bdac72936b9c"
+      "size": 3498,
+      "sha256": "f8897223ea1c2a0e796c25c74b41ad8feb1dd0ecc8ae66c02b6f056dbf79aba8"
     },
     {
       "path": "docs/quality/FEATURE_FLAGS.md",
@@ -403,13 +373,13 @@
     },
     {
       "path": "docs/quality/SCOPE_1_0.md",
-      "size": 2954,
-      "sha256": "e3e1af0b399ac816881dba8d18af3d725224b5308ac3e125a6349ca9f0606dce"
+      "size": 2958,
+      "sha256": "f94a33b6812746cc4be819e6e11253fcea0b48b7a6bfc8366206b7bcd48142b0"
     },
     {
       "path": "docs/RELEASE.md",
-      "size": 1569,
-      "sha256": "92fe557be0df278be49ef85d476a53d46443c06a86b040e141a70fcf057b4698"
+      "size": 1367,
+      "sha256": "a0fb1687cecc41b14484259a6ef565a4bcc23fb80588a5a69126c759088111c6"
     },
     {
       "path": "docs/releases/v0.1.0.md",
@@ -418,8 +388,8 @@
     },
     {
       "path": "docs/ROADMAP.md",
-      "size": 1696,
-      "sha256": "b281c5ff9935ca0bb8ae81bbc9e95769aa50b27722a87320557b7340ea2e1ae6"
+      "size": 1803,
+      "sha256": "521a132cbff25aeabf699c087f3f52b6adecad397d692d1fdde6ab306ceff2e4"
     },
     {
       "path": "docs/rootcause/ADOPTION_MATRIX.md",
@@ -428,8 +398,8 @@
     },
     {
       "path": "docs/rootcause/ARCHITECTURE.md",
-      "size": 5605,
-      "sha256": "cd803c09378b92380dfc55a0174ce323d55f699985f393441165a403eea5d692"
+      "size": 5624,
+      "sha256": "232cd4ae4daca705389b9f975bdf708c7c2a584bea1bf592a03a3c465de0e289"
     },
     {
       "path": "docs/rootcause/HEURISTICS.md",
@@ -443,8 +413,8 @@
     },
     {
       "path": "docs/rootcause/LIMITATIONS.md",
-      "size": 3957,
-      "sha256": "4a078181421863f95a241a280beac84aa99df551738847ccf9d54e7280fc16e0"
+      "size": 4003,
+      "sha256": "736cd8583d5214b4359d77185ede385ae5edfc17b88c936978dc43376bb5e32d"
     },
     {
       "path": "docs/rootcause/PROVENANCE.md",
@@ -478,8 +448,8 @@
     },
     {
       "path": "docs/SECURITY.md",
-      "size": 2360,
-      "sha256": "2af08025e9b2eb65bf40cd84a09675b2512e311b3ab7ace091c40ce2a502b05f"
+      "size": 2395,
+      "sha256": "c47fe04bc9dc3d83c69e70d21ca4263618f19f3b2d54a27a8c802277457bc4c6"
     },
     {
       "path": "docs/SUPPORTED_FORMATS.md",
@@ -488,8 +458,8 @@
     },
     {
       "path": "docs/TROUBLESHOOTING.md",
-      "size": 2643,
-      "sha256": "59ce0ffc8a121665ccdbdb53ec7898a77355eb1fc45ec874b7d95d2c13d6c1bc"
+      "size": 2671,
+      "sha256": "9d518954e17e1736bbed80669d0f13ed8f498756419ac92a88be122d3e63c08f"
     },
     {
       "path": "fixtures/qr/manifest.json",
@@ -518,18 +488,18 @@
     },
     {
       "path": "landing/index.html",
-      "size": 20600,
-      "sha256": "821ed3b1de6856a07658a2039e520a52a1bd9594e2bf42fb424be6f9d822fa01"
+      "size": 20894,
+      "sha256": "3e03c0c0396aac3028c296bf12ef4826a6ac24e37213bf9ca27c960ade200127"
     },
     {
       "path": "landing/privacidad.html",
-      "size": 3669,
-      "sha256": "9db85cb2e95c32081d505c3d24c4c35e6b1611410aeb9eda27133dd1fd7ebbcc"
+      "size": 3721,
+      "sha256": "bec5484c99d285138c43525562787807a2f08b7b73e58b1d2c6c3d5543e59cf7"
     },
     {
       "path": "landing/README.md",
-      "size": 877,
-      "sha256": "0633c2e20653fd1b94d64e5b5965a756edb492f3b667c749d9b9470750e5caec"
+      "size": 990,
+      "sha256": "4cf54cf1111b8b6eb6cd811b4906e0076aef641697770a4b9de08c685dcd627c"
     },
     {
       "path": "lib/app.dart",
@@ -873,8 +843,8 @@
     },
     {
       "path": "README.md",
-      "size": 21523,
-      "sha256": "8053e5efe2ac7fbf9a25362b0020bda66bb273a06cfe6ff2411c4cf21bdb1aec"
+      "size": 22482,
+      "sha256": "9331f443535a4135c1ecbc9de8149263492e7ee0dbb51f7b7b004f7cf96afd5e"
     },
     {
       "path": "RELEASE_SOURCE.json",
@@ -1083,8 +1053,8 @@
     },
     {
       "path": "tool/bootstrap.py",
-      "size": 15806,
-      "sha256": "ab7992a3c7572be5b8f10eec8c0405d5eee264635d9b340df921d6830b9d8590"
+      "size": 14580,
+      "sha256": "7fb3d9edd938e780c948d89a4625a66cd8a582237b09d2864a8e0196e73e03fc"
     },
     {
       "path": "tool/bootstrap.sh",
@@ -1103,8 +1073,8 @@
     },
     {
       "path": "tool/generate_launcher_icons.py",
-      "size": 7122,
-      "sha256": "0a7030efc5080dd6e6faac9f59268f95ea9ae8d02a5dd0e477e6dd31ffb09ccc"
+      "size": 6888,
+      "sha256": "9ee21e1df59b712e34dcc1507ffd46351d105b9ee4d0f310e3fcb62faa8cc78c"
     },
     {
       "path": "tool/generate_license_inventory.py",
@@ -1133,8 +1103,8 @@
     },
     {
       "path": "tool/validate_structure.py",
-      "size": 10358,
-      "sha256": "c51454ef47661f2a64ca3497101a6cffd5f3dd20ec7ba51d5f64c530fb344236"
+      "size": 11642,
+      "sha256": "9b6aa78783b5a6c3e5b98836aae554495af0d0cb1876a3c6c3f55f5e1306efea"
     },
     {
       "path": "tool/verify_rootcause_contract.py",

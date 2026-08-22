@@ -3,7 +3,7 @@
 #
 # Publica en GitHub Pages un sitio con dos partes:
 #   /      → la landing estática de landing/
-#   /app/  → la propia aplicación compilada para web (PWA), con su base href
+#   /app/  → demo web compilada, con su base href
 #
 # El icono se copia desde la única fuente versionada en assets/launcher/.
 # ─────────────────────────────────────────────────────────────────────────────
@@ -35,14 +35,15 @@ concurrency:
 
 env:
   FLUTTER_VERSION: 3.44.7
-  # Debe empezar y terminar en «/»: es la ruta desde la que se sirve la PWA.
-  APP_BASE_HREF: /rootcause-qr-inspector/app/
+  # Debe empezar y terminar en «/»: es la ruta de la demo, no una plataforma del producto.
+  DEMO_BASE_HREF: /rootcause-qr-inspector/app/
 
 jobs:
   deploy:
-    name: Publicar landing y PWA en GitHub Pages
+    name: Publicar landing y demo web en GitHub Pages
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    # Entorno de despliegue de GitHub Pages; no es una plataforma de la app.
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -53,8 +54,10 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Install Python tooling
-        run: python3 -m pip install --upgrade pyyaml
+      - name: Install uv
+        uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
+        with:
+          version: "0.12.5"
 
       - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
         with:
@@ -65,8 +68,8 @@ jobs:
       - name: Generate the web project
         run: python3 tool/bootstrap.py --platforms web
 
-      - name: Build the PWA
-        run: flutter build web --release --base-href "$APP_BASE_HREF"
+      - name: Build the web demo
+        run: flutter build web --release --base-href "$DEMO_BASE_HREF"
 
       - name: Assemble the site
         run: |
@@ -85,6 +88,7 @@ jobs:
           test -f _site/assets/android/android-generator.png
           test -f _site/assets/android/android-settings.png
           test -f _site/assets/android/android-analysis-result.png
+          test -f _site/assets/android/android-tablet-generator.png
 
       - uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
 

@@ -10,7 +10,8 @@ landing, descripción o release promete más, prevalecen aquí los límites.
 | Producto | RootCause QR Inspector |
 | Versión | 0.1.0 |
 | Superficie | Cargas QR y otros códigos 1D/2D antes de entregarlos a otra app |
-| Tecnología | Flutter y Dart; Android, iOS, macOS y PWA |
+| Tecnología | Flutter y Dart; producto exclusivamente móvil para Android/iOS |
+| Formato primario | teléfonos; tablet Android/iPad quedan pendientes de verificación específica |
 | Modelo | Análisis local determinista con 26 reglas identificables |
 | Evidencia | `rootcause.evidence.qr.v1`, redactada por defecto y con checksum SHA-256 |
 | Persistencia | Historial e inventarios locales cifrados con AES-256-GCM |
@@ -77,5 +78,5 @@ decisión → evidencia. La matriz exacta está en
 - El QR es la superficie; phishing es una hipótesis posible.
 - “Sin señales locales” nunca se traduce como “seguro”.
 - El checksum aporta integridad comprobable, no autoría ni autenticación.
-- PWA y builds de CI no se presentan como binarios firmados de release.
+- La demo web y los builds de CI no se presentan como aplicaciones firmadas de release.
 - Una capacidad de otra edición RootCause no se atribuye a este sensor.

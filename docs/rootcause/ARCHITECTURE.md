@@ -165,7 +165,7 @@ histórica.
 
 | Frontera | Implementación actual | Extensión prevista |
 |---|---|---|
-| Captura | `MobileScannerEngine` | ZXing-C++ para Windows/Linux nativo |
+| Captura | `MobileScannerEngine` | Android/iOS; escritorio fuera del alcance del producto |
 | Parser | `ContentParserRegistry` | parsers firmados por formato |
 | Política | API Dart + ejemplo JSON | carga, firma y administración en UI |
 | Reputación | ninguna | proveedor opt-in con privacidad separada |

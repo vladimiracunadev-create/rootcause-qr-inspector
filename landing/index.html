@@ -174,7 +174,7 @@
             <tbody>
               <tr><td><strong>Contrato causal</strong></td><td>26 ids entre motor, textos, esquema, fixtures y política</td><td class="ok">Validado offline</td></tr>
               <tr><td><strong>Privacidad de evidencia</strong></td><td>Omisión de carga, campos y URL efectiva por defecto</td><td class="ok">Cubierto por contrato</td></tr>
-              <tr><td><strong>App Flutter</strong></td><td>Análisis, 77 pruebas y builds Android/web/Apple</td><td class="ok">CI pública en verde</td></tr>
+              <tr><td><strong>Apps móviles</strong></td><td>Análisis, 77 pruebas y builds Android/iOS</td><td class="ok">CI pública en verde</td></tr>
               <tr><td><strong>Dispositivo físico</strong></td><td>Cámara, biometría, poca luz y ciclo de vida</td><td class="warn">Pendiente antes de release</td></tr>
             </tbody>
           </table>
@@ -196,7 +196,7 @@
         </ul>
         <div class="note" style="margin-top:1.5rem">
           <strong>Estado 0.1.0:</strong> contrato, estructura, análisis, 77 pruebas
-          y builds Android/web/Apple en verde. El APK Android v0.1.0 está
+          y builds Android/iOS en verde. El APK Android v0.1.0 está
           publicado; la matriz amplia de hardware físico y las tiendas siguen pendientes.
         </div>
       </div>
@@ -205,8 +205,8 @@
     <section id="instalar" class="section section-alt">
       <div class="container">
         <p class="eyebrow">Usar RootCause QR Inspector</p>
-        <h2 class="section-title">Instala Android o prueba la PWA</h2>
-        <p class="section-sub">El APK público se construye desde el tag v0.1.0, incluye SHA-256 y procedencia atestada. La PWA sale del mismo repositorio.</p>
+        <h2 class="section-title">Instala la aplicación móvil Android</h2>
+        <p class="section-sub">El APK público se construye desde el tag v0.1.0, incluye SHA-256 y procedencia atestada. Android e iOS son las únicas plataformas del producto.</p>
         <div class="download-grid">
           <article class="download-card primary">
             <span class="dl-badge">Android 7+</span>
@@ -216,14 +216,14 @@
             <a class="btn-primary" href="https://github.com/vladimiracunadev-create/rootcause-qr-inspector/releases/download/v0.1.0/rootcause-qr-inspector-v0.1.0-android.apk">Descargar APK</a>
           </article>
           <article class="download-card">
-            <h3>PWA en GitHub Pages</h3>
-            <p>Abre la aplicación desde HTTPS sin instalar un APK. Cámara disponible según permisos y compatibilidad del navegador.</p>
-            <p class="dl-meta">Web · instalable · telemetría cero</p>
-            <a class="btn-ghost" href="app/">Inspeccionar un QR</a>
+            <h3>Demo técnica web</h3>
+            <p>Explora la interfaz y el flujo desde HTTPS. No es una aplicación soportada ni sustituye la validación móvil.</p>
+            <p class="dl-meta">Demostración · no cuenta como plataforma</p>
+            <a class="btn-ghost" href="app/">Abrir demo</a>
           </article>
           <article class="download-card">
             <h3>Código fuente</h3>
-            <p>Revisa el motor, reproduce los gates y genera Android o web con la versión fijada de Flutter.</p>
+            <p>Revisa el motor, reproduce los gates y genera Android/iOS; el target web se reserva para la demo.</p>
             <p class="dl-meta">Flutter 3.44.7 · Dart 3.12+</p>
             <a class="btn-ghost" href="https://github.com/vladimiracunadev-create/rootcause-qr-inspector#inicio-rápido">Ver instalación</a>
           </article>
@@ -240,6 +240,10 @@
           <figure>
             <img src="assets/android/android-settings.png" alt="Ajustes de privacidad y accesibilidad ejecutándose en Android" loading="lazy" />
             <figcaption>Ajustes · privacidad y accesibilidad visibles</figcaption>
+          </figure>
+          <figure>
+            <img src="assets/android/android-tablet-generator.png" alt="APK Android ejecutándose en un viewport móvil grande de tablet" loading="lazy" />
+            <figcaption>Tablet emulada · layout móvil grande verificado</figcaption>
           </figure>
         </div>
         <div class="note"><strong>Importante:</strong> una lectura sin señales locales no declara seguro el destino. Verifica de forma independiente pagos, credenciales y beneficiarios.</div>
@@ -280,7 +284,7 @@
   <footer class="footer">
     <div class="footer-inner">
       <div class="footer-col"><h4>RootCause QR Inspector</h4><p>Sensor local y explicable para la superficie QR. Diagnóstico primero; intervención después.</p></div>
-      <div class="footer-col"><h4>Proyecto</h4><ul><li><a href="https://github.com/vladimiracunadev-create/rootcause-qr-inspector">Código fuente</a></li><li><a href="app/">PWA</a></li><li><a href="privacidad.html">Privacidad</a></li></ul></div>
+      <div class="footer-col"><h4>Proyecto</h4><ul><li><a href="https://github.com/vladimiracunadev-create/rootcause-qr-inspector">Código fuente</a></li><li><a href="app/">Demo web</a></li><li><a href="privacidad.html">Privacidad</a></li></ul></div>
       <div class="footer-col"><h4>Base y seguridad</h4><ul><li><a href="https://github.com/vladimiracunadev-create/universal-code-scanner">Universal Code Scanner</a></li><li><a href="https://github.com/vladimiracunadev-create/rootcause-qr-inspector/security/policy">Reportar vulnerabilidad</a></li><li><a href="https://opensource.org/license/mit">Licencia MIT</a></li></ul></div>
     </div>
     <div class="footer-bottom"><p>© 2026 Vladimir Acuña · RootCause QR Inspector 0.1.0</p></div>

@@ -11,7 +11,7 @@ completo ni la reputación remota del destino.
 |---|---|
 | [`MANUAL_USUARIO.md`](MANUAL_USUARIO.md) | Flujo de inspección, resultados, historial, inventario y ajustes |
 | [`SUPPORTED_FORMATS.md`](SUPPORTED_FORMATS.md) | Formatos reconocidos y límites por origen |
-| [`TROUBLESHOOTING.md`](TROUBLESHOOTING.md) | Cámara, PWA, PDF, biometría, almacenamiento y exportación |
+| [`TROUBLESHOOTING.md`](TROUBLESHOOTING.md) | Cámara móvil, demo web, PDF, biometría, almacenamiento y exportación |
 | [`PRIVACY_POLICY.md`](PRIVACY_POLICY.md) | Qué procesa, qué conserva y qué solo sale por decisión explícita |
 | [`../SECURITY.md`](../SECURITY.md) | Canal privado para reportar vulnerabilidades |
 

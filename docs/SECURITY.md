@@ -44,5 +44,5 @@ No incluyas secretos, claves OTP ni documentos personales en un reporte público
 ## Consideraciones por plataforma
 
 - Android desactiva `allowBackup` para evitar que una llave de Keystore sea restaurada sin su material criptográfico compatible.
-- La PWA debe publicarse únicamente por HTTPS, con HSTS y cabeceras de seguridad apropiadas; el almacenamiento seguro web depende del origen del navegador.
+- La demo web debe publicarse únicamente por HTTPS, con HSTS y cabeceras de seguridad apropiadas; su almacenamiento depende del origen del navegador y no representa una plataforma soportada.
 - La exportación JSON, CSV y XLSX contiene datos descifrados por decisión explícita del usuario. Debe tratarse como información sensible fuera de la aplicación.

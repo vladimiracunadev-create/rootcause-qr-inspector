@@ -45,8 +45,9 @@ En 0.1.0 los pasos son manuales. El contrato futuro se bosqueja en
 
 - Este repositorio usa MIT por su procedencia; otras ediciones Inspector usan
   Apache 2.0 y las de activos digitales también usan MIT.
-- La PWA necesita red para recibir sus archivos desde GitHub Pages, aunque el
-  análisis de la carga no envía telemetría.
+- La demo web necesita red para recibir sus archivos desde GitHub Pages, aunque
+  el análisis de la carga no envía telemetría. No cuenta como plataforma del
+  producto.
 - El sensor QR trabaja antes de la acción. No sustituye la observación posterior
   del navegador ni del sistema.
 - Sus 26 reglas son específicas de cargas QR/códigos; no deben reutilizarse como

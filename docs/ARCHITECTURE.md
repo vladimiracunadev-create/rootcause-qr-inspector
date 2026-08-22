@@ -56,7 +56,7 @@ Comportamiento por estado en
 El icono de la aplicación se dibuja por código en
 `tool/generate_launcher_icons.py` y sus PNG se versionan en `assets/launcher/`.
 `tool/bootstrap.py` los copia a los proyectos generados: iconos heredados,
-adaptativos y monocromos de Android, más los iconos y el favicon de la PWA.
+adaptativos y monocromos de Android, más los iconos y el favicon de la demo web.
 Regenerarlo requiere Pillow; compilar la aplicación, no.
 
 `HandheldFrame` mantiene la interfaz a un ancho de teléfono en pantallas
@@ -77,10 +77,8 @@ un móvil es idéntico al que habría sin esa capa.
 `MobileScannerEngine` es su única implementación en 0.1.0. La interpretación y la
 persistencia no dependen de `mobile_scanner`.
 
-Para añadir Windows o Linux nativos basta con una segunda implementación de
-`ScannerEngine` — por ejemplo sobre ZXing-C++ — sin modificar `ScanRecord`,
-`ContentInterpreter` ni los repositorios. La bandera `secondaryScannerEngine` de
-`FeatureFlags` reserva ese punto de activación y permanece apagada.
+Windows, macOS y Linux no son plataformas objetivo. Cualquier implementación
+de escritorio requeriría otro producto y no se incorpora a este repositorio.
 
 ## Del código a la acción
 

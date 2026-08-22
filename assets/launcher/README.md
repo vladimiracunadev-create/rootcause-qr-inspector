@@ -10,10 +10,9 @@ generados.
 |---|---|
 | `android/mipmap-*/ic_launcher.png` | Icono heredado de Android, cinco densidades |
 | `android/mipmap-*/ic_launcher_foreground.png` | Capa frontal del icono adaptativo y del monocromo |
-| `web/Icon-*.png` | Iconos de la PWA, incluidas las variantes *maskable* |
+| `web/Icon-*.png` | Iconos de la demo web, incluidas las variantes *maskable* |
 | `web/favicon.png` | Favicon del sitio |
 | `ios/Icon-App-*.png` | AppIcon completo para iPhone, iPad y App Store |
-| `macos/app_icon_*.png` | AppIcon de macOS, de 16 a 1024 px |
 | `icon-1024.png` | Maestro para documentación, landing y fichas futuras |
 
 La silueta combina un **escudo**, módulos QR y una línea de análisis. Así el
@@ -26,8 +25,7 @@ El diseño vive en código, no en un binario opaco, para que la geometría sea
 revisable en una revisión de cambios:
 
 ```bash
-python3 -m pip install pillow
-python3 tool/generate_launcher_icons.py
+uv run --with pillow python tool/generate_launcher_icons.py
 ```
 
 Pillow solo hace falta para redibujar el icono. Compilar la aplicación no lo
