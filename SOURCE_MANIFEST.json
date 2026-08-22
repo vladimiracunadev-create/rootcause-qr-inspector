@@ -18,18 +18,18 @@
     },
     {
       "path": ".github/workflows/android-release.yml",
-      "size": 3030,
-      "sha256": "20ed1a026fa083d1ac047cfa531a0ab7c95872db5de828356d6f3f50d040d0d4"
+      "size": 3060,
+      "sha256": "b4e3aa82ef0656f03d560fd167feb4cc0c8a2e490625e29739ebc7b6c922cbba"
     },
     {
       "path": ".github/workflows/deploy-landing.yml",
-      "size": 3609,
-      "sha256": "c0e23385337be4a8e36a31c3a855935cb743bee0337b0c57737ef784a6c2e707"
+      "size": 3458,
+      "sha256": "7de574e56eebb32dc3f6b38f7df6b2aafebedcedb75ff49f256d0a0869e534d2"
     },
     {
       "path": ".github/workflows/flutter-ci.yml",
-      "size": 3145,
-      "sha256": "dabe3446e8ccbfa8ed83c29c99ec61130f26fdf1bf4714aa5f8ff5588ce44c41"
+      "size": 3195,
+      "sha256": "fca6fc56dcc6ed4888f03559ef3f75c3a3f1f6c865d1a346182219dbdd17210e"
     },
     {
       "path": ".gitignore",

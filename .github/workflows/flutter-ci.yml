@@ -25,6 +25,7 @@ jobs:
         uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
         with:
           version: "0.12.5"
+          enable-cache: false
       - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
         with:
           flutter-version: ${{ env.FLUTTER_VERSION }}
@@ -46,7 +47,7 @@ jobs:
         run: flutter test --coverage
       - name: Generate SBOM and license inventory
         run: |
-          python3 tool/generate_sbom.py
+          uv run --with pyyaml python tool/generate_sbom.py
           python3 tool/generate_license_inventory.py
       - name: Build web demo
         run: flutter build web --release
