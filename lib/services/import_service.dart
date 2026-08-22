@@ -182,17 +182,15 @@ abstract final class ImportService {
   }
 
   static Future<_PickedJson?> _pickJson() async {
-    final FilePickerResult? result = await FilePicker.pickFiles(
+    final PlatformFile? file = await FilePicker.pickFile(
       type: FileType.custom,
       allowedExtensions: const <String>['json'],
-      allowMultiple: false,
-      withData: true,
     );
-    final PlatformFile? file = result?.files.single;
-    final List<int>? bytes = file?.bytes;
-    if (bytes == null) return null;
+    if (file == null) return null;
+    if (file.size > maxImportBytes) throw const FormatException('El archivo supera el límite de 25 MB.');
+    final List<int> bytes = await file.readAsBytes();
     if (bytes.length > maxImportBytes) throw const FormatException('El archivo supera el límite de 25 MB.');
-    return _PickedJson(fileName: file?.name ?? 'respaldo.json', bytes: bytes);
+    return _PickedJson(fileName: file.name, bytes: bytes);
   }
 }
 

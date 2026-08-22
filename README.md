@@ -244,7 +244,7 @@ evidencia técnica, no una release firmada para distribución.
 | Plataforma | Ruta | Limitación principal |
 |---|---|---|
 | Android 7+ | app Flutter nativa | APK inicial de evaluación; firma de publicación pendiente |
-| iOS 15.5+ | app Flutter nativa | compila sin firma; dispositivo físico pendiente |
+| iOS 15.5+ | app Flutter nativa | compila para simulador en CI; dispositivo físico y firma pendientes |
 | macOS | app Flutter nativa | cámara/galería; dispositivo pendiente |
 | Web / PWA | Flutter Web | PDF local no soportado por el renderer actual |
 | Windows / Linux | PWA | no hay motor de cámara nativo en 0.1.0 |

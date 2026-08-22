@@ -10,19 +10,18 @@ flutter pub get
 
 ## Restricciones conocidas
 
-Tres dependencias no pueden fijarse en su última versión publicada porque
-generan conflictos de resolución. Cada una está anclada de forma deliberada:
+Dos dependencias siguen ancladas porque la serie más nueva rompe la resolución.
+La actualización coordinada de `file_picker`, `share_plus` y
+`flutter_secure_storage` ya está incorporada y probada como conjunto:
 
 | Paquete | Fijado en | Motivo |
 |---|---|---|
-| `share_plus` | `12.0.2` | Desde `13.0.0` exige `win32 ^6`, incompatible con el `win32 ^5.9` que requiere `file_picker 11.x` |
 | `pdfrx` | `2.4.5` | Desde `2.4.6` arrastra `archive ^4`, incompatible con el `archive ^3.6.1` que requiere `excel 4.0.6` |
 | `excel` | `4.0.6` | Última versión publicada; es la que ancla `archive` a la serie 3 |
 
 Estos anclajes deben revisarse cuando `excel` publique una versión sobre
-`archive ^4`, o cuando `file_picker` estabilice su serie 12 sobre `win32 ^6`.
-`flutter pub outdated` los muestra como actualizables, pero subirlos sin resolver
-antes el conflicto rompe la resolución.
+`archive ^4`. `flutter pub outdated` puede mostrarlos como actualizables, pero
+subirlos sin resolver antes el conflicto rompe la resolución.
 
 ## Cadena de compilación de Android
 
@@ -36,8 +35,8 @@ y la distribución de Gradle del proyecto generado:
 | Gradle | `8.14.3` | Compatible con AGP 8.11.1 y sin aviso de obsolescencia |
 
 El motivo del anclaje de AGP es concreto: varios plugins de este conjunto de
-dependencias —`file_picker` entre ellos— dejan de aplicar el Kotlin Gradle
-Plugin en cuanto detectan AGP 9, dando por hecho que el Kotlin integrado está
+dependencias heredadas dejan de aplicar el Kotlin Gradle Plugin en cuanto
+detectan AGP 9, dando por hecho que el Kotlin integrado está
 activo. Pero la misma plantilla entrega `android.builtInKotlin=false`, así que
 nadie compila el código Kotlin de esos plugins y la compilación falla con
 `cannot find symbol: class FilePickerPlugin`. Activar el Kotlin integrado rompe

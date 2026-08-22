@@ -18,7 +18,7 @@ flowchart LR
 
 | Workflow | Disparo | Resultado |
 |---|---|---|
-| [`flutter-ci.yml`](../.github/workflows/flutter-ci.yml) | push a `main`/`develop`, pull request o manual | valida contrato, analiza, prueba, genera SBOM/licencias y compila Android, web, iOS y macOS |
+| [`flutter-ci.yml`](../.github/workflows/flutter-ci.yml) | push a `main`/`develop`, pull request o manual | valida contrato, analiza, prueba, genera SBOM/licencias y compila Android, web, iOS Simulator y macOS |
 | [`deploy-landing.yml`](../.github/workflows/deploy-landing.yml) | cambios publicables en `main` o manual | compila la PWA, ensambla landing/capturas y despliega GitHub Pages |
 
 ## Controles de entrega
@@ -46,7 +46,8 @@ flutter build web --release
 flutter build apk --debug
 ```
 
-En macOS se pueden generar `ios,macos` y repetir sus builds. La ejecución local
+En macOS se pueden generar `ios,macos` y repetir el build de iOS Simulator y
+macOS. La ejecución local
 debe usar la versión declarada en [`.fvmrc`](../.fvmrc).
 
 ## Qué demuestra y qué no

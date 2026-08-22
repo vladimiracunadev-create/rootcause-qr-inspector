@@ -29,8 +29,8 @@ def insert_before(text: str, marker: str, content: str) -> str:
 
 
 # The Flutter 3.44.7 template generates Android Gradle Plugin 9, whose default is
-# built-in Kotlin. Several plugins in this dependency set (file_picker among
-# them) skip applying the Kotlin Gradle Plugin as soon as they detect AGP 9,
+# built-in Kotlin. Several plugins in this dependency set skip applying the
+# Kotlin Gradle Plugin as soon as they detect AGP 9,
 # assuming built-in Kotlin is enabled — but the same template ships
 # `android.builtInKotlin=false`. The result is that nobody compiles those
 # plugins' Kotlin sources and the build fails with "cannot find symbol

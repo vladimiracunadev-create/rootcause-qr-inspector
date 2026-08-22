@@ -13,8 +13,8 @@
     },
     {
       "path": ".github/dependabot.yml",
-      "size": 746,
-      "sha256": "e6ef22ca0486a7c18f5733085214bf2efb7ca390c950ba4f67f9cf65e0b81430"
+      "size": 544,
+      "sha256": "ab17ac347988e28f053f6faa34de5c58a70e8a8a8419145a341d81e339fc1c1f"
     },
     {
       "path": ".github/workflows/deploy-landing.yml",
@@ -23,8 +23,8 @@
     },
     {
       "path": ".github/workflows/flutter-ci.yml",
-      "size": 3310,
-      "sha256": "00458347279115a5c45d3a258853681a61d5c8b74a92d7f998c1725100222966"
+      "size": 3331,
+      "sha256": "c62eea992909aca28f15c48815f81449bca146298f0b3c6bba8778b61d2c4400"
     },
     {
       "path": ".gitignore",
@@ -78,8 +78,8 @@
     },
     {
       "path": "docs/CI_GITHUB.md",
-      "size": 2196,
-      "sha256": "0fb1bf13049545af7316214548ef69ee29c4822bf5387f3fcefdedf5a8d0cafc"
+      "size": 2229,
+      "sha256": "8291bc30dbb34b28b67185378783a19f54b2527b77046a99dbf4718b2fef6385"
     },
     {
       "path": "docs/DETECCION_AMENAZAS.md",
@@ -163,8 +163,8 @@
     },
     {
       "path": "docs/quality/LOCKFILE.md",
-      "size": 2581,
-      "sha256": "1667afa6d151165d12444130dc71057ad6248a77d99ab7657e25ec22b288c956"
+      "size": 2432,
+      "sha256": "8dd5caf64166b4cfb839b7940e0e581e9d3b348110458608ff3a621c9203d505"
     },
     {
       "path": "docs/quality/MIGRATIONS.md",
@@ -244,7 +244,7 @@
     {
       "path": "docs/security/sbom-source.cdx.json",
       "size": 5484,
-      "sha256": "2dff341a11d2696b327d15706eafc48706d24387c990969ee928d8b2bc517f45"
+      "sha256": "9e808e09ff67f71d6479738f20b69eb1ca87f13ba05b899027d99c53e3eb0da8"
     },
     {
       "path": "docs/security/SECURITY_TEST_PLAN.md",
@@ -583,8 +583,8 @@
     },
     {
       "path": "lib/services/import_service.dart",
-      "size": 7952,
-      "sha256": "3e82f9c0044f26387ad601ff72b4e83e7726be87b022417bb80d106669d34630"
+      "size": 7940,
+      "sha256": "806a89ad09048d83bf7de095147aa6dca784e74df123467eeb8186478fef119e"
     },
     {
       "path": "lib/services/inventory_repository.dart",
@@ -598,8 +598,8 @@
     },
     {
       "path": "lib/services/pdf_page_renderer_io.dart",
-      "size": 4291,
-      "sha256": "217c24f123eb114b59868cbb5d1c433293042aae6ea7b603fe849b82b6b79d45"
+      "size": 4222,
+      "sha256": "7585797f475973e854cfaff53e10126b6838ba3e34e9a8dbc75dfbd47311c4b7"
     },
     {
       "path": "lib/services/pdf_page_renderer_stub.dart",
@@ -643,18 +643,18 @@
     },
     {
       "path": "pubspec.lock",
-      "size": 32470,
-      "sha256": "e9486f434c937e42b893979934b87798145cc0c3a6f3a17c78559e4933e46b29"
+      "size": 34210,
+      "sha256": "4ea7450af4c279c6ef5a0f28d84157ed7767570e8cd3ebe5bba659f89cf26121"
     },
     {
       "path": "pubspec.yaml",
       "size": 988,
-      "sha256": "2c8f66dec007ce1c8a6c2916491a8e363ccbb8e989faaa51d30f01c38f2f3d6d"
+      "sha256": "4bc8ef8a461f848cc7f05a2c21e9263d454232a08ade0632a5456b2fb796a7d1"
     },
     {
       "path": "README.md",
-      "size": 15501,
-      "sha256": "3d8c83b184c3731711aae9ebdb9565e1d70bd371bdb2ec3190bb1c772de5e77a"
+      "size": 15521,
+      "sha256": "cf45414624176267ed65a0f5368c1e9c87bb6816329904e558a185ca799b3a48"
     },
     {
       "path": "RELEASE_SOURCE.json",
@@ -863,8 +863,8 @@
     },
     {
       "path": "tool/bootstrap.py",
-      "size": 15349,
-      "sha256": "161f12e7e278296017b9af3ff2b26d03d35f9ff4613bb756e35684e9e573f962"
+      "size": 15324,
+      "sha256": "aed9f77c453b05ba2d87596ee83078c66216ae9a8428771cc056d5bb554521c0"
     },
     {
       "path": "tool/bootstrap.sh",

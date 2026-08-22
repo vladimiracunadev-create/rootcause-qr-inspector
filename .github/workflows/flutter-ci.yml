@@ -80,8 +80,8 @@ jobs:
           cache: true
       - name: Generate Apple projects
         run: python3 tool/bootstrap.py --platforms ios,macos
-      - name: Build iOS without signing
-        run: flutter build ios --release --no-codesign
+      - name: Build iOS simulator (no signing identity required)
+        run: flutter build ios --debug --simulator
       - name: Build macOS
         run: flutter build macos --release
       # The startup integration test is intentionally not run here: GitHub's

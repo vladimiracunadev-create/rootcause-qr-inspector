@@ -21,13 +21,11 @@ class PdfPageRenderer {
     void Function(int current, int total)? onProgress,
   }) async {
     await pdfrxFlutterInitialize();
-    final FilePickerResult? selection = await FilePicker.pickFiles(
+    final PlatformFile? selection = await FilePicker.pickFile(
       type: FileType.custom,
       allowedExtensions: const <String>['pdf'],
-      allowMultiple: false,
-      withData: false,
     );
-    final String? path = selection?.files.single.path;
+    final String? path = selection?.path;
     if (path == null || path.isEmpty) return const <RenderedPdfPage>[];
 
     final PdfDocument document = await PdfDocument.openFile(path);
