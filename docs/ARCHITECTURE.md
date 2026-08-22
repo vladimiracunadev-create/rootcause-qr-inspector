@@ -1,0 +1,89 @@
+# Arquitectura
+
+La aplicación separa captura, interpretación, seguridad, persistencia y
+presentación en capas independientes.
+
+<p align="center">
+  <img src="images/arquitectura.svg" width="820" alt="Diagrama de capas: features, state, services y core" />
+</p>
+
+## Flujo de lectura
+
+```text
+Cámara / Imagen / PDF
+        ↓
+mobile_scanner
+        ↓
+ScanRecord.fromBarcode
+        ├── ContentParserRegistry
+        └── QrInvestigationEngine
+        ↓
+Resultado inmediato
+        ├── hallazgos + hipótesis
+        ├── política de acción
+        ├── evidencia redactada
+        ├── compartir/copiar
+        └── HistoryRepository (si corresponde)
+```
+
+## Estado del escáner
+
+La pantalla de lectura crea su propio `MobileScannerController`, así que también
+le corresponde el ciclo de vida: `MobileScanner` solo lo atiende cuando el
+controlador es suyo. `ScannerScreen` e `InventoryScreen` observan
+`didChangeAppLifecycleState`, detienen la cámara al pasar a inactivo y la
+reinician al volver.
+
+Toda llamada al controlador —arrancar, detener, reiniciar— pasa por métodos que
+capturan la excepción y la traducen a uno de cuatro estados visibles:
+`starting`, `scanning`, `paused` y `unavailable` (`ScanPhase`). `ScanStatusBar`
+los nombra y dibuja; la barra horizontal solo se mueve mientras el motor analiza
+cuadros. `ScanFeedback` concentra la confirmación de lectura —tono empaquetado y
+vibración— con degradación al sonido del sistema si el reproductor falla.
+Comportamiento por estado en
+[`quality/SCANNER_UX.md`](quality/SCANNER_UX.md).
+
+## Persistencia
+
+- `AppDatabase`: abre Sembast en archivos nativos o IndexedDB web.
+- `PayloadCipher`: AES-GCM de 256 bits; guarda nonce, texto cifrado y MAC.
+- `HistoryRepository`: almacena metadatos mínimos visibles y carga completa cifrada.
+- `InventoryRepository`: aplica el mismo esquema a sesiones de inventario.
+- `SettingsRepository`: preferencias no sensibles mediante `SharedPreferencesAsync`.
+
+## Identidad visual
+
+El icono de la aplicación se dibuja por código en
+`tool/generate_launcher_icons.py` y sus PNG se versionan en `assets/launcher/`.
+`tool/bootstrap.py` los copia a los proyectos generados: iconos heredados,
+adaptativos y monocromos de Android, más los iconos y el favicon de la PWA.
+Regenerarlo requiere Pillow; compilar la aplicación, no.
+
+`HandheldFrame` mantiene la interfaz a un ancho de teléfono en pantallas
+grandes. Por debajo del umbral no envuelve nada, así que el árbol de widgets en
+un móvil es idéntico al que habría sin esa capa.
+
+## Capas
+
+- `models`: entidades inmutables y serializables.
+- `services`: interpretación, seguridad, cifrado, importación, exportación y plataforma.
+- `state`: stores basados en `ChangeNotifier`.
+- `features`: pantallas y componentes por caso de uso.
+- `core`: infraestructura transversal.
+
+## Extensión de motores
+
+`ScannerEngine` es la frontera estable alrededor del paquete de captura;
+`MobileScannerEngine` es su única implementación en 0.1.0. La interpretación y la
+persistencia no dependen de `mobile_scanner`.
+
+Para añadir Windows o Linux nativos basta con una segunda implementación de
+`ScannerEngine` — por ejemplo sobre ZXing-C++ — sin modificar `ScanRecord`,
+`ContentInterpreter` ni los repositorios. La bandera `secondaryScannerEngine` de
+`FeatureFlags` reserva ese punto de activación y permanece apagada.
+
+## Del código a la acción
+
+<p align="center">
+  <img src="images/flujo-seguridad.svg" width="820" alt="Flujo de captura, interpretación, riesgo, confirmación y persistencia cifrada" />
+</p>

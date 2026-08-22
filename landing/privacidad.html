@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Política de privacidad de RootCause QR Inspector: análisis local, telemetría cero y exportación explícita." />
+  <meta name="robots" content="index,follow" />
+  <meta name="theme-color" content="#0d1117" />
+  <title>Privacidad · RootCause QR Inspector</title>
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+  <link rel="stylesheet" href="assets/style.css" />
+</head>
+<body>
+  <a class="skip-link" href="#contenido">Saltar al contenido</a>
+  <header class="nav">
+    <div class="nav-inner">
+      <a class="nav-logo" href="index.html">RootCause QR Inspector</a>
+      <nav class="nav-links" aria-label="Navegación principal">
+        <a href="index.html#modelo">Producto</a>
+        <a href="index.html#limites">Límites</a>
+        <a href="https://github.com/vladimiracunadev-create/rootcause-qr-inspector" class="btn-nav">Ver en GitHub</a>
+      </nav>
+    </div>
+  </header>
+  <main id="contenido" class="section">
+    <article class="container prose">
+      <p class="eyebrow">Política de privacidad</p>
+      <h1>Datos bajo control de la persona</h1>
+      <p class="lead">RootCause QR Inspector analiza códigos en el dispositivo. No requiere cuenta, no integra publicidad, analítica ni telemetría, y no envía automáticamente cargas o resultados a un servidor.</p>
+
+      <h2>Qué procesa</h2>
+      <p>La aplicación procesa la imagen o carga elegida para reconocerla, interpretar sus campos y aplicar reglas locales. Una carga puede contener URLs firmadas, OTP, identidad, credenciales Wi-Fi o instrucciones de pago; debe tratarse como información sensible.</p>
+
+      <h2>Qué conserva</h2>
+      <p>El historial y los inventarios se almacenan localmente cifrados con AES-256-GCM. OTP, contraseñas Wi-Fi y URLs que parecen contener secretos quedan fuera del historial automático. El modo temporal elimina sus datos al cerrar la aplicación.</p>
+
+      <h2>Qué sale del dispositivo</h2>
+      <p>Solo lo que la persona comparte o exporta explícitamente. La evidencia redactada omite por defecto la carga cruda, los campos interpretados y la URL efectiva. Exportaciones JSON, CSV o XLSX pueden contener datos descifrados y deben protegerse fuera de la aplicación.</p>
+
+      <h2>PWA y permisos</h2>
+      <p>GitHub Pages entrega la PWA por HTTPS. El navegador puede pedir acceso a cámara, archivos o almacenamiento local para una acción iniciada por la persona. GitHub puede conservar registros técnicos propios de la entrega del sitio; esos registros no son controlados por la aplicación.</p>
+
+      <h2>Eliminación</h2>
+      <p>Los ajustes permiten borrar historial e inventarios. También puedes eliminar los datos del sitio desde la configuración del navegador o desinstalar la aplicación. No existe una cuenta remota que solicitar eliminar.</p>
+
+      <h2>Seguridad y cambios</h2>
+      <p>Reporta vulnerabilidades mediante la <a href="https://github.com/vladimiracunadev-create/rootcause-qr-inspector/security/policy">política de seguridad</a>, sin adjuntar datos reales. Esta página corresponde a la versión 0.1.0, actualizada el 21 de agosto de 2026. El texto técnico completo está en <a href="https://github.com/vladimiracunadev-create/rootcause-qr-inspector/blob/main/docs/PRIVACY_POLICY.md">docs/PRIVACY_POLICY.md</a>.</p>
+    </article>
+  </main>
+  <footer class="footer"><div class="footer-bottom"><p>© 2026 Vladimir Acuña · <a href="index.html">Volver a RootCause QR Inspector</a></p></div></footer>
+</body>
+</html>

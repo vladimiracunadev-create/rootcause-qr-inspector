@@ -1,0 +1,19 @@
+.dart_tool/
+.packages
+.pub/
+build/
+coverage/
+.idea/
+.vscode/
+*.iml
+.flutter-plugins
+.flutter-plugins-dependencies
+.pub-cache/
+__pycache__/
+*.py[cod]
+
+# Se generan con tool/bootstrap.py
+/android/
+/ios/
+/web/
+/macos/

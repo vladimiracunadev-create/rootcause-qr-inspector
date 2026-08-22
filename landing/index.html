@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="RootCause QR Inspector observa códigos QR, explica 26 señales locales, separa hechos de hipótesis y exporta evidencia redactada." />
+  <meta property="og:title" content="RootCause QR Inspector — diagnóstico antes de acción" />
+  <meta property="og:description" content="Sensor local para QR: 26 reglas explicables, hipótesis separadas, evidencia SHA-256 y telemetría cero." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://vladimiracunadev-create.github.io/rootcause-qr-inspector/" />
+  <meta property="og:image" content="https://vladimiracunadev-create.github.io/rootcause-qr-inspector/assets/icon-512.png" />
+  <meta name="theme-color" content="#0d1117" />
+  <title>RootCause QR Inspector</title>
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+  <link rel="apple-touch-icon" href="assets/icon-512.png" />
+  <link rel="stylesheet" href="assets/style.css" />
+</head>
+<body>
+  <a class="skip-link" href="#contenido">Saltar al contenido</a>
+  <header class="nav">
+    <div class="nav-inner">
+      <a class="nav-logo" href="#inicio" aria-label="Inicio de RootCause QR Inspector">
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden="true">
+          <path d="M3 8V4.5A1.5 1.5 0 0 1 4.5 3H8M14 3h3.5A1.5 1.5 0 0 1 19 4.5V8M19 14v3.5a1.5 1.5 0 0 1-1.5 1.5H14M8 19H4.5A1.5 1.5 0 0 1 3 17.5V14" stroke="#5bd7cd" stroke-width="1.6" stroke-linecap="round" />
+          <rect x="7" y="7" width="3.2" height="3.2" rx=".8" fill="#5bd7cd" />
+          <rect x="11.8" y="11.8" width="3.2" height="3.2" rx=".8" fill="#5bd7cd" />
+        </svg>
+        RootCause QR Inspector
+      </a>
+      <nav class="nav-links" aria-label="Navegación principal">
+        <a href="#modelo">Modelo</a>
+        <a href="#prueba">La prueba</a>
+        <a href="#instalar">Usar</a>
+        <a href="#familia">Familia</a>
+        <a href="privacidad.html">Privacidad</a>
+        <a href="app/" class="btn-nav">Abrir PWA</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="contenido">
+    <section id="inicio" class="hero">
+      <div class="hero-inner">
+        <div class="ascii-block" aria-hidden="true"><pre>
+██████╗  ██████╗  ██████╗ ████████╗ ██████╗  █████╗ ██╗   ██╗███████╗███████╗
+██╔══██╗██╔═══██╗██╔═══██╗╚══██╔══╝██╔════╝ ██╔══██╗██║   ██║██╔════╝██╔════╝
+██████╔╝██║   ██║██║   ██║   ██║   ██║      ███████║██║   ██║███████╗█████╗
+██╔══██╗██║   ██║██║   ██║   ██║   ██║      ██╔══██║██║   ██║╚════██║██╔══╝
+██║  ██║╚██████╔╝╚██████╔╝   ██║   ╚██████╗ ██║  ██║╚██████╔╝███████║███████╗
+╚═╝  ╚═╝ ╚═════╝  ╚═════╝    ╚═╝    ╚═════╝ ╚═╝  ╚═╝ ╚═════╝ ╚══════╝╚══════╝
+                         Q R   I N S P E C T O R
+        </pre></div>
+        <img class="hero-logo" src="assets/icon-512.png" width="96" height="96" alt="Icono de RootCause QR Inspector" />
+        <h1 class="section-title">Diagnóstico primero. Intervención después.</h1>
+        <p class="hero-sub">
+          Un QR es una instrucción opaca. RootCause la captura, interpreta y
+          convierte en <strong>hechos observables</strong> antes de ofrecer una acción.
+        </p>
+        <div class="badges" aria-label="Datos del proyecto">
+          <img src="https://github.com/vladimiracunadev-create/rootcause-qr-inspector/actions/workflows/flutter-ci.yml/badge.svg" alt="Estado de integración continua" />
+          <img src="https://img.shields.io/badge/version-0.1.0-blue.svg" alt="Versión 0.1.0" />
+          <img src="https://img.shields.io/badge/reglas_locales-26-12847b.svg" alt="26 reglas locales" />
+          <img src="https://img.shields.io/badge/telemetr%C3%ADa-cero-success.svg" alt="Telemetría cero" />
+          <img src="https://img.shields.io/badge/licencia-MIT-blue.svg" alt="Licencia MIT" />
+        </div>
+        <div class="hero-cta">
+          <a href="app/" class="btn-primary">Abrir la PWA</a>
+          <a href="https://github.com/vladimiracunadev-create/rootcause-qr-inspector" class="btn-ghost">Ver código</a>
+        </div>
+        <p class="hero-tagline">El QR es la superficie. El phishing es una hipótesis.</p>
+      </div>
+    </section>
+
+    <section id="modelo" class="section">
+      <div class="container">
+        <h2 class="section-title">Un sensor RootCause para la superficie QR</h2>
+        <p class="section-sub">
+          El producto no acusa a una URL ni promete seguridad. Registra qué pudo
+          observar, qué reglas aplicó, qué hipótesis merece investigar y qué no
+          puede conocer sin otra fuente.
+        </p>
+        <div class="feature-grid">
+          <article class="feature-card">
+            <div class="feature-icon" aria-hidden="true">01</div>
+            <h3>Captura e interpretación</h3>
+            <p>Cámara, imágenes y PDF; URL, Wi-Fi, identidad, OTP, pagos, GS1, AAMVA y más.</p>
+          </article>
+          <article class="feature-card">
+            <div class="feature-icon" aria-hidden="true">02</div>
+            <h3>Hechos explicables</h3>
+            <p>Cada hallazgo tiene id estable, severidad, puntos, confianza, categoría y evidencia mínima.</p>
+          </article>
+          <article class="feature-card">
+            <div class="feature-icon" aria-hidden="true">03</div>
+            <h3>Hipótesis separadas</h3>
+            <p><code>qr-phishing-suspected</code> solo aparece cuando hechos concretos la sustentan.</p>
+          </article>
+          <article class="feature-card">
+            <div class="feature-icon" aria-hidden="true">04</div>
+            <h3>Acción controlada</h3>
+            <p>Permitir, confirmar, solo inspeccionar o bloquear una URI ambigua; nunca ejecutar en silencio.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="senales" class="section section-alt">
+      <div class="container">
+        <h2 class="section-title">26 reglas locales, agrupadas por causa observable</h2>
+        <p class="section-sub">El puntaje ordena señales; no representa una probabilidad de fraude.</p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Familia</th><th>Qué observa</th><th>Ejemplos de ids</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Identidad</strong></td><td>Punycode, mezcla de alfabetos, Unicode, IP, subdominios y marcas configuradas.</td><td><code>host-punycode</code><br /><code>brand-domain-mismatch</code></td></tr>
+              <tr><td><strong>Ofuscación</strong></td><td>Usuario antes del host, controles invisibles, autoridad ambigua y separadores codificados.</td><td><code>authority-userinfo</code><br /><code>encoded-separator</code></td></tr>
+              <tr><td><strong>Destino</strong></td><td>HTTP, host vacío, red privada, puerto inusual y acortadores.</td><td><code>transport-http</code><br /><code>host-private-or-local</code></td></tr>
+              <tr><td><strong>Intención</strong></td><td>Rutas de credenciales, redirecciones externas, instaladores, scripts, OTP y pagos.</td><td><code>credential-lure-path</code><br /><code>redirect-nested-domain</code></td></tr>
+              <tr><td><strong>Ejecución</strong></td><td>Esquemas desconocidos o ambiguos que no deben salir de la aplicación.</td><td><code>scheme-blocked</code><br /><code>authority-obfuscated</code></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section id="evidencia" class="section">
+      <div class="container">
+        <h2 class="section-title">Evidencia portable y redactada por defecto</h2>
+        <p class="section-sub">
+          <code>rootcause.evidence.qr.v1</code> conserva la observación, el motor,
+          los hallazgos, las hipótesis, los límites y una huella de integridad.
+        </p>
+        <div class="feature-grid">
+          <article class="feature-card"><h3>SHA-256 de la carga</h3><p>Permite correlacionar sin adjuntar el QR original.</p></article>
+          <article class="feature-card"><h3>Sin fuga secundaria</h3><p>El modo redactado omite carga, campos parseados y URL efectiva.</p></article>
+          <article class="feature-card"><h3>Consistencia determinista</h3><p>Calcula un checksum reproducible aunque cambie el orden de claves JSON; no lo presenta como firma.</p></article>
+          <article class="feature-card"><h3>Cadena opcional</h3><p>Puede referenciar el hash anterior; 0.1.0 no crea una cadena automática.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section id="prueba" class="section section-alt">
+      <div class="container">
+        <p class="eyebrow">Evidencia del proyecto</p>
+        <h2 class="section-title">Lo que se afirma tiene una comprobación visible</h2>
+        <p class="section-sub">
+          La validación distingue la coherencia offline de las pruebas de runtime.
+          La CI pública vuelve a ejecutar el contrato, el análisis, 77 casos y los builds.
+        </p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Control</th><th>Prueba</th><th>Estado publicado</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Contrato causal</strong></td><td>26 ids entre motor, textos, esquema, fixtures y política</td><td class="ok">Validado offline</td></tr>
+              <tr><td><strong>Privacidad de evidencia</strong></td><td>Omisión de carga, campos y URL efectiva por defecto</td><td class="ok">Cubierto por contrato</td></tr>
+              <tr><td><strong>App Flutter</strong></td><td>Análisis, pruebas y builds Android/web/Apple</td><td class="warn">Ver CI pública</td></tr>
+              <tr><td><strong>Dispositivo físico</strong></td><td>Cámara, biometría, poca luz y ciclo de vida</td><td class="warn">Pendiente antes de release</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="shots" aria-label="Capturas de la aplicación">
+          <figure><img src="assets/capturas/escanear.png" loading="lazy" alt="Pantalla de escaneo con estado visible" /><figcaption>Escaneo y estado observable</figcaption></figure>
+          <figure><img src="assets/capturas/historial.png" loading="lazy" alt="Historial cifrado de lecturas" /><figcaption>Historial local cifrado</figcaption></figure>
+          <figure><img src="assets/capturas/inventario.png" loading="lazy" alt="Sesión local de inventario" /><figcaption>Inventario sin nube</figcaption></figure>
+          <figure><img src="assets/capturas/ajustes.png" loading="lazy" alt="Ajustes de privacidad y accesibilidad" /><figcaption>Privacidad y accesibilidad</figcaption></figure>
+        </div>
+      </div>
+    </section>
+
+    <section id="limites" class="section">
+      <div class="container">
+        <h2 class="section-title">Límites visibles, no letra pequeña</h2>
+        <p class="section-sub">Un análisis local no conoce lo que solo existe en red o en el contexto físico.</p>
+        <ul class="limits">
+          <li><strong>Sin reputación remota</strong>No consulta listas de bloqueo, edad o dueño de un dominio.</li>
+          <li><strong>Sin navegación</strong>No resuelve DNS, certificados, redirecciones HTTP ni contenido final.</li>
+          <li><strong>Sin contexto físico</strong>No detecta si una etiqueta falsa cubre el QR auténtico.</li>
+          <li><strong>Unicode heurístico</strong>No implementa todavía skeleton completo UTS #39.</li>
+          <li><strong>Política por API</strong>La carga y administración visual de políticas queda para una versión posterior.</li>
+          <li><strong>Resultado normal</strong>“Sin señales locales” nunca significa “destino seguro”.</li>
+        </ul>
+        <div class="note" style="margin-top:1.5rem">
+          <strong>Estado 0.1.0:</strong> el contrato y la estructura se validaron
+          offline. La suite Flutter y los builds deben ejecutarse antes de publicar binarios.
+        </div>
+      </div>
+    </section>
+
+    <section id="instalar" class="section section-alt">
+      <div class="container">
+        <p class="eyebrow">Usar RootCause QR Inspector</p>
+        <h2 class="section-title">Prueba la PWA o ejecuta el código auditado</h2>
+        <p class="section-sub">La PWA se publica desde el mismo commit que ves en GitHub. Los binarios firmados llegarán después de completar la matriz física.</p>
+        <div class="download-grid">
+          <article class="download-card primary">
+            <span class="dl-badge">Recomendado</span>
+            <h3>PWA en GitHub Pages</h3>
+            <p>Abre la aplicación desde HTTPS sin instalar un APK. Cámara disponible según permisos y compatibilidad del navegador.</p>
+            <p class="dl-meta">Web · instalable · telemetría cero</p>
+            <a class="btn-primary" href="app/">Abrir la PWA</a>
+          </article>
+          <article class="download-card">
+            <h3>Código fuente</h3>
+            <p>Revisa el motor, reproduce los gates y genera Android o web con la versión fijada de Flutter.</p>
+            <p class="dl-meta">Flutter 3.44.7 · Dart 3.12+</p>
+            <a class="btn-ghost" href="https://github.com/vladimiracunadev-create/rootcause-qr-inspector#inicio-rápido">Ver instalación</a>
+          </article>
+        </div>
+        <div class="note"><strong>Importante:</strong> una lectura sin señales locales no declara seguro el destino. Verifica de forma independiente pagos, credenciales y beneficiarios.</div>
+      </div>
+    </section>
+
+    <section id="familia" class="section">
+      <div class="container">
+        <p class="eyebrow">Familia RootCause</p>
+        <h2 class="section-title">Cada producto observa una superficie distinta</h2>
+        <p class="section-sub">QR Inspector no intenta reemplazar señales del navegador, del teléfono ni del sistema operativo. Sus evidencias se complementan.</p>
+        <div class="doc-grid">
+          <span class="doc-entry"><a href="https://github.com/vladimiracunadev-create/rootcause-web-inspector">RootCause Web Inspector</a><span>Navegación, extensiones, permisos, sesiones y descargas.</span></span>
+          <span class="doc-entry"><a href="https://github.com/vladimiracunadev-create/rootcause-mobile-inspector">RootCause Mobile Inspector</a><span>Apps, recursos, permisos y cambios del dispositivo.</span></span>
+          <span class="doc-entry"><a href="https://github.com/vladimiracunadev-create/rootcause-windows-inspector">RootCause Windows Inspector</a><span>Procesos, persistencia, red y recursos del sistema.</span></span>
+          <span class="doc-entry"><a href="https://github.com/vladimiracunadev-create/rootcause-blockchain-security">RootCause Blockchain Security</a><span>Contratos, proxies, oráculos, puentes y gobernanza.</span></span>
+        </div>
+      </div>
+    </section>
+
+    <section id="documentacion" class="section section-alt">
+      <div class="container">
+        <h2 class="section-title">Documentación técnica</h2>
+        <div class="doc-grid">
+          <span class="doc-entry"><a href="https://github.com/vladimiracunadev-create/rootcause-qr-inspector/blob/main/docs/rootcause/HEURISTICS.md">Heurísticas</a><span>Condición, peso, evidencia y falso positivo de cada regla.</span></span>
+          <span class="doc-entry"><a href="https://github.com/vladimiracunadev-create/rootcause-qr-inspector/blob/main/docs/rootcause/ARCHITECTURE.md">Arquitectura</a><span>Flujo, fronteras y contratos del sensor.</span></span>
+          <span class="doc-entry"><a href="https://github.com/vladimiracunadev-create/rootcause-qr-inspector/blob/main/docs/rootcause/LIMITATIONS.md">Límites</a><span>Qué no puede concluir el motor.</span></span>
+          <span class="doc-entry"><a href="https://github.com/vladimiracunadev-create/rootcause-qr-inspector/blob/main/docs/rootcause/PROVENANCE.md">Procedencia</a><span>Commit de origen y diferencias con Universal Code Scanner.</span></span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-col"><h4>RootCause QR Inspector</h4><p>Sensor local y explicable para la superficie QR. Diagnóstico primero; intervención después.</p></div>
+      <div class="footer-col"><h4>Proyecto</h4><ul><li><a href="https://github.com/vladimiracunadev-create/rootcause-qr-inspector">Código fuente</a></li><li><a href="app/">PWA</a></li><li><a href="privacidad.html">Privacidad</a></li></ul></div>
+      <div class="footer-col"><h4>Base y seguridad</h4><ul><li><a href="https://github.com/vladimiracunadev-create/universal-code-scanner">Universal Code Scanner</a></li><li><a href="https://github.com/vladimiracunadev-create/rootcause-qr-inspector/security/policy">Reportar vulnerabilidad</a></li><li><a href="https://opensource.org/license/mit">Licencia MIT</a></li></ul></div>
+    </div>
+    <div class="footer-bottom"><p>© 2026 Vladimir Acuña · RootCause QR Inspector 0.1.0</p></div>
+  </footer>
+</body>
+</html>

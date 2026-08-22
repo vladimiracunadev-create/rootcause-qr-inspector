@@ -1,0 +1,102 @@
+{
+  "schema": "rootcause.qr-fixtures.v1",
+  "description": "Cargas sintéticas y dominios reservados para regresión del motor local.",
+  "cases": [
+    {
+      "id": "benign-https",
+      "payload": "https://example.com/documento",
+      "expectedSeverity": "normal",
+      "expectedAction": "allow",
+      "mustInclude": [],
+      "mustExclude": ["transport-http", "credential-lure-path"]
+    },
+    {
+      "id": "plain-http",
+      "payload": "http://example.com/documento",
+      "expectedSeverity": "warning",
+      "expectedAction": "confirm",
+      "mustInclude": ["transport-http"],
+      "mustExclude": []
+    },
+    {
+      "id": "userinfo-host-confusion",
+      "payload": "https://banco.example@evil.example/acceso",
+      "expectedSeverity": "critical",
+      "expectedAction": "confirm",
+      "mustInclude": ["authority-userinfo", "credential-lure-path"],
+      "mustExclude": []
+    },
+    {
+      "id": "punycode-login",
+      "payload": "https://xn--pple-43d.example/login",
+      "expectedSeverity": "critical",
+      "expectedAction": "confirm",
+      "mustInclude": ["host-punycode", "credential-lure-path"],
+      "mustExclude": []
+    },
+    {
+      "id": "private-target",
+      "payload": "https://192.168.1.10/panel",
+      "expectedSeverity": "critical",
+      "expectedAction": "confirm",
+      "mustInclude": ["host-ip-literal", "host-private-or-local"],
+      "mustExclude": []
+    },
+    {
+      "id": "shortened-target",
+      "payload": "https://bit.ly/example-path",
+      "expectedSeverity": "warning",
+      "expectedAction": "confirm",
+      "mustInclude": ["host-shortener"],
+      "mustExclude": []
+    },
+    {
+      "id": "executable-download",
+      "payload": "https://download.example/update.apk",
+      "expectedSeverity": "critical",
+      "expectedAction": "confirm",
+      "mustInclude": ["download-dangerous-extension"],
+      "mustExclude": []
+    },
+    {
+      "id": "unsafe-scheme",
+      "payload": "javascript:alert(1)",
+      "expectedSeverity": "critical",
+      "expectedAction": "block",
+      "mustInclude": ["scheme-blocked"],
+      "mustExclude": []
+    },
+    {
+      "id": "nested-redirect",
+      "payload": "https://example.com/out?redirect=https%3A%2F%2Fevil.example%2Flogin",
+      "expectedSeverity": "critical",
+      "expectedAction": "confirm",
+      "mustInclude": ["redirect-nested-domain"],
+      "mustExclude": []
+    },
+    {
+      "id": "crypto-payment",
+      "payload": "bitcoin:bc1qexample?amount=0.01",
+      "expectedSeverity": "warning",
+      "expectedAction": "inspectOnly",
+      "mustInclude": ["payment-instruction"],
+      "mustExclude": ["scheme-blocked"]
+    },
+    {
+      "id": "otp-secret",
+      "payload": "otpauth://totp/Ejemplo?secret=SYNTHETIC123",
+      "expectedSeverity": "warning",
+      "expectedAction": "inspectOnly",
+      "mustInclude": ["sensitive-secret"],
+      "mustExclude": ["scheme-blocked"]
+    },
+    {
+      "id": "binary-opaque",
+      "payload": "binary-base64:AAH+/w==",
+      "expectedSeverity": "warning",
+      "expectedAction": "inspectOnly",
+      "mustInclude": ["opaque-binary-payload"],
+      "mustExclude": []
+    }
+  ]
+}

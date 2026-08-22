@@ -1,0 +1,33 @@
+{
+  "application": "RootCause QR Inspector",
+  "version": "0.1.0+1",
+  "releaseType": "source-preview",
+  "assembledAt": "2026-08-21",
+  "toolchainTarget": {
+    "flutter": "3.44.7",
+    "dart": ">=3.12.0 <4.0.0"
+  },
+  "provenance": {
+    "repository": "https://github.com/vladimiracunadev-create/universal-code-scanner",
+    "version": "1.1.0+2",
+    "commit": "c1f98781575bf8223b19ad8344fdfddeaccef373"
+  },
+  "validation": {
+    "offlineStructure": true,
+    "rootcauseContract": {
+      "valid": true,
+      "rules": 26,
+      "fixtures": 12,
+      "declaredDartFlutterCases": 77
+    },
+    "flutterRuntimeExecuted": false,
+    "reason": "Flutter and Dart were not installed in the assembly environment"
+  },
+  "releaseGateRequired": [
+    "flutter analyze --fatal-infos",
+    "flutter test",
+    "flutter build web --release",
+    "flutter build apk --release",
+    "physical-device validation"
+  ]
+}

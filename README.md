@@ -1,0 +1,293 @@
+# RootCause QR Inspector
+
+> Sensor local para observar códigos QR, explicar señales, derivar hipótesis y
+> exportar evidencia. Diagnóstico primero; intervención después.
+
+[![Version](https://img.shields.io/badge/version-0.1.0-blue.svg)](CHANGELOG.md)
+[![Flutter](https://img.shields.io/badge/Flutter-3.44.7-02569B.svg?logo=flutter)](pubspec.yaml)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![Telemetry](https://img.shields.io/badge/telemetry-zero-success.svg)](docs/PRIVACY_POLICY.md)
+[![CI](https://github.com/vladimiracunadev-create/rootcause-qr-inspector/actions/workflows/flutter-ci.yml/badge.svg)](https://github.com/vladimiracunadev-create/rootcause-qr-inspector/actions/workflows/flutter-ci.yml)
+[![GitHub Pages](https://img.shields.io/badge/PWA-GitHub%20Pages-12847b.svg?logo=github)](https://vladimiracunadev-create.github.io/rootcause-qr-inspector/)
+
+[Abrir landing y PWA](https://vladimiracunadev-create.github.io/rootcause-qr-inspector/) ·
+[Ver heurísticas](docs/rootcause/HEURISTICS.md) ·
+[Revisar límites](docs/rootcause/LIMITATIONS.md) ·
+[Política de seguridad](SECURITY.md)
+
+> **Estado de 0.1.0:** contrato y estructura validados offline. La CI pública
+> ejecuta análisis, 77 casos Dart/Flutter y builds para Android, web, iOS y
+> macOS. No se publican binarios hasta que esos gates estén en verde.
+
+## Qué es
+
+Un QR es una instrucción opaca: a simple vista no permite distinguir el sitio
+real de una copia ni un pago legítimo de una sustitución. RootCause QR
+Inspector captura la carga, la interpreta, registra hechos observables y aplica
+un motor local de 26 reglas con ids estables. Solo después ofrece una acción.
+
+El producto **no se llama “RootCause QR Phishing”** porque RootCause se organiza
+por superficie observable. El QR es la superficie; `qr-phishing-suspected` es
+una hipótesis derivada cuando la evidencia lo permite.
+
+No es antivirus, reputación web ni garantía de seguridad. No acusa a un dominio
+ni declara “enlace seguro”. Expone qué observó, qué no pudo comprobar y qué debe
+validar la persona.
+
+## De dónde nace
+
+Este repositorio toma el subsistema operativo de
+[Universal Code Scanner v1.1.0](https://github.com/vladimiracunadev-create/universal-code-scanner):
+
+- captura QR, 2D y códigos lineales mediante `mobile_scanner`;
+- parser extensible para URL, Wi-Fi, vCard, eventos, OTP, GS1, ISBN, EMVCo,
+  EPC/SEPA, Swiss QR, Bitcoin, Lightning, Ethereum y AAMVA;
+- cámara, imágenes y PDF por lotes;
+- historial e inventario cifrados con AES-256-GCM;
+- llave en Keychain/Keystore, bloqueo biométrico y modo temporal;
+- importación, recuperación, generador y exportaciones;
+- Flutter para Android, iOS, macOS y PWA.
+
+RootCause agrega un contrato de investigación, evidencia con SHA-256, reglas
+identificables, puntaje explicable, política de marcas y separación explícita
+entre hallazgos e hipótesis. La procedencia exacta está en
+[`docs/rootcause/PROVENANCE.md`](docs/rootcause/PROVENANCE.md); la selección de
+capacidades y sus cambios está en
+[`docs/rootcause/ADOPTION_MATRIX.md`](docs/rootcause/ADOPTION_MATRIX.md).
+
+## Flujo de decisión
+
+```mermaid
+flowchart TD
+    A["Cámara · imagen · PDF"] --> B["Captura y parser"]
+    B --> C["Observaciones locales"]
+    C --> D["26 reglas aplicables"]
+    D --> E["Hallazgos + evidencia"]
+    E --> F["Hipótesis separadas"]
+    F --> G{"Política de acción"}
+    G --> H["Permitir"]
+    G --> I["Confirmar"]
+    G --> J["Solo inspeccionar"]
+    G --> K["Bloquear URI ambigua"]
+```
+
+## Interfaz
+
+| Escaneo y explicación | Historial cifrado | Inventario local |
+|---|---|---|
+| ![Pantalla de escaneo](docs/images/capturas/escanear.png) | ![Historial de lecturas](docs/images/capturas/historial.png) | ![Sesión de inventario](docs/images/capturas/inventario.png) |
+
+También incluye generación de códigos, importación desde imagen/PDF,
+recuperación de registros aislados y ajustes de privacidad y accesibilidad.
+
+La acción se bloquea únicamente cuando la carga no puede entregarse de forma
+segura a otra aplicación: esquema no permitido, host inválido, caracteres de
+control o autoridad ambigua. Una URL crítica pero interpretable queda en
+**confirmación obligatoria**, acompañada de su evidencia.
+
+## Qué observa en 0.1.0
+
+| Familia | Hallazgos principales |
+|---|---|
+| Transporte | HTTP sin TLS, puerto inusual |
+| Identidad del host | Punycode, alfabetos mezclados, Unicode, IP literal, dominio profundo, punto final, densidad de guiones |
+| Destino | host vacío, red privada/local, acortador |
+| Ofuscación | usuario antes del host, controles invisibles, barras/espacios/@ ambiguos, separadores codificados, longitud excesiva |
+| Credenciales | rutas de acceso, verificación, cuenta, banco, contraseña o MFA |
+| Redirección | URL anidada que cambia de familia de host |
+| Descarga | extensiones ejecutables, scripts, instaladores y archivos comprimidos |
+| Política organizacional | token de una marca fuera de sus dominios permitidos |
+| Acciones sensibles | OTP, pagos interoperables y criptomonedas |
+| Contenido opaco | carga binaria no interpretable |
+
+La especificación exacta de los 26 ids, severidades, pesos, evidencia y falsos
+positivos está en [`docs/rootcause/HEURISTICS.md`](docs/rootcause/HEURISTICS.md).
+
+## Hallazgo no es hipótesis
+
+Ejemplo:
+
+```text
+Hallazgos observados
+  host-punycode              critical · 20
+  credential-lure-path       warning  · 8
+
+Hipótesis derivadas
+  qr-phishing-suspected
+  credential-theft-suspected
+```
+
+“Punycode” es un hecho sobre la carga. “Posible phishing” es una explicación a
+investigar. El motor nunca transforma la hipótesis en certeza.
+
+## Evidencia exportable
+
+El botón **Evidencia** crea `rootcause.evidence.qr.v1` con:
+
+- instante, origen y simbología;
+- SHA-256 de la carga y tamaño en bytes;
+- versión del motor, severidad, puntaje y decisión;
+- ids de hallazgo, confianza, categoría y hechos que los sustentan;
+- hipótesis derivadas;
+- reglas evaluadas y límites no evaluables;
+- checksum SHA-256 sobre JSON con claves ordenadas y enlace opcional al hash
+  anterior.
+
+La carga cruda, los campos interpretados y `effectiveUri` se omiten por defecto
+para que una consulta o credencial no reaparezca por una ruta secundaria.
+Incluirlos requiere una decisión explícita porque pueden contener OTP,
+contraseñas Wi-Fi, identidad, datos personales o instrucciones de pago.
+Contrato: [`schemas/rootcause-qr-evidence.schema.json`](schemas/rootcause-qr-evidence.schema.json).
+
+La interfaz 0.1.0 comparte únicamente la variante redactada. La inclusión de
+carga completa existe para integraciones mediante el parámetro explícito
+`includeRawPayload`; no hay un botón que la active por accidente.
+
+El checksum detecta cambios solo si se compara con una huella obtenida por una
+ruta confiable. No es firma digital, MAC ni prueba de quién creó el paquete; el
+campo `assurance` lo declara como `checksum-only-not-authenticated`.
+
+## Política de marcas y dominios
+
+El motor no incorpora bancos o empresas como una lista global que envejece. Una
+integración puede inyectar sus propios tokens y dominios autorizados mediante
+`QrAnalysisPolicy`:
+
+```json
+{
+  "trustedBrands": [
+    {
+      "id": "banco-ejemplo",
+      "tokens": ["banco-ejemplo"],
+      "allowedHosts": ["banco-ejemplo.example"]
+    }
+  ]
+}
+```
+
+El ejemplo completo usa únicamente dominios reservados `.example`:
+[`config/rootcause-qr-policy.example.json`](config/rootcause-qr-policy.example.json).
+La carga de ese archivo desde la interfaz todavía no está implementada en
+0.1.0; es un contrato para integradores, no una preferencia activa por defecto.
+
+## Arquitectura
+
+```text
+lib/
+├── core/
+│   ├── investigation/        contrato, política, motor, textos y export
+│   ├── security/             adaptador, cifrado y mantenimiento
+│   ├── database/             Sembast / IndexedDB y migraciones
+│   └── recovery/             aislamiento y recuperación de registros
+├── features/
+│   ├── scanner/              cámara y estado observable
+│   ├── result/               hallazgos, hipótesis, acciones y evidencia
+│   ├── history/              registros cifrados
+│   ├── inventory/            sesiones de conteo
+│   └── generator/            generación de códigos
+├── models/                   entidades inmutables y serializables
+├── services/                 parser, importación y exportación
+└── state/                    stores ChangeNotifier
+```
+
+Detalle: [`docs/rootcause/ARCHITECTURE.md`](docs/rootcause/ARCHITECTURE.md).
+
+## Inicio rápido
+
+Requiere Flutter 3.44.7 y Dart 3.12 o superior.
+
+```bash
+flutter pub get
+python3 tool/bootstrap.py --platforms android,web
+python3 tool/validate_structure.py --require-lock
+flutter analyze --fatal-infos
+flutter test
+flutter run
+```
+
+Las carpetas nativas se generan de forma reproducible con `tool/bootstrap.py`.
+En macOS puede generar también `ios,macos`.
+
+## Pruebas
+
+La suite heredada valida cifrado, migraciones, recuperación, parser, cámara,
+importación, almacenamiento y accesibilidad. La capa RootCause añade casos para
+Punycode, autoridad engañosa, esquemas ejecutables, URL anidada, entrega de APK,
+red privada, pagos, política de marca y evidencia alterada.
+
+```bash
+python3 tool/verify_rootcause_contract.py
+flutter test test/core/qr_investigation_engine_test.dart
+flutter test test/core/qr_evidence_exporter_test.dart
+```
+
+El estado comprobado y lo pendiente se declara en [`VALIDATION.md`](VALIDATION.md).
+
+La CI conserva como artefactos el APK de depuración, el build web, cobertura,
+SBOM CycloneDX, inventario de licencias y checksums. Estos artefactos de CI son
+evidencia técnica, no una release firmada para distribución.
+
+## Plataformas objetivo
+
+| Plataforma | Ruta | Limitación principal |
+|---|---|---|
+| Android 7+ | app Flutter nativa | APK inicial de evaluación; firma de publicación pendiente |
+| iOS 15.5+ | app Flutter nativa | compila sin firma; dispositivo físico pendiente |
+| macOS | app Flutter nativa | cámara/galería; dispositivo pendiente |
+| Web / PWA | Flutter Web | PDF local no soportado por el renderer actual |
+| Windows / Linux | PWA | no hay motor de cámara nativo en 0.1.0 |
+
+## Integración con la familia RootCause
+
+- `rootcause-mobile-inspector` puede correlacionar el instante del escaneo con
+  cambios y anomalías del dispositivo.
+- `rootcause-web-inspector` puede observar la navegación posterior, permisos,
+  sesión y descarga del navegador.
+- un futuro `rootcause-schema` puede consumir directamente
+  `rootcause.evidence.qr.v1` sin depender del texto español.
+- no se envían eventos automáticamente entre productos en 0.1.0; la integración
+  actual es por export explícito.
+
+Contrato de integración: [`docs/rootcause/INTEGRATION.md`](docs/rootcause/INTEGRATION.md).
+
+## Límites que no se ocultan
+
+El análisis local no puede conocer reputación, edad del dominio, DNS real,
+certificado servido, cadena de redirecciones ni si alguien pegó un QR falso
+encima del auténtico. Tampoco puede confirmar un beneficiario bancario sin una
+fuente independiente.
+
+Una lectura normal significa **“ninguna regla local aplicable disparó”**, no
+“sitio seguro”. Ver [`docs/rootcause/LIMITATIONS.md`](docs/rootcause/LIMITATIONS.md).
+
+## Privacidad
+
+Sin cuentas, publicidad, analítica ni telemetría. El análisis se ejecuta en el
+dispositivo. El historial y los inventarios se cifran antes de escribirse. OTP,
+Wi-Fi con contraseña y URLs con claves sensibles quedan fuera del historial
+automático. La evidencia solo sale cuando la persona la exporta.
+
+## Documentación
+
+| Documento | Contenido |
+|---|---|
+| [`docs/rootcause/ARCHITECTURE.md`](docs/rootcause/ARCHITECTURE.md) | Flujo causal, fronteras, contratos y decisiones |
+| [`docs/rootcause/HEURISTICS.md`](docs/rootcause/HEURISTICS.md) | Las 26 reglas, pesos, evidencia y falsos positivos |
+| [`docs/rootcause/LIMITATIONS.md`](docs/rootcause/LIMITATIONS.md) | Lo que el análisis local no puede concluir |
+| [`schemas/rootcause-qr-evidence.schema.json`](schemas/rootcause-qr-evidence.schema.json) | Contrato JSON de evidencia exportable |
+| [`docs/security/THREAT_MODEL.md`](docs/security/THREAT_MODEL.md) | Activos, amenazas, controles y riesgo residual |
+| [`VALIDATION.md`](VALIDATION.md) | Qué se verificó y qué sigue pendiente |
+| [`docs/RELEASE.md`](docs/RELEASE.md) | Gate reproducible de publicación |
+| [`docs/rootcause/PROVENANCE.md`](docs/rootcause/PROVENANCE.md) | Procedencia y relación con el proyecto base |
+
+## Seguridad y colaboración
+
+Los reportes de vulnerabilidad deben seguir [`SECURITY.md`](SECURITY.md) y no
+deben incluir QR, OTP, credenciales ni documentos reales. Para proponer cambios,
+consulta [`CONTRIBUTING.md`](CONTRIBUTING.md); cada cambio de una regla requiere
+actualizar motor, textos, pruebas, documentación y contrato de evidencia.
+
+## Licencia
+
+MIT · © 2026 Vladimir Acuña. Se conserva la procedencia del código derivado de
+Universal Code Scanner en el historial documental y en la licencia.

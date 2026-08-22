@@ -1,0 +1,18 @@
+{
+  "schema": "rootcause.qr-policy.v1",
+  "maxUrlLength": 240,
+  "maxDomainLabels": 5,
+  "allowPrivateTargets": false,
+  "trustedBrands": [
+    {
+      "id": "banco-ejemplo",
+      "tokens": ["banco-ejemplo", "bancoejemplo"],
+      "allowedHosts": ["banco-ejemplo.example"]
+    },
+    {
+      "id": "municipio-ejemplo",
+      "tokens": ["municipio-ejemplo"],
+      "allowedHosts": ["municipio-ejemplo.example"]
+    }
+  ]
+}
