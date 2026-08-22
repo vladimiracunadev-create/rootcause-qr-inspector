@@ -24,19 +24,18 @@
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Telemetry](https://img.shields.io/badge/telemetry-zero-success.svg)](docs/PRIVACY_POLICY.md)
 [![CI](https://github.com/vladimiracunadev-create/rootcause-qr-inspector/actions/workflows/flutter-ci.yml/badge.svg)](https://github.com/vladimiracunadev-create/rootcause-qr-inspector/actions/workflows/flutter-ci.yml)
-[![GitHub Pages](https://img.shields.io/badge/PWA-GitHub%20Pages-12847b.svg?logo=github)](https://vladimiracunadev-create.github.io/rootcause-qr-inspector/)
+[![Landing](https://img.shields.io/badge/landing-GitHub%20Pages-12847b.svg?logo=github)](https://vladimiracunadev-create.github.io/rootcause-qr-inspector/)
 
-🔍 **[Inspeccionar un QR ahora →](https://vladimiracunadev-create.github.io/rootcause-qr-inspector/app/)** ·
 📱 **[Descargar Android →](https://github.com/vladimiracunadev-create/rootcause-qr-inspector/releases/latest/download/rootcause-qr-inspector-v0.1.0-android.apk)** ·
 🌐 **[Página del producto →](https://vladimiracunadev-create.github.io/rootcause-qr-inspector/)** ·
 📘 **[Manual de usuario →](docs/MANUAL_USUARIO.md)**
 
 ---
 
-**RootCause QR Inspector es el sensor de la familia RootCause para la superficie
-QR:** una aplicación de seguridad que convierte una instrucción visual opaca en
-hechos observables, hipótesis separadas, una decisión controlada y evidencia
-exportable. Todo se analiza en el dispositivo: **telemetría cero**.
+**RootCause QR Inspector es una app Android de la familia RootCause para la
+superficie QR:** convierte una instrucción visual opaca en hechos observables,
+hipótesis separadas, una decisión controlada y evidencia exportable. Todo se
+analiza en el dispositivo: **telemetría cero**.
 
 > **Diagnóstico primero. Intervención después.**
 
@@ -44,11 +43,10 @@ No es un lector que abre enlaces con una advertencia añadida. Es un **sensor de
 apoyo a la decisión**: nunca ejecuta la carga al detectarla, explica por qué un
 QR puede ser peligroso y deja que la persona decida después de ver la evidencia.
 
-> **Estado de 0.1.0:** contrato y estructura validados; CI pública en verde con
-> análisis, 77 casos Dart/Flutter y builds para Android, web, iOS simulador y
-> macOS. Android dispone además de APK instalable de evaluación, checksum y
-> procedencia pública; la firma estable, la matriz física amplia y la
-> publicación en tiendas siguen pendientes.
+> **Estado de 0.1.0:** producto publicado como **APK Android** en GitHub
+> Releases, con checksum SHA-256 y verificación técnica del paquete APK. La
+> firma comercial de tienda, Play Store/App Store, iOS, macOS y una PWA usable
+> como producto final siguen pendientes.
 
 ## 🔍 Qué problema resuelve
 
@@ -74,8 +72,8 @@ validar la persona.
 | ¿Cambia el destinatario de un pago? | Mantiene pagos en confirmación y exige validar beneficiario e importe fuera del QR |
 | ¿Puedo compartir lo observado sin filtrar el secreto? | Exporta evidencia redactada con SHA-256, ids estables y límites explícitos |
 
-> 🛡️ **¿Tienes un QR dudoso?** [Inspecciónalo en la PWA](https://vladimiracunadev-create.github.io/rootcause-qr-inspector/app/)
-> o carga una imagen/PDF en la app nativa. El análisis no demuestra que un
+> 🛡️ **¿Tienes un QR dudoso?** Descarga el APK Android publicado o carga una
+> imagen/PDF en la app. El análisis no demuestra que un
 > destino sea seguro: reduce la opacidad y muestra el peligro observable antes
 > de actuar. Cobertura exacta → [`docs/DETECCION_AMENAZAS.md`](docs/DETECCION_AMENAZAS.md)
 
@@ -103,7 +101,7 @@ Este repositorio toma el subsistema operativo de
 - historial e inventario cifrados con AES-256-GCM;
 - llave en Keychain/Keystore, bloqueo biométrico y modo temporal;
 - importación, recuperación, generador y exportaciones;
-- Flutter para Android, iOS, macOS y PWA.
+- base Flutter con entrega publicada solo para Android en 0.1.0.
 
 RootCause agrega un contrato de investigación, evidencia con SHA-256, reglas
 identificables, puntaje explicable, política de marcas y separación explícita
@@ -156,9 +154,11 @@ mockups ni imágenes generadas.
 | La app importó el QR, separó lo observado de lo no comprobado y mostró `0/100` sin llamarlo seguro. | El generador produjo localmente un QR para `https://example.com`. | Ajustes de apariencia, inspección, privacidad y seguridad disponibles. |
 
 Comprobación del artefacto público: `adb install -r` devolvió `Success`, Android
-abrió `dev.vladimiracuna.rootcause_qr_inspector`, `apksigner` verificó APK
-Signature Scheme v2 y el SHA-256 local coincidió con el publicado:
+abrió `dev.vladimiracuna.rootcause_qr_inspector`, `apksigner` verificó la firma
+técnica del APK con Signature Scheme v2 y el SHA-256 local coincidió con el publicado:
 `78ed8e2194488029218f73aa17fdfa0fb9075e1d0dd110db1981b16c4418c51b`.
+Esto no equivale a firma comercial pagada, Play App Signing, notarización de
+Apple ni firma de instalador de escritorio; esas firmas siguen en trámite.
 La cámara virtual del AVD no entregó sensor y la app mostró un error recuperable;
 la importación desde Photo Picker sí completó el análisis de extremo a extremo.
 
@@ -300,19 +300,20 @@ flutter test test/core/qr_evidence_exporter_test.dart
 
 El estado comprobado y lo pendiente se declara en [`VALIDATION.md`](VALIDATION.md).
 
-La CI conserva como artefactos el APK instalable de release, el build web,
-cobertura, SBOM CycloneDX, inventario de licencias y checksums. El tag `v0.1.0`
-publica además el APK y su SHA-256 en un GitHub Release verificable.
+La CI conserva artefactos técnicos de verificación —cobertura, SBOM CycloneDX,
+inventario de licencias y checksums— y el APK instalable de release. El tag
+`v0.1.0` publica el APK Android y su SHA-256 en un GitHub Release verificable.
+Otros targets que compile Flutter no se presentan como producto publicado.
 
-## 📱 Plataformas objetivo
+## 📱 Plataformas y firmas
 
-| Plataforma | Ruta | Limitación principal |
+| Plataforma | Estado 0.1.0 | Limitación principal |
 |---|---|---|
-| Android 7+ | app Flutter nativa | [APK v0.1.0 público](https://github.com/vladimiracunadev-create/rootcause-qr-inspector/releases/tag/v0.1.0); Play Store pendiente |
-| iOS 15.5+ | app Flutter nativa | compila para simulador en CI; dispositivo físico y firma pendientes |
-| macOS | app Flutter nativa | cámara/galería; dispositivo pendiente |
-| Web / PWA | Flutter Web | PDF local no soportado por el renderer actual |
-| Windows / Linux | PWA | no hay motor de cámara nativo en 0.1.0 |
+| Android 7+ | **producto publicado** como [APK v0.1.0](https://github.com/vladimiracunadev-create/rootcause-qr-inspector/releases/tag/v0.1.0) | SHA-256 publicado y firma técnica APK v2; firma comercial/Play Store en trámite |
+| iOS | no publicado como producto | firma, tienda y validación en dispositivo pendientes |
+| macOS | no publicado como producto | firma/notarización y validación en dispositivo pendientes |
+| Web / PWA | no publicada como producto | la landing existe; app web usable como entrega final pendiente |
+| Windows / Linux | no publicado como producto | sin paquete nativo en 0.1.0 |
 
 ## 📦 Estado de entrega del repositorio
 
@@ -321,13 +322,14 @@ publica además el APK y su SHA-256 en un GitHub Release verificable.
 - fuente Flutter, lockfile y generación reproducible de proyectos nativos;
 - motor de 26 reglas, contrato JSON, fixtures y pruebas unitarias/widgets;
 - historial e inventario cifrados, modo temporal y recuperación;
-- CI multi-plataforma, SBOM, licencias, checksums, landing y PWA;
-- GitHub Release `v0.1.0` con APK Android instalable y procedencia atestada;
+- CI, SBOM, licencias, checksums y landing;
+- GitHub Release `v0.1.0` con APK Android instalable y SHA-256 publicado;
 - documentación de arquitectura, operación, amenazas, privacidad y límites.
 
 ### ❌ Todavía no incluye
 
-- publicación en Play Store/App Store y paquetes instalables para iOS/macOS;
+- firma comercial, publicación en Play Store/App Store y paquetes instalables para iOS/macOS;
+- PWA usable como producto final;
 - validación completa de cámara, biometría y ciclo de vida en dispositivo físico;
 - reputación, DNS, certificados o seguimiento de redirecciones en red;
 - editor visual de política organizacional ni correlación automática entre
