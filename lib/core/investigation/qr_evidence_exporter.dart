@@ -52,7 +52,7 @@ abstract final class QrEvidenceExporter {
       'integrity': <String, Object?>{
         'algorithm': 'SHA-256',
         'assurance': 'checksum-only-not-authenticated',
-        if (previousEvidenceHash != null) 'previousEvidenceHash': previousEvidenceHash,
+        'previousEvidenceHash': ?previousEvidenceHash,
       },
     };
     final String bundleHash =

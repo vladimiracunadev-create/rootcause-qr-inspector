@@ -19,7 +19,7 @@
 > ejecuta análisis, 77 casos Dart/Flutter y builds para Android, web, iOS y
 > macOS. No se publican binarios hasta que esos gates estén en verde.
 
-## Qué es
+## 🔍 Qué problema resuelve
 
 Un QR es una instrucción opaca: a simple vista no permite distinguir el sitio
 real de una copia ni un pago legítimo de una sustitución. RootCause QR
@@ -34,7 +34,19 @@ No es antivirus, reputación web ni garantía de seguridad. No acusa a un domini
 ni declara “enlace seguro”. Expone qué observó, qué no pudo comprobar y qué debe
 validar la persona.
 
-## De dónde nace
+## 🛡️ Principios no negociables
+
+- **Interpretar antes de actuar:** ninguna carga se abre automáticamente.
+- **Hechos antes que hipótesis:** una propiedad observable no se presenta como
+  intención, atribución ni veredicto.
+- **Privacidad por defecto:** análisis local, persistencia selectiva, evidencia
+  redactada y telemetría cero.
+- **Acción humana explícita:** incluso una URI interpretable puede requerir
+  confirmación; pagos y credenciales necesitan validación independiente.
+- **Claims comprobables:** reglas, evidencia, cifrado, builds y límites apuntan a
+  código, tests o documentación; lo pendiente se declara como pendiente.
+
+## 🧬 De dónde nace
 
 Este repositorio toma el subsistema operativo de
 [Universal Code Scanner v1.1.0](https://github.com/vladimiracunadev-create/universal-code-scanner):
@@ -55,7 +67,7 @@ entre hallazgos e hipótesis. La procedencia exacta está en
 capacidades y sus cambios está en
 [`docs/rootcause/ADOPTION_MATRIX.md`](docs/rootcause/ADOPTION_MATRIX.md).
 
-## Flujo de decisión
+## 🧠 Del QR a una decisión
 
 ```mermaid
 flowchart TD
@@ -71,7 +83,7 @@ flowchart TD
     G --> K["Bloquear URI ambigua"]
 ```
 
-## Interfaz
+## 📸 Interfaz
 
 | Escaneo y explicación | Historial cifrado | Inventario local |
 |---|---|---|
@@ -85,7 +97,7 @@ segura a otra aplicación: esquema no permitido, host inválido, caracteres de
 control o autoridad ambigua. Una URL crítica pero interpretable queda en
 **confirmación obligatoria**, acompañada de su evidencia.
 
-## Qué observa en 0.1.0
+## 🛡️ Las señales que observa en 0.1.0
 
 | Familia | Hallazgos principales |
 |---|---|
@@ -103,7 +115,7 @@ control o autoridad ambigua. Una URL crítica pero interpretable queda en
 La especificación exacta de los 26 ids, severidades, pesos, evidencia y falsos
 positivos está en [`docs/rootcause/HEURISTICS.md`](docs/rootcause/HEURISTICS.md).
 
-## Hallazgo no es hipótesis
+## 🔬 Hallazgo no es hipótesis
 
 Ejemplo:
 
@@ -120,7 +132,7 @@ Hipótesis derivadas
 “Punycode” es un hecho sobre la carga. “Posible phishing” es una explicación a
 investigar. El motor nunca transforma la hipótesis en certeza.
 
-## Evidencia exportable
+## 🧾 Evidencia exportable
 
 El botón **Evidencia** crea `rootcause.evidence.qr.v1` con:
 
@@ -147,7 +159,7 @@ El checksum detecta cambios solo si se compara con una huella obtenida por una
 ruta confiable. No es firma digital, MAC ni prueba de quién creó el paquete; el
 campo `assurance` lo declara como `checksum-only-not-authenticated`.
 
-## Política de marcas y dominios
+## 🏷️ Política de marcas y dominios
 
 El motor no incorpora bancos o empresas como una lista global que envejece. Una
 integración puede inyectar sus propios tokens y dominios autorizados mediante
@@ -170,7 +182,7 @@ El ejemplo completo usa únicamente dominios reservados `.example`:
 La carga de ese archivo desde la interfaz todavía no está implementada en
 0.1.0; es un contrato para integradores, no una preferencia activa por defecto.
 
-## Arquitectura
+## 📐 Arquitectura
 
 ```text
 lib/
@@ -192,7 +204,7 @@ lib/
 
 Detalle: [`docs/rootcause/ARCHITECTURE.md`](docs/rootcause/ARCHITECTURE.md).
 
-## Inicio rápido
+## ⚡ Inicio rápido
 
 Requiere Flutter 3.44.7 y Dart 3.12 o superior.
 
@@ -208,7 +220,7 @@ flutter run
 Las carpetas nativas se generan de forma reproducible con `tool/bootstrap.py`.
 En macOS puede generar también `ios,macos`.
 
-## Pruebas
+## 🚀 Validación automática
 
 La suite heredada valida cifrado, migraciones, recuperación, parser, cámara,
 importación, almacenamiento y accesibilidad. La capa RootCause añade casos para
@@ -227,7 +239,7 @@ La CI conserva como artefactos el APK de depuración, el build web, cobertura,
 SBOM CycloneDX, inventario de licencias y checksums. Estos artefactos de CI son
 evidencia técnica, no una release firmada para distribución.
 
-## Plataformas objetivo
+## 📱 Plataformas objetivo
 
 | Plataforma | Ruta | Limitación principal |
 |---|---|---|
@@ -237,7 +249,25 @@ evidencia técnica, no una release firmada para distribución.
 | Web / PWA | Flutter Web | PDF local no soportado por el renderer actual |
 | Windows / Linux | PWA | no hay motor de cámara nativo en 0.1.0 |
 
-## Integración con la familia RootCause
+## 📦 Estado de entrega del repositorio
+
+### ✅ Incluye
+
+- fuente Flutter, lockfile y generación reproducible de proyectos nativos;
+- motor de 26 reglas, contrato JSON, fixtures y pruebas unitarias/widgets;
+- historial e inventario cifrados, modo temporal y recuperación;
+- CI multi-plataforma, SBOM, licencias, checksums, landing y PWA;
+- documentación de arquitectura, operación, amenazas, privacidad y límites.
+
+### ❌ Todavía no incluye
+
+- APK/IPA/app firmados como release para personas usuarias;
+- validación completa de cámara, biometría y ciclo de vida en dispositivo físico;
+- reputación, DNS, certificados o seguimiento de redirecciones en red;
+- editor visual de política organizacional ni correlación automática entre
+  productos RootCause.
+
+## 👥 Integración con la familia RootCause
 
 - `rootcause-mobile-inspector` puede correlacionar el instante del escaneo con
   cambios y anomalías del dispositivo.
@@ -250,7 +280,7 @@ evidencia técnica, no una release firmada para distribución.
 
 Contrato de integración: [`docs/rootcause/INTEGRATION.md`](docs/rootcause/INTEGRATION.md).
 
-## Límites que no se ocultan
+## ⚠️ Limitaciones honestas
 
 El análisis local no puede conocer reputación, edad del dominio, DNS real,
 certificado servido, cadena de redirecciones ni si alguien pegó un QR falso
@@ -260,34 +290,45 @@ fuente independiente.
 Una lectura normal significa **“ninguna regla local aplicable disparó”**, no
 “sitio seguro”. Ver [`docs/rootcause/LIMITATIONS.md`](docs/rootcause/LIMITATIONS.md).
 
-## Privacidad
+## 🔒 Privacidad verificable
 
 Sin cuentas, publicidad, analítica ni telemetría. El análisis se ejecuta en el
 dispositivo. El historial y los inventarios se cifran antes de escribirse. OTP,
 Wi-Fi con contraseña y URLs con claves sensibles quedan fuera del historial
 automático. La evidencia solo sale cuando la persona la exporta.
 
-## Documentación
+## 📚 Rutas de lectura
 
 | Documento | Contenido |
 |---|---|
+| [`docs/INDEX.md`](docs/INDEX.md) | Índice por perfil y ruta de lectura recomendada |
+| [`docs/MANUAL_USUARIO.md`](docs/MANUAL_USUARIO.md) | Uso de escaneo, resultados, historial, inventario y ajustes |
+| [`docs/DETECCION_AMENAZAS.md`](docs/DETECCION_AMENAZAS.md) | Cobertura local por amenaza y fronteras de interpretación |
 | [`docs/rootcause/ARCHITECTURE.md`](docs/rootcause/ARCHITECTURE.md) | Flujo causal, fronteras, contratos y decisiones |
 | [`docs/rootcause/HEURISTICS.md`](docs/rootcause/HEURISTICS.md) | Las 26 reglas, pesos, evidencia y falsos positivos |
 | [`docs/rootcause/LIMITATIONS.md`](docs/rootcause/LIMITATIONS.md) | Lo que el análisis local no puede concluir |
 | [`schemas/rootcause-qr-evidence.schema.json`](schemas/rootcause-qr-evidence.schema.json) | Contrato JSON de evidencia exportable |
 | [`docs/security/THREAT_MODEL.md`](docs/security/THREAT_MODEL.md) | Activos, amenazas, controles y riesgo residual |
+| [`docs/CI_GITHUB.md`](docs/CI_GITHUB.md) | Gates, permisos, artefactos y réplica local de CI/Pages |
+| [`docs/FAMILIA_ROOTCAUSE.md`](docs/FAMILIA_ROOTCAUSE.md) | Lugar específico del sensor QR dentro de la familia |
+| [`docs/ROADMAP.md`](docs/ROADMAP.md) | Estado, candidatos de evolución y no objetivos |
 | [`VALIDATION.md`](VALIDATION.md) | Qué se verificó y qué sigue pendiente |
 | [`docs/RELEASE.md`](docs/RELEASE.md) | Gate reproducible de publicación |
 | [`docs/rootcause/PROVENANCE.md`](docs/rootcause/PROVENANCE.md) | Procedencia y relación con el proyecto base |
 
-## Seguridad y colaboración
+## 🤝 Seguridad y colaboración
 
 Los reportes de vulnerabilidad deben seguir [`SECURITY.md`](SECURITY.md) y no
 deben incluir QR, OTP, credenciales ni documentos reales. Para proponer cambios,
 consulta [`CONTRIBUTING.md`](CONTRIBUTING.md); cada cambio de una regla requiere
 actualizar motor, textos, pruebas, documentación y contrato de evidencia.
 
-## Licencia
+## 📄 Licencia
 
 MIT · © 2026 Vladimir Acuña. Se conserva la procedencia del código derivado de
 Universal Code Scanner en el historial documental y en la licencia.
+
+## ✍️ Autor
+
+[Vladimir Acuña](https://github.com/vladimiracunadev-create) · Full-Stack
+Developer & Educator.

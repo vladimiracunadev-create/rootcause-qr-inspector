@@ -56,6 +56,18 @@ def check_yaml() -> None:
             fail(f"YAML inválido en {relative}: {exc}")
 
 
+def check_action_pins() -> None:
+    """Third-party Actions must resolve to immutable commit SHAs."""
+    pattern = re.compile(r"^\s*-?\s*uses:\s*[^@\s]+@([^\s#]+)", re.MULTILINE)
+    for path in sorted((ROOT / ".github" / "workflows").glob("*.y*ml")):
+        for reference in pattern.findall(path.read_text(encoding="utf-8")):
+            if not re.fullmatch(r"[0-9a-f]{40}", reference):
+                fail(
+                    "Action no fijada a commit SHA en "
+                    f"{path.relative_to(ROOT)}: @{reference}"
+                )
+
+
 def check_imports() -> None:
     pattern = re.compile(r"import 'package:rootcause_qr_inspector/([^']+)';|export 'package:rootcause_qr_inspector/([^']+)';")
     for path in (ROOT / "lib").rglob("*.dart"):
@@ -205,6 +217,7 @@ def main() -> None:
     parser.add_argument("--require-lock", action="store_true")
     args = parser.parse_args()
     check_yaml()
+    check_action_pins()
     check_imports()
     check_absolute_paths()
     check_version()

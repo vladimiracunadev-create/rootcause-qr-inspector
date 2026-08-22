@@ -18,13 +18,13 @@
     },
     {
       "path": ".github/workflows/deploy-landing.yml",
-      "size": 2881,
-      "sha256": "def2ef35e34c16b510eb86d477cd9e6b05ffb13e864e54b3f5b657737fd2bfb2"
+      "size": 3164,
+      "sha256": "895db1f0145dd269a25a809138879969d4a1095187be81d274463ee1a3952794"
     },
     {
       "path": ".github/workflows/flutter-ci.yml",
-      "size": 2979,
-      "sha256": "fff0afb0116ea76173feaa977aeaba61063e3c23865f1a3ea347e31da8fa8753"
+      "size": 3310,
+      "sha256": "00458347279115a5c45d3a258853681a61d5c8b74a92d7f998c1725100222966"
     },
     {
       "path": ".gitignore",
@@ -72,6 +72,26 @@
       "sha256": "a8747f53f986df890bede3e6cf536b1c8cef16ee8c5208873aec35ad887b1778"
     },
     {
+      "path": "docs/CATALOGO_PRODUCTO.md",
+      "size": 2967,
+      "sha256": "bd3bb99114d58918f8d50616dbc2892db83b3e77c98893491b588384423dda67"
+    },
+    {
+      "path": "docs/CI_GITHUB.md",
+      "size": 2196,
+      "sha256": "0fb1bf13049545af7316214548ef69ee29c4822bf5387f3fcefdedf5a8d0cafc"
+    },
+    {
+      "path": "docs/DETECCION_AMENAZAS.md",
+      "size": 2412,
+      "sha256": "7ae727dccd09a0812f54b20e69e8bfb3e3bd1aaf601e739cd562562fdb66acf2"
+    },
+    {
+      "path": "docs/FAMILIA_ROOTCAUSE.md",
+      "size": 2980,
+      "sha256": "5e28569672e70f43378d24ea6bc2236906d4758929a32f4709f6489eb835ed8d"
+    },
+    {
       "path": "docs/images/arquitectura.svg",
       "size": 4987,
       "sha256": "b369621a1a2f599da1786b95968fb13aed4b17b8f86dafd7528cf254965639eb"
@@ -105,6 +125,16 @@
       "path": "docs/images/flujo-seguridad.svg",
       "size": 4505,
       "sha256": "f13a1d8d029eb67ab4db96f2b5a6ec423c638ed72af147092a257e6e035c2bcd"
+    },
+    {
+      "path": "docs/INDEX.md",
+      "size": 3038,
+      "sha256": "c89febfa652f661238194fd09ef9c3cead146622143f2f1a72763d43cb1875b3"
+    },
+    {
+      "path": "docs/MANUAL_USUARIO.md",
+      "size": 2607,
+      "sha256": "738f9ce0df02db468ab94cf14c64e6332e103ebf65cd34adaff59375a0a1b271"
     },
     {
       "path": "docs/PRIVACY_POLICY.md",
@@ -165,6 +195,11 @@
       "path": "docs/RELEASE.md",
       "size": 1569,
       "sha256": "92fe557be0df278be49ef85d476a53d46443c06a86b040e141a70fcf057b4698"
+    },
+    {
+      "path": "docs/ROADMAP.md",
+      "size": 1696,
+      "sha256": "b281c5ff9935ca0bb8ae81bbc9e95769aa50b27722a87320557b7340ea2e1ae6"
     },
     {
       "path": "docs/rootcause/ADOPTION_MATRIX.md",
@@ -232,6 +267,11 @@
       "sha256": "9fe614baa0114d0a9b4431c01e7ecdcaa7386577fa1120b86e26ea3fe72571dd"
     },
     {
+      "path": "docs/TROUBLESHOOTING.md",
+      "size": 2643,
+      "sha256": "59ce0ffc8a121665ccdbdb53ec7898a77355eb1fc45ec874b7d95d2c13d6c1bc"
+    },
+    {
       "path": "fixtures/qr/manifest.json",
       "size": 3154,
       "sha256": "bf7e8dd10cd9f6752e1cbce9a4db5a3403b6f2ba345b87576d9bfa40ddd130b2"
@@ -258,8 +298,8 @@
     },
     {
       "path": "landing/index.html",
-      "size": 17808,
-      "sha256": "45f568083c7e85a273cb9b07cbb80e3573d1e5c64b10846fecc54100b5bddf9c"
+      "size": 18768,
+      "sha256": "f548fb82249889d1a302657ca4ea78de84fb55675b2fcc9eb091fd0f74260a71"
     },
     {
       "path": "landing/privacidad.html",
@@ -343,8 +383,8 @@
     },
     {
       "path": "lib/core/investigation/qr_evidence_exporter.dart",
-      "size": 4403,
-      "sha256": "ddc0da56adf1a6429d8d70db60a98cf51c25157c0767211a005a067a90692f7f"
+      "size": 4370,
+      "sha256": "d3ba0803ba31656d7f432f8a261d052e857d00adabe21115f2c5a178c509d76e"
     },
     {
       "path": "lib/core/investigation/qr_finding_text.dart",
@@ -613,8 +653,8 @@
     },
     {
       "path": "README.md",
-      "size": 13162,
-      "sha256": "cb6e6da9378502693d19051e158a4eddbb3fd487bf8681538e2cace00463e9cd"
+      "size": 15501,
+      "sha256": "3d8c83b184c3731711aae9ebdb9565e1d70bd371bdb2ec3190bb1c772de5e77a"
     },
     {
       "path": "RELEASE_SOURCE.json",
@@ -873,8 +913,8 @@
     },
     {
       "path": "tool/validate_structure.py",
-      "size": 8305,
-      "sha256": "6757ca2090214a235c9b64dc40242b51e59e4c34052407ecab121cc0e1280485"
+      "size": 8879,
+      "sha256": "782f0f5ff49e4d12e57a1ae310de1e23d9d31396781f5ad47b321f7555e4871f"
     },
     {
       "path": "tool/verify_rootcause_contract.py",
