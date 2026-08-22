@@ -1,6 +1,13 @@
 # Manual de usuario
 
-## Antes de escanear
+## Inspeccionar un QR ahora
+
+La PWA pública está disponible en
+[`https://vladimiracunadev-create.github.io/rootcause-qr-inspector/app/`](https://vladimiracunadev-create.github.io/rootcause-qr-inspector/app/).
+En móvil y escritorio, la aplicación nativa añade cámara, imágenes y PDF según
+la plataforma.
+
+## Antes de inspeccionar
 
 RootCause QR Inspector interpreta antes de actuar. Aun así, evita usar datos
 reales durante una prueba y valida por un canal independiente cualquier pago,
@@ -9,7 +16,7 @@ una regla local aplicable.
 
 ## Flujo recomendado
 
-1. Abre **Escanear** y concede cámara solo si usarás captura en vivo.
+1. Abre **Inspeccionar** y concede cámara solo si usarás captura en vivo.
 2. Enmarca un código o elige una imagen/PDF iniciado por ti.
 3. Espera el estado visible de lectura; el tono confirma una captura, no la
    seguridad del contenido.
@@ -31,10 +38,11 @@ una regla local aplicable.
 
 ## Secciones de la aplicación
 
-### Escanear
+### Inspeccionar
 
-Captura con cámara o importa imágenes y PDF compatibles. Mantiene visible el
-estado, evita acciones silenciosas y abre la hoja de resultado tras interpretar.
+Es la superficie principal del producto de seguridad. Captura con cámara o
+importa imágenes y PDF compatibles, mantiene visible el estado, evita acciones
+silenciosas y abre el resultado de seguridad tras interpretar.
 
 ### Inventario
 

@@ -1,7 +1,23 @@
 # RootCause QR Inspector
 
-> Sensor local para observar códigos QR, explicar señales, derivar hipótesis y
-> exportar evidencia. Diagnóstico primero; intervención después.
+```text
+╔═══════════════════════════════════════════════════════════════════════════════════╗
+║                                                                                   ║
+║  ██████╗  ██████╗  ██████╗ ████████╗ ██████╗  █████╗ ██╗   ██╗███████╗███████╗    ║
+║  ██╔══██╗██╔═══██╗██╔═══██╗╚══██╔══╝██╔════╝ ██╔══██╗██║   ██║██╔════╝██╔════╝    ║
+║  ██████╔╝██║   ██║██║   ██║   ██║   ██║      ███████║██║   ██║███████╗█████╗      ║
+║  ██╔══██╗██║   ██║██║   ██║   ██║   ██║      ██╔══██║██║   ██║╚════██║██╔══╝      ║
+║  ██║  ██║╚██████╔╝╚██████╔╝   ██║   ╚██████╗ ██║  ██║╚██████╔╝███████║███████╗    ║
+║  ╚═╝  ╚═╝ ╚═════╝  ╚═════╝    ╚═╝    ╚═════╝ ╚═╝  ╚═╝ ╚═════╝╚══════╝╚══════╝     ║
+║                                                                                   ║
+║                         Q R   I N S P E C T O R                                   ║
+║            Sensor de seguridad QR · Flutter · local-first · v0.1.0                ║
+╚═══════════════════════════════════════════════════════════════════════════════════╝
+```
+
+<p align="center">
+  <img src="assets/launcher/icon-1024.png" width="112" alt="Icono RootCause QR Inspector: escudo con señal QR" />
+</p>
 
 [![Version](https://img.shields.io/badge/version-0.1.0-blue.svg)](CHANGELOG.md)
 [![Flutter](https://img.shields.io/badge/Flutter-3.44.7-02569B.svg?logo=flutter)](pubspec.yaml)
@@ -10,10 +26,22 @@
 [![CI](https://github.com/vladimiracunadev-create/rootcause-qr-inspector/actions/workflows/flutter-ci.yml/badge.svg)](https://github.com/vladimiracunadev-create/rootcause-qr-inspector/actions/workflows/flutter-ci.yml)
 [![GitHub Pages](https://img.shields.io/badge/PWA-GitHub%20Pages-12847b.svg?logo=github)](https://vladimiracunadev-create.github.io/rootcause-qr-inspector/)
 
-[Abrir landing y PWA](https://vladimiracunadev-create.github.io/rootcause-qr-inspector/) ·
-[Ver heurísticas](docs/rootcause/HEURISTICS.md) ·
-[Revisar límites](docs/rootcause/LIMITATIONS.md) ·
-[Política de seguridad](SECURITY.md)
+🔍 **[Inspeccionar un QR ahora →](https://vladimiracunadev-create.github.io/rootcause-qr-inspector/app/)** ·
+🌐 **[Página del producto →](https://vladimiracunadev-create.github.io/rootcause-qr-inspector/)** ·
+📘 **[Manual de usuario →](docs/MANUAL_USUARIO.md)**
+
+---
+
+**RootCause QR Inspector es el sensor de la familia RootCause para la superficie
+QR:** una aplicación de seguridad que convierte una instrucción visual opaca en
+hechos observables, hipótesis separadas, una decisión controlada y evidencia
+exportable. Todo se analiza en el dispositivo: **telemetría cero**.
+
+> **Diagnóstico primero. Intervención después.**
+
+No es un lector que abre enlaces con una advertencia añadida. Es un **sensor de
+apoyo a la decisión**: nunca ejecuta la carga al detectarla, explica por qué un
+QR puede ser peligroso y deja que la persona decida después de ver la evidencia.
 
 > **Estado de 0.1.0:** contrato y estructura validados; CI pública en verde con
 > análisis, 77 casos Dart/Flutter y builds para Android, web, iOS simulador y
@@ -33,6 +61,20 @@ una hipótesis derivada cuando la evidencia lo permite.
 No es antivirus, reputación web ni garantía de seguridad. No acusa a un dominio
 ni declara “enlace seguro”. Expone qué observó, qué no pudo comprobar y qué debe
 validar la persona.
+
+| Pregunta de seguridad | Cómo RootCause ayuda |
+|---|---|
+| ¿Adónde intenta llevarme este QR? | Muestra esquema, host, ruta y campos interpretados **sin abrirlos** |
+| ¿El dominio está ofuscado o imita una marca? | Detecta Punycode, Unicode mixto, `userinfo`, subdominios profundos y desajustes de política |
+| ¿Puede buscar mis credenciales? | Señala rutas de acceso, verificación, contraseña, banco o MFA y deriva la hipótesis por separado |
+| ¿Descarga una app, script o archivo ejecutable? | Clasifica extensiones peligrosas y recomienda inspección independiente |
+| ¿Cambia el destinatario de un pago? | Mantiene pagos en confirmación y exige validar beneficiario e importe fuera del QR |
+| ¿Puedo compartir lo observado sin filtrar el secreto? | Exporta evidencia redactada con SHA-256, ids estables y límites explícitos |
+
+> 🛡️ **¿Tienes un QR dudoso?** [Inspecciónalo en la PWA](https://vladimiracunadev-create.github.io/rootcause-qr-inspector/app/)
+> o carga una imagen/PDF en la app nativa. El análisis no demuestra que un
+> destino sea seguro: reduce la opacidad y muestra el peligro observable antes
+> de actuar. Cobertura exacta → [`docs/DETECCION_AMENAZAS.md`](docs/DETECCION_AMENAZAS.md)
 
 ## 🛡️ Principios no negociables
 
@@ -85,9 +127,12 @@ flowchart TD
 
 ## 📸 Interfaz
 
-| Escaneo y explicación | Historial cifrado | Inventario local |
-|---|---|---|
-| ![Pantalla de escaneo](docs/images/capturas/escanear.png) | ![Historial de lecturas](docs/images/capturas/historial.png) | ![Sesión de inventario](docs/images/capturas/inventario.png) |
+![Flujo visual de RootCause QR Inspector: inspección local, resultado explicable y evidencia redactada](docs/images/rootcause-qr-security-flow.svg)
+
+La interfaz presenta primero la inspección de seguridad y mantiene una jerarquía
+única: **observar → explicar el riesgo → decidir → exportar evidencia**. El
+inventario y el generador siguen disponibles, pero no compiten con el flujo
+principal.
 
 También incluye generación de códigos, importación desde imagen/PDF,
 recuperación de registros aislados y ajustes de privacidad y accesibilidad.
@@ -302,7 +347,7 @@ automático. La evidencia solo sale cuando la persona la exporta.
 | Documento | Contenido |
 |---|---|
 | [`docs/INDEX.md`](docs/INDEX.md) | Índice por perfil y ruta de lectura recomendada |
-| [`docs/MANUAL_USUARIO.md`](docs/MANUAL_USUARIO.md) | Uso de escaneo, resultados, historial, inventario y ajustes |
+| [`docs/MANUAL_USUARIO.md`](docs/MANUAL_USUARIO.md) | Uso de inspección, resultados, historial, inventario y ajustes |
 | [`docs/DETECCION_AMENAZAS.md`](docs/DETECCION_AMENAZAS.md) | Cobertura local por amenaza y fronteras de interpretación |
 | [`docs/rootcause/ARCHITECTURE.md`](docs/rootcause/ARCHITECTURE.md) | Flujo causal, fronteras, contratos y decisiones |
 | [`docs/rootcause/HEURISTICS.md`](docs/rootcause/HEURISTICS.md) | Las 26 reglas, pesos, evidencia y falsos positivos |

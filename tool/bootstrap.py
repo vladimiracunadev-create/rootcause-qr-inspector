@@ -129,6 +129,16 @@ def patch_web_icons() -> None:
         shutil.copyfile(favicon, ROOT / "web/favicon.png")
 
 
+def patch_apple_icons(platform_name: str) -> None:
+    """Copy the reproducible RootCause icon over Flutter's AppIcon set."""
+    source = LAUNCHER_ASSETS / platform_name
+    destination = ROOT / platform_name / "Runner/Assets.xcassets/AppIcon.appiconset"
+    if not source.is_dir() or not destination.is_dir():
+        return
+    for icon in source.glob("*.png"):
+        shutil.copyfile(icon, destination / icon.name)
+
+
 def patch_android() -> None:
     patch_android_toolchain()
     patch_android_icons()
@@ -197,6 +207,7 @@ def patch_android() -> None:
 
 
 def patch_ios() -> None:
+    patch_apple_icons("ios")
     podfile = ROOT / "ios/Podfile"
     if podfile.exists():
         pod_text = podfile.read_text(encoding="utf-8")
@@ -261,6 +272,7 @@ def patch_ios() -> None:
 
 
 def patch_macos() -> None:
+    patch_apple_icons("macos")
     info = ROOT / "macos/Runner/Info.plist"
     text = info.read_text(encoding="utf-8")
     additions = """

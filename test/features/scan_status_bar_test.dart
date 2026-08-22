@@ -33,7 +33,7 @@ void main() {
   testWidgets('while scanning the bar moves and says so', (WidgetTester tester) async {
     await pumpBar(tester, phase: ScanPhase.scanning);
 
-    expect(find.text('Escaneando'), findsOneWidget);
+    expect(find.text('Inspección activa'), findsOneWidget);
     // A null value is the indeterminate, moving bar.
     expect(indicator(tester).value, isNull);
   });
@@ -41,7 +41,7 @@ void main() {
   testWidgets('reduced motion keeps the bar readable without movement', (WidgetTester tester) async {
     await pumpBar(tester, phase: ScanPhase.scanning, animate: false);
 
-    expect(find.text('Escaneando'), findsOneWidget);
+    expect(find.text('Inspección activa'), findsOneWidget);
     expect(indicator(tester).value, 1);
   });
 
@@ -50,21 +50,21 @@ void main() {
     await pumpBar(
       tester,
       phase: ScanPhase.paused,
-      actionLabel: 'Reanudar escaneo',
+      actionLabel: 'Reanudar inspección',
       onAction: () => taps++,
     );
 
-    expect(find.text('Escaneo en pausa'), findsOneWidget);
+    expect(find.text('Inspección en pausa'), findsOneWidget);
     expect(indicator(tester).value, 0);
 
-    await tester.tap(find.text('Reanudar escaneo'));
+    await tester.tap(find.text('Reanudar inspección'));
     expect(taps, 1);
   });
 
   testWidgets('a camera that could not start is named as such', (WidgetTester tester) async {
     await pumpBar(tester, phase: ScanPhase.unavailable);
 
-    expect(find.text('Cámara no disponible'), findsOneWidget);
+    expect(find.text('Sensor no disponible'), findsOneWidget);
     expect(find.text('Mensaje de estado'), findsOneWidget);
   });
 

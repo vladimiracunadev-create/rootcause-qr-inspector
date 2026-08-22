@@ -141,43 +141,75 @@ class _ScannerScreenState extends State<ScannerScreen> with WidgetsBindingObserv
     return Column(
       children: <Widget>[
         Padding(
-          padding: const EdgeInsets.fromLTRB(20, 14, 20, 12),
-          child: Row(
+          padding: const EdgeInsets.fromLTRB(20, 18, 20, 14),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(context.strings.scannerTitle, style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800)),
-                    Text(context.strings.scannerSubtitle),
-                  ],
-                ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  const _RootCauseMark(),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(
+                          'ROOTCAUSE · SEGURIDAD QR',
+                          style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                                color: Theme.of(context).colorScheme.primary,
+                                fontWeight: FontWeight.w900,
+                                letterSpacing: 1.25,
+                              ),
+                        ),
+                        const SizedBox(height: 3),
+                        Text(context.strings.scannerTitle, style: Theme.of(context).textTheme.titleLarge),
+                        const SizedBox(height: 3),
+                        Text(
+                          context.strings.scannerSubtitle,
+                          style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: 6),
+                  PopupMenuButton<String>(
+                    tooltip: 'Inspeccionar desde imágenes o PDF',
+                    enabled: !kIsWeb,
+                    icon: const Icon(Icons.add_photo_alternate_outlined),
+                    onSelected: (String value) {
+                      if (value == 'images') unawaited(_scanFromGallery());
+                      if (value == 'pdf') unawaited(_scanFromPdf());
+                    },
+                    itemBuilder: (BuildContext context) => const <PopupMenuEntry<String>>[
+                      PopupMenuItem<String>(
+                        value: 'images',
+                        child: ListTile(
+                          contentPadding: EdgeInsets.zero,
+                          leading: Icon(Icons.collections_outlined),
+                          title: Text('Inspeccionar imágenes'),
+                        ),
+                      ),
+                      PopupMenuItem<String>(
+                        value: 'pdf',
+                        child: ListTile(
+                          contentPadding: EdgeInsets.zero,
+                          leading: Icon(Icons.picture_as_pdf_outlined),
+                          title: Text('Inspeccionar PDF'),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
-              PopupMenuButton<String>(
-                tooltip: 'Importar imágenes o PDF',
-                enabled: !kIsWeb,
-                icon: const Icon(Icons.add_photo_alternate_outlined),
-                onSelected: (String value) {
-                  if (value == 'images') unawaited(_scanFromGallery());
-                  if (value == 'pdf') unawaited(_scanFromPdf());
-                },
-                itemBuilder: (BuildContext context) => const <PopupMenuEntry<String>>[
-                  PopupMenuItem<String>(
-                    value: 'images',
-                    child: ListTile(
-                      contentPadding: EdgeInsets.zero,
-                      leading: Icon(Icons.collections_outlined),
-                      title: Text('Varias imágenes'),
-                    ),
-                  ),
-                  PopupMenuItem<String>(
-                    value: 'pdf',
-                    child: ListTile(
-                      contentPadding: EdgeInsets.zero,
-                      leading: Icon(Icons.picture_as_pdf_outlined),
-                      title: Text('Documento PDF'),
-                    ),
-                  ),
+              const SizedBox(height: 12),
+              const Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: <Widget>[
+                  _SecurityCapability(icon: Icons.phonelink_lock_outlined, label: 'Análisis local'),
+                  _SecurityCapability(icon: Icons.rule_outlined, label: '26 señales'),
+                  _SecurityCapability(icon: Icons.visibility_off_outlined, label: 'Telemetría cero'),
                 ],
               ),
             ],
@@ -186,9 +218,27 @@ class _ScannerScreenState extends State<ScannerScreen> with WidgetsBindingObserv
         Expanded(
           child: Padding(
             padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(28),
-              child: LayoutBuilder(
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  colors: <Color>[Color(0xFF26D9BC), Color(0xFF087A6D), Color(0xFF112B27)],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                borderRadius: BorderRadius.circular(32),
+                boxShadow: <BoxShadow>[
+                  BoxShadow(
+                    color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.18),
+                    blurRadius: 24,
+                    offset: const Offset(0, 10),
+                  ),
+                ],
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(3),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(29),
+                  child: LayoutBuilder(
                 builder: (BuildContext context, BoxConstraints constraints) {
                   final double side = math.min(constraints.maxWidth, constraints.maxHeight) * 0.68;
                   final Rect window = Rect.fromCenter(
@@ -246,7 +296,7 @@ class _ScannerScreenState extends State<ScannerScreen> with WidgetsBindingObserv
                               message: _messageFor(phase),
                               animate: !_settings.reduceMotion,
                               actionLabel: switch (phase) {
-                                ScanPhase.paused => 'Reanudar escaneo',
+                                ScanPhase.paused => 'Reanudar inspección',
                                 ScanPhase.unavailable => 'Reintentar',
                                 ScanPhase.starting || ScanPhase.scanning => null,
                               },
@@ -302,7 +352,7 @@ class _ScannerScreenState extends State<ScannerScreen> with WidgetsBindingObserv
                                     foregroundColor: scanning ? Colors.black : Theme.of(context).colorScheme.onPrimary,
                                   ),
                                   icon: Icon(scanning ? Icons.pause : Icons.play_arrow),
-                                  label: Text(scanning ? 'Pausar' : 'Escanear'),
+                                  label: Text(scanning ? 'Pausar inspección' : 'Inspeccionar'),
                                 ),
                                 _CameraButton(
                                   tooltip: 'Cambiar cámara',
@@ -322,6 +372,8 @@ class _ScannerScreenState extends State<ScannerScreen> with WidgetsBindingObserv
                     },
                   );
                 },
+                  ),
+                ),
               ),
             ),
           ),
@@ -540,6 +592,59 @@ class _ScannerScreenState extends State<ScannerScreen> with WidgetsBindingObserv
       isScrollControlled: true,
       showDragHandle: false,
       builder: (BuildContext context) => ScanResultsSheet(records: records, settings: widget.settings),
+    );
+  }
+}
+
+class _RootCauseMark extends StatelessWidget {
+  const _RootCauseMark();
+
+  @override
+  Widget build(BuildContext context) {
+    final ColorScheme colors = Theme.of(context).colorScheme;
+    return Container(
+      width: 46,
+      height: 46,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: <Color>[colors.primary, const Color(0xFF19BDA4)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(15),
+        boxShadow: <BoxShadow>[
+          BoxShadow(color: colors.primary.withValues(alpha: 0.22), blurRadius: 14, offset: const Offset(0, 5)),
+        ],
+      ),
+      child: Icon(Icons.qr_code_2_rounded, color: colors.onPrimary, size: 27, semanticLabel: 'RootCause QR'),
+    );
+  }
+}
+
+class _SecurityCapability extends StatelessWidget {
+  const _SecurityCapability({required this.icon, required this.label});
+
+  final IconData icon;
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    final ColorScheme colors = Theme.of(context).colorScheme;
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
+      decoration: BoxDecoration(
+        color: colors.surfaceContainerLow,
+        border: Border.all(color: colors.outlineVariant.withValues(alpha: 0.8)),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          Icon(icon, size: 15, color: colors.primary),
+          const SizedBox(width: 6),
+          Text(label, style: Theme.of(context).textTheme.labelMedium?.copyWith(fontWeight: FontWeight.w700)),
+        ],
+      ),
     );
   }
 }

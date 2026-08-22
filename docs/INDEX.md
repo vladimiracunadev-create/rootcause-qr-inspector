@@ -9,7 +9,7 @@ completo ni la reputación remota del destino.
 
 | Documento | Contenido |
 |---|---|
-| [`MANUAL_USUARIO.md`](MANUAL_USUARIO.md) | Flujo de escaneo, resultados, historial, inventario y ajustes |
+| [`MANUAL_USUARIO.md`](MANUAL_USUARIO.md) | Flujo de inspección, resultados, historial, inventario y ajustes |
 | [`SUPPORTED_FORMATS.md`](SUPPORTED_FORMATS.md) | Formatos reconocidos y límites por origen |
 | [`TROUBLESHOOTING.md`](TROUBLESHOOTING.md) | Cámara, PWA, PDF, biometría, almacenamiento y exportación |
 | [`PRIVACY_POLICY.md`](PRIVACY_POLICY.md) | Qué procesa, qué conserva y qué solo sale por decisión explícita |

@@ -1,5 +1,10 @@
 # Detección de amenazas
 
+> **¿Tienes un QR dudoso?** Abre el
+> [inspector público](https://vladimiracunadev-create.github.io/rootcause-qr-inspector/app/)
+> para ver la carga antes de actuar. El resultado describe señales locales y
+> límites; no certifica que el destino sea seguro.
+
 ## Qué significa “detectar” en este repositorio
 
 El sensor no detecta una campaña ni atribuye intención. Detecta propiedades de

@@ -43,9 +43,9 @@ está analizando cuadros de verdad.
 | Estado | Título | Barra | Acción ofrecida |
 |---|---|---|---|
 | `starting` | «Iniciando cámara…» | En movimiento | — |
-| `scanning` | «Escaneando» | En movimiento + línea que recorre el marco | Botón «Pausar» |
-| `paused` | «Escaneo en pausa» | Detenida y vacía | «Reanudar escaneo» + toque en cualquier punto de la vista |
-| `unavailable` | «Cámara no disponible» | Detenida, en color de error | «Reintentar» (reconstruye el controlador) |
+| `scanning` | «Inspección activa» | En movimiento + línea que recorre el marco | Botón «Pausar inspección» |
+| `paused` | «Inspección en pausa» | Detenida y vacía | «Reanudar inspección» + toque en cualquier punto de la vista |
+| `unavailable` | «Sensor no disponible» | Detenida, en color de error | «Reintentar» (reconstruye el controlador) |
 
 El escaneo **sigue siendo automático**: no hay que pulsar nada para leer un
 código, que es lo que hace cualquier lector del sector. Lo que se añadió es la
@@ -89,7 +89,7 @@ ZXing—, y estado en esta aplicación:
 |---|---|---|
 | Lectura automática sin pulsar nada | Sí | Sí |
 | Indicador visible de «escaneando» | No | **Barra en movimiento + línea que recorre el marco** |
-| Botón explícito de activar/pausar | Icono sin etiqueta | **Botón con texto «Escanear» / «Pausar»** |
+| Botón explícito de activar/pausar | Icono sin etiqueta | **Botón con texto «Inspeccionar» / «Pausar inspección»** |
 | Pitido de lectura conseguida | Dependiente de los sonidos táctiles del sistema | **Tono propio empaquetado** |
 | Vibración de confirmación | Sí | Sí |
 | Recuperación cuando la cámara no arranca | No existía | **«Reintentar» y «Reiniciar cámara»** |

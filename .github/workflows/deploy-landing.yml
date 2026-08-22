@@ -14,7 +14,7 @@ on:
     branches: [main]
     paths:
       - "landing/**"
-      - "docs/images/capturas/**"
+      - "docs/images/rootcause-qr-security-flow.svg"
       - "lib/**"
       - "web/**"
       - "assets/**"
@@ -76,11 +76,11 @@ jobs:
           touch _site/.nojekyll
           mkdir -p _site/assets
           cp assets/launcher/web/Icon-512.png _site/assets/icon-512.png
-          cp -r docs/images/capturas _site/assets/capturas
+          cp docs/images/rootcause-qr-security-flow.svg _site/assets/rootcause-qr-security-flow.svg
           cp -r build/web _site/app
           test -f _site/app/index.html
           test -f _site/assets/icon-512.png
-          test -f _site/assets/capturas/escanear.png
+          test -f _site/assets/rootcause-qr-security-flow.svg
 
       - uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
 

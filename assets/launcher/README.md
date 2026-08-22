@@ -12,7 +12,13 @@ generados.
 | `android/mipmap-*/ic_launcher_foreground.png` | Capa frontal del icono adaptativo y del monocromo |
 | `web/Icon-*.png` | Iconos de la PWA, incluidas las variantes *maskable* |
 | `web/favicon.png` | Favicon del sitio |
-| `icon-1024.png` | Maestro para documentación y fichas futuras |
+| `ios/Icon-App-*.png` | AppIcon completo para iPhone, iPad y App Store |
+| `macos/app_icon_*.png` | AppIcon de macOS, de 16 a 1024 px |
+| `icon-1024.png` | Maestro para documentación, landing y fichas futuras |
+
+La silueta combina un **escudo**, módulos QR y una línea de análisis. Así el
+icono comunica la función de seguridad del producto incluso sin texto y deja
+de parecer el de un lector genérico.
 
 ## Cómo regenerarlos
 

@@ -18,9 +18,9 @@ abstract final class ExportService {
       })),
     );
     return SharePlus.instance.share(ShareParams(
-      title: 'Historial de escaneos',
+      title: 'Casos QR inspeccionados',
       files: <XFile>[XFile.fromData(bytes, mimeType: 'application/json')],
-      fileNameOverrides: const <String>['historial-escaneos.json'],
+      fileNameOverrides: const <String>['casos-qr-inspeccionados.json'],
     ));
   }
 
@@ -38,7 +38,7 @@ abstract final class ExportService {
             item.rawValue,
           ]),
     ];
-    return _shareCsv(rows, 'historial-escaneos.csv', 'Historial de escaneos');
+    return _shareCsv(rows, 'casos-qr-inspeccionados.csv', 'Casos QR inspeccionados');
   }
 
 
@@ -57,7 +57,7 @@ abstract final class ExportService {
             item.rawValue,
           ]),
     ];
-    return _shareXlsx(rows, 'Historial', 'historial-escaneos.xlsx', 'Historial de escaneos');
+    return _shareXlsx(rows, 'Casos QR', 'casos-qr-inspeccionados.xlsx', 'Casos QR inspeccionados');
   }
 
   static Future<void> shareInventoryCsv(InventorySession session) {

@@ -62,9 +62,18 @@ class _HistoryScreenState extends State<HistoryScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text('Historial cifrado', style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800)),
                     Text(
-                      '${records.length} visibles · ${widget.store.history.where((ScanRecord item) => item.favorite).length} favoritos · ${widget.store.history.where((ScanRecord item) => item.riskLevel == RiskLevel.high).length} con señales críticas',
+                      'ROOTCAUSE · EVIDENCIA LOCAL',
+                      style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                            color: Theme.of(context).colorScheme.primary,
+                            fontWeight: FontWeight.w900,
+                            letterSpacing: 1.15,
+                          ),
+                    ),
+                    const SizedBox(height: 3),
+                    Text('Casos inspeccionados', style: Theme.of(context).textTheme.titleLarge),
+                    Text(
+                      '${records.length} visibles · ${widget.store.history.where((ScanRecord item) => item.favorite).length} favoritos · ${widget.store.history.where((ScanRecord item) => item.riskLevel == RiskLevel.high).length} críticos',
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -129,16 +138,36 @@ class _HistoryScreenState extends State<HistoryScreen> {
         const SizedBox(height: 6),
         Expanded(
           child: records.isEmpty
-              ? const Center(child: Text('No hay lecturas que coincidan con los filtros.'))
+              ? _HistoryEmptyState(filtered: widget.store.history.isNotEmpty)
               : ListView.separated(
                   padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
                   itemCount: records.length,
                   separatorBuilder: (_, _) => const SizedBox(height: 8),
                   itemBuilder: (BuildContext context, int index) {
                     final ScanRecord item = records[index];
+                    final (Color background, Color foreground) riskColors = switch (item.riskLevel) {
+                      RiskLevel.low => (
+                          Theme.of(context).colorScheme.primaryContainer,
+                          Theme.of(context).colorScheme.onPrimaryContainer,
+                        ),
+                      RiskLevel.caution => (
+                          Theme.of(context).colorScheme.tertiaryContainer,
+                          Theme.of(context).colorScheme.onTertiaryContainer,
+                        ),
+                      RiskLevel.high => (
+                          Theme.of(context).colorScheme.errorContainer,
+                          Theme.of(context).colorScheme.onErrorContainer,
+                        ),
+                    };
                     return Card(
                       child: ListTile(
-                        leading: Icon(_riskIcon(item.riskLevel)),
+                        contentPadding: const EdgeInsets.fromLTRB(14, 8, 8, 8),
+                        leading: Container(
+                          width: 44,
+                          height: 44,
+                          decoration: BoxDecoration(color: riskColors.$1, borderRadius: BorderRadius.circular(14)),
+                          child: Icon(_riskIcon(item.riskLevel), color: riskColors.$2),
+                        ),
                         title: Text(item.parsed.summary?.isNotEmpty == true ? item.parsed.summary! : item.contentType, maxLines: 1, overflow: TextOverflow.ellipsis),
                         subtitle: Text('${item.format} · ${_formatDate(item.scannedAt)}\n${item.rawValue}', maxLines: 2, overflow: TextOverflow.ellipsis),
                         isThreeLine: true,
@@ -309,5 +338,54 @@ class _HistoryScreenState extends State<HistoryScreen> {
   String _formatDate(DateTime value) {
     String two(int number) => number.toString().padLeft(2, '0');
     return '${two(value.day)}/${two(value.month)}/${value.year} ${two(value.hour)}:${two(value.minute)}';
+  }
+}
+
+class _HistoryEmptyState extends StatelessWidget {
+  const _HistoryEmptyState({required this.filtered});
+
+  final bool filtered;
+
+  @override
+  Widget build(BuildContext context) {
+    final ColorScheme colors = Theme.of(context).colorScheme;
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(28),
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 340),
+          child: Card(
+            child: Padding(
+              padding: const EdgeInsets.all(26),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Container(
+                    width: 66,
+                    height: 66,
+                    decoration: BoxDecoration(color: colors.primaryContainer, borderRadius: BorderRadius.circular(22)),
+                    child: Icon(filtered ? Icons.filter_alt_off_outlined : Icons.shield_outlined, color: colors.onPrimaryContainer, size: 32),
+                  ),
+                  const SizedBox(height: 18),
+                  Text(
+                    filtered ? 'Ningún caso coincide' : 'Aún no hay casos',
+                    style: Theme.of(context).textTheme.titleLarge,
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    filtered
+                        ? 'Ajusta la búsqueda o los filtros para volver a ver la evidencia guardada.'
+                        : 'Inspecciona un QR. Los resultados no sensibles que autorices quedarán cifrados en este dispositivo.',
+                    style: TextStyle(color: colors.onSurfaceVariant, height: 1.4),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }

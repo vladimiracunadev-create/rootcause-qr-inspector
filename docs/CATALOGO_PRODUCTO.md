@@ -17,6 +17,20 @@ landing, descripción o release promete más, prevalecen aquí los límites.
 | Privacidad | Sin cuenta, publicidad, analítica ni telemetría |
 | Licencia | MIT, coherente con la procedencia en Universal Code Scanner |
 
+## Jerarquía del producto
+
+La interfaz, la documentación y la comunicación pública siguen el mismo orden:
+
+1. **Inspeccionar:** capturar sin ejecutar.
+2. **Explicar:** presentar señales observables, severidad y evidencia.
+3. **Separar:** distinguir hallazgos de hipótesis como posible phishing.
+4. **Decidir:** permitir, confirmar, limitar a inspección o bloquear una URI
+   que no puede entregarse con seguridad.
+5. **Conservar:** exportar evidencia redactada y guardar solo lo autorizado.
+
+Inventario y generación son utilidades operativas secundarias. Nunca deben
+dominar la identidad visual ni hacer que el producto parezca un lector universal.
+
 ## Problema que resuelve
 
 Un código impreso oculta una instrucción. La cámara ve módulos; la persona no ve

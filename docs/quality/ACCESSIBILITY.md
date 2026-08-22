@@ -38,5 +38,5 @@ al 200 % y comprueba las guías `labeledTapTargetGuideline` y
 
 La barra de estado del escáner se anuncia como región activa (`liveRegion`) con
 el estado y la instrucción en una sola etiqueta, para que un lector de pantalla
-comunique el cambio de «Escaneando» a «Escaneo en pausa» sin que la persona
+comunique el cambio de «Inspección activa» a «Inspección en pausa» sin que la persona
 tenga que buscarlo.

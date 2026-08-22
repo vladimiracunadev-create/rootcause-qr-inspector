@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="RootCause QR Inspector observa códigos QR, explica 26 señales locales, separa hechos de hipótesis y exporta evidencia redactada." />
-  <meta property="og:title" content="RootCause QR Inspector — diagnóstico antes de acción" />
-  <meta property="og:description" content="Sensor local para QR: 26 reglas explicables, hipótesis separadas, evidencia SHA-256 y telemetría cero." />
+  <meta name="description" content="Producto de seguridad para QR: inspecciona antes de abrir, explica 26 señales locales, separa hechos de hipótesis y exporta evidencia redactada." />
+  <meta property="og:title" content="RootCause QR Inspector — seguridad QR antes de actuar" />
+  <meta property="og:description" content="Inspector local de seguridad QR: 26 reglas explicables, decisión controlada, evidencia SHA-256 y telemetría cero." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://vladimiracunadev-create.github.io/rootcause-qr-inspector/" />
   <meta property="og:image" content="https://vladimiracunadev-create.github.io/rootcause-qr-inspector/assets/icon-512.png" />
@@ -20,20 +20,17 @@
   <header class="nav">
     <div class="nav-inner">
       <a class="nav-logo" href="#inicio" aria-label="Inicio de RootCause QR Inspector">
-        <svg width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden="true">
-          <path d="M3 8V4.5A1.5 1.5 0 0 1 4.5 3H8M14 3h3.5A1.5 1.5 0 0 1 19 4.5V8M19 14v3.5a1.5 1.5 0 0 1-1.5 1.5H14M8 19H4.5A1.5 1.5 0 0 1 3 17.5V14" stroke="#5bd7cd" stroke-width="1.6" stroke-linecap="round" />
-          <rect x="7" y="7" width="3.2" height="3.2" rx=".8" fill="#5bd7cd" />
-          <rect x="11.8" y="11.8" width="3.2" height="3.2" rx=".8" fill="#5bd7cd" />
-        </svg>
+        <img src="assets/favicon.svg" width="24" height="24" alt="" aria-hidden="true" />
         RootCause QR Inspector
       </a>
       <nav class="nav-links" aria-label="Navegación principal">
+        <a href="#riesgo">Riesgos QR</a>
         <a href="#modelo">Modelo</a>
         <a href="#prueba">La prueba</a>
         <a href="#instalar">Usar</a>
         <a href="#familia">Familia</a>
         <a href="privacidad.html">Privacidad</a>
-        <a href="app/" class="btn-nav">Abrir PWA</a>
+          <a href="app/" class="btn-nav">Inspeccionar QR</a>
       </nav>
     </div>
   </header>
@@ -53,8 +50,9 @@
         <img class="hero-logo" src="assets/icon-512.png" width="96" height="96" alt="Icono de RootCause QR Inspector" />
         <h1 class="section-title">Diagnóstico primero. Intervención después.</h1>
         <p class="hero-sub">
-          Un QR es una instrucción opaca. RootCause la captura, interpreta y
-          convierte en <strong>hechos observables</strong> antes de ofrecer una acción.
+          Producto de seguridad para QR: captura una instrucción opaca, la
+          interpreta y la convierte en <strong>hechos observables</strong> antes
+          de permitir cualquier acción.
         </p>
         <div class="badges" aria-label="Datos del proyecto">
           <img src="https://github.com/vladimiracunadev-create/rootcause-qr-inspector/actions/workflows/flutter-ci.yml/badge.svg" alt="Estado de integración continua" />
@@ -64,10 +62,37 @@
           <img src="https://img.shields.io/badge/licencia-MIT-blue.svg" alt="Licencia MIT" />
         </div>
         <div class="hero-cta">
-          <a href="app/" class="btn-primary">Abrir la PWA</a>
+          <a href="app/" class="btn-primary">Inspeccionar un QR</a>
           <a href="https://github.com/vladimiracunadev-create/rootcause-qr-inspector" class="btn-ghost">Ver código</a>
         </div>
         <p class="hero-tagline">El QR es la superficie. El phishing es una hipótesis.</p>
+      </div>
+    </section>
+
+    <section id="riesgo" class="section security-entry">
+      <div class="container">
+        <div class="security-callout">
+          <div>
+            <p class="eyebrow">¿Tienes un QR que te preocupa?</p>
+            <h2 class="section-title">Mira el destino y el peligro observable antes de abrirlo</h2>
+            <p class="section-sub">
+              Un QR puede ocultar un dominio imitado, una ruta para robar
+              credenciales, una descarga ejecutable o un pago sustituido.
+              RootCause inspecciona la carga localmente y explica qué encontró.
+            </p>
+          </div>
+          <a href="app/" class="btn-primary">Inspeccionar ahora →</a>
+        </div>
+        <div class="risk-grid" aria-label="Peligros que puede revelar un QR">
+          <article><span>01</span><strong>Identidad oculta</strong><p>Punycode, Unicode mixto, IP literal y dominios que imitan una marca.</p></article>
+          <article><span>02</span><strong>Robo de acceso</strong><p>Rutas de login, contraseña, banco, verificación o MFA.</p></article>
+          <article><span>03</span><strong>Entrega peligrosa</strong><p>APK, ejecutables, scripts, instaladores y archivos comprimidos.</p></article>
+          <article><span>04</span><strong>Acción sensible</strong><p>Pagos, cripto, OTP y destinatarios que deben validarse fuera del QR.</p></article>
+        </div>
+        <figure class="product-flow">
+          <img src="assets/rootcause-qr-security-flow.svg" alt="Flujo de RootCause QR Inspector: inspección local, resultado explicable y evidencia redactada" />
+          <figcaption>Una sola jerarquía: observar → explicar el riesgo → decidir → exportar evidencia.</figcaption>
+        </figure>
       </div>
     </section>
 
@@ -158,12 +183,6 @@
             </tbody>
           </table>
         </div>
-        <div class="shots" aria-label="Capturas de la aplicación">
-          <figure><img src="assets/capturas/escanear.png" loading="lazy" alt="Pantalla de escaneo con estado visible" /><figcaption>Escaneo y estado observable</figcaption></figure>
-          <figure><img src="assets/capturas/historial.png" loading="lazy" alt="Historial cifrado de lecturas" /><figcaption>Historial local cifrado</figcaption></figure>
-          <figure><img src="assets/capturas/inventario.png" loading="lazy" alt="Sesión local de inventario" /><figcaption>Inventario sin nube</figcaption></figure>
-          <figure><img src="assets/capturas/ajustes.png" loading="lazy" alt="Ajustes de privacidad y accesibilidad" /><figcaption>Privacidad y accesibilidad</figcaption></figure>
-        </div>
       </div>
     </section>
 
@@ -198,7 +217,7 @@
             <h3>PWA en GitHub Pages</h3>
             <p>Abre la aplicación desde HTTPS sin instalar un APK. Cámara disponible según permisos y compatibilidad del navegador.</p>
             <p class="dl-meta">Web · instalable · telemetría cero</p>
-            <a class="btn-primary" href="app/">Abrir la PWA</a>
+            <a class="btn-primary" href="app/">Inspeccionar un QR</a>
           </article>
           <article class="download-card">
             <h3>Código fuente</h3>
@@ -230,7 +249,7 @@
         <h2 class="section-title">Documentación técnica</h2>
         <div class="doc-grid">
           <span class="doc-entry"><a href="https://github.com/vladimiracunadev-create/rootcause-qr-inspector/blob/main/docs/INDEX.md">Índice de documentación</a><span>Rutas para usuarios, investigación, desarrollo y producto.</span></span>
-          <span class="doc-entry"><a href="https://github.com/vladimiracunadev-create/rootcause-qr-inspector/blob/main/docs/MANUAL_USUARIO.md">Manual de usuario</a><span>Cómo escanear, interpretar, conservar y exportar.</span></span>
+          <span class="doc-entry"><a href="https://github.com/vladimiracunadev-create/rootcause-qr-inspector/blob/main/docs/MANUAL_USUARIO.md">Manual de usuario</a><span>Cómo inspeccionar, interpretar, conservar y exportar.</span></span>
           <span class="doc-entry"><a href="https://github.com/vladimiracunadev-create/rootcause-qr-inspector/blob/main/docs/DETECCION_AMENAZAS.md">Detección de amenazas</a><span>Mapa de cobertura local y fronteras de cada señal.</span></span>
           <span class="doc-entry"><a href="https://github.com/vladimiracunadev-create/rootcause-qr-inspector/blob/main/docs/rootcause/HEURISTICS.md">Heurísticas</a><span>Condición, peso, evidencia y falso positivo de cada regla.</span></span>
           <span class="doc-entry"><a href="https://github.com/vladimiracunadev-create/rootcause-qr-inspector/blob/main/docs/rootcause/ARCHITECTURE.md">Arquitectura</a><span>Flujo, fronteras y contratos del sensor.</span></span>

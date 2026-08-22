@@ -44,10 +44,10 @@ class ScanStatusBar extends StatelessWidget {
   final bool animate;
 
   String get _title => switch (phase) {
-        ScanPhase.starting => 'Iniciando cámara…',
-        ScanPhase.scanning => 'Escaneando',
-        ScanPhase.paused => 'Escaneo en pausa',
-        ScanPhase.unavailable => 'Cámara no disponible',
+        ScanPhase.starting => 'Preparando inspección…',
+        ScanPhase.scanning => 'Inspección activa',
+        ScanPhase.paused => 'Inspección en pausa',
+        ScanPhase.unavailable => 'Sensor no disponible',
       };
 
   IconData get _icon => switch (phase) {
@@ -72,8 +72,12 @@ class ScanStatusBar extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.fromLTRB(14, 12, 14, 12),
         decoration: BoxDecoration(
-          color: Colors.black.withValues(alpha: 0.72),
-          borderRadius: BorderRadius.circular(18),
+          color: const Color(0xFF07120F).withValues(alpha: 0.9),
+          border: Border.all(color: Colors.white.withValues(alpha: 0.12)),
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: <BoxShadow>[
+            BoxShadow(color: Colors.black.withValues(alpha: 0.25), blurRadius: 18, offset: const Offset(0, 8)),
+          ],
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -81,12 +85,31 @@ class ScanStatusBar extends StatelessWidget {
           children: <Widget>[
             Row(
               children: <Widget>[
-                Icon(_icon, color: accent, size: 20),
-                const SizedBox(width: 8),
+                Container(
+                  width: 34,
+                  height: 34,
+                  decoration: BoxDecoration(color: accent.withValues(alpha: 0.16), borderRadius: BorderRadius.circular(11)),
+                  child: Icon(_icon, color: accent, size: 19),
+                ),
+                const SizedBox(width: 10),
                 Expanded(
-                  child: Text(
-                    _title,
-                    style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w800),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        _title,
+                        style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w800),
+                      ),
+                      Text(
+                        phase == ScanPhase.scanning ? 'QR · ANÁLISIS LOCAL' : 'ROOTCAUSE SENSOR',
+                        style: TextStyle(
+                          color: accent,
+                          fontSize: 10,
+                          fontWeight: FontWeight.w800,
+                          letterSpacing: 1.1,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],

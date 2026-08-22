@@ -28,7 +28,8 @@ EXCLUDED_DIRS = {
 
 
 def is_excluded(path: Path) -> bool:
-    return any(part in EXCLUDED_DIRS for part in path.relative_to(ROOT).parts)
+    relative = path.relative_to(ROOT)
+    return bool(relative.parts) and relative.parts[0] in EXCLUDED_DIRS
 
 
 def source_files(pattern: str = "*"):
@@ -173,6 +174,7 @@ def check_landing() -> None:
     reference = re.compile(r'(?:href|src)="([^"]+)"')
     generated = {
         "assets/icon-512.png": ROOT / "assets" / "launcher" / "web" / "Icon-512.png",
+        "assets/rootcause-qr-security-flow.svg": ROOT / "docs" / "images" / "rootcause-qr-security-flow.svg",
     }
     for html in sorted(landing.glob("*.html")):
         text = html.read_text(encoding="utf-8")
@@ -183,8 +185,6 @@ def check_landing() -> None:
             if not clean or clean == "app/":
                 continue
             source = generated.get(clean)
-            if clean.startswith("assets/capturas/"):
-                source = ROOT / "docs" / "images" / "capturas" / Path(clean).name
             if source is None:
                 source = html.parent / clean
             if not source.exists():
@@ -193,11 +193,34 @@ def check_landing() -> None:
     workflow = (ROOT / ".github" / "workflows" / "deploy-landing.yml").read_text(encoding="utf-8")
     for required in (
         "cp assets/launcher/web/Icon-512.png _site/assets/icon-512.png",
-        "cp -r docs/images/capturas _site/assets/capturas",
+        "cp docs/images/rootcause-qr-security-flow.svg _site/assets/rootcause-qr-security-flow.svg",
         "cp -r build/web _site/app",
     ):
         if required not in workflow:
             fail(f"El deploy de la landing no ensambla el recurso requerido: {required}")
+
+
+def check_launcher_assets() -> None:
+    """Keep the product identity available on every generated platform."""
+    required = (
+        "assets/launcher/icon-1024.png",
+        "assets/launcher/android/mipmap-mdpi/ic_launcher.png",
+        "assets/launcher/android/mipmap-xxxhdpi/ic_launcher_foreground.png",
+        "assets/launcher/web/Icon-512.png",
+        "assets/launcher/web/Icon-maskable-512.png",
+        "assets/launcher/ios/Icon-App-1024x1024@1x.png",
+        "assets/launcher/macos/app_icon_1024.png",
+        "landing/assets/favicon.svg",
+    )
+    for relative in required:
+        path = ROOT / relative
+        if not path.is_file() or path.stat().st_size == 0:
+            fail(f"Falta un icono de producto requerido: {relative}")
+
+    bootstrap = (ROOT / "tool" / "bootstrap.py").read_text(encoding="utf-8")
+    for required_call in ('patch_android_icons()', 'patch_web_icons()', 'patch_apple_icons("ios")', 'patch_apple_icons("macos")'):
+        if required_call not in bootstrap:
+            fail(f"El bootstrap no instala el icono de producto: {required_call}")
 
 
 def check_source_sbom() -> None:
@@ -227,6 +250,7 @@ def main() -> None:
     check_json_files()
     check_markdown_links()
     check_landing()
+    check_launcher_assets()
     check_source_sbom()
     if args.require_lock and not (ROOT / "pubspec.lock").exists():
         fail("Falta pubspec.lock. Ejecuta flutter pub get en la versión fijada de Flutter y confirma el archivo.")

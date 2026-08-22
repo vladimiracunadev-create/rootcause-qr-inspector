@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="720" viewBox="0 0 1440 720" role="img" aria-labelledby="title desc">
+  <title id="title">Flujo visual de RootCause QR Inspector</title>
+  <desc id="desc">Tres paneles muestran la inspección local de un QR, el resultado explicable de riesgo y la exportación de evidencia redactada.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#081713"/>
+      <stop offset="1" stop-color="#0d1117"/>
+    </linearGradient>
+    <linearGradient id="teal" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#5be2cd"/>
+      <stop offset="1" stop-color="#087a6d"/>
+    </linearGradient>
+    <filter id="shadow" x="-30%" y="-30%" width="160%" height="170%">
+      <feDropShadow dx="0" dy="18" stdDeviation="18" flood-color="#000" flood-opacity=".42"/>
+    </filter>
+    <style>
+      .sans{font-family:Inter,Segoe UI,Arial,sans-serif}.mono{font-family:Cascadia Code,Consolas,monospace}
+      .muted{fill:#8fa49e}.white{fill:#edf7f4}.teal{fill:#5be2cd}.small{font-size:15px}.tiny{font-size:12px}.label{font-size:12px;font-weight:800;letter-spacing:1.7px}.title{font-size:25px;font-weight:800}.body{font-size:16px}.bold{font-weight:750}
+    </style>
+  </defs>
+  <rect width="1440" height="720" rx="34" fill="url(#bg)"/>
+  <path d="M0 136H1440M0 584H1440" stroke="#263b35" opacity=".55"/>
+  <circle cx="100" cy="82" r="42" fill="#102b24"/>
+  <path d="M80 77V65a7 7 0 017-7h12M113 58h12a7 7 0 017 7v12M132 91v12a7 7 0 01-7 7h-12M99 110H87a7 7 0 01-7-7V91" fill="none" stroke="#5be2cd" stroke-width="5" stroke-linecap="round"/>
+  <rect x="92" y="72" width="12" height="12" rx="3" fill="#5be2cd"/><rect x="108" y="88" width="12" height="12" rx="3" fill="#5be2cd"/>
+  <text x="165" y="73" class="sans teal label">ROOTCAUSE · SEGURIDAD QR</text>
+  <text x="165" y="106" class="sans white title">De una instrucción opaca a una decisión explicable</text>
+  <text x="1120" y="88" class="mono muted small">LOCAL ONLY · 26 RULES · 0 TELEMETRY</text>
+
+  <!-- panel 1 -->
+  <g filter="url(#shadow)">
+    <rect x="72" y="172" width="386" height="454" rx="28" fill="#101e1a" stroke="#31534a"/>
+    <rect x="92" y="192" width="346" height="58" rx="17" fill="#152b24"/>
+    <rect x="106" y="205" width="32" height="32" rx="10" fill="url(#teal)"/>
+    <path d="M114 215v-4h4M126 211h4v4M130 223v4h-4M118 227h-4v-4" fill="none" stroke="#04231d" stroke-width="2.4"/>
+    <text x="151" y="216" class="sans teal tiny bold">INSPECCIÓN ACTIVA</text>
+    <text x="151" y="236" class="sans white body bold">Analizando localmente</text>
+    <rect x="92" y="266" width="346" height="278" rx="22" fill="#07110e" stroke="#1e7d6d" stroke-width="2"/>
+    <path d="M133 339v-24h24M373 315h24v24M397 472v24h-24M157 496h-24v-24" fill="none" stroke="#5be2cd" stroke-width="6" stroke-linecap="round"/>
+    <g fill="#d9ece6">
+      <rect x="194" y="352" width="38" height="38"/><rect x="239" y="352" width="15" height="15"/><rect x="262" y="352" width="38" height="38"/><rect x="308" y="352" width="15" height="15"/>
+      <rect x="194" y="397" width="15" height="15"/><rect x="217" y="397" width="37" height="37"/><rect x="262" y="397" width="15" height="15"/><rect x="285" y="397" width="38" height="15"/>
+      <rect x="194" y="442" width="38" height="38"/><rect x="239" y="442" width="15" height="15"/><rect x="262" y="442" width="38" height="38"/><rect x="308" y="442" width="15" height="38"/>
+    </g>
+    <rect x="92" y="560" width="346" height="45" rx="14" fill="#18352d"/>
+    <text x="111" y="588" class="sans teal small bold">01</text><text x="150" y="588" class="sans white small bold">Captura sin ejecutar el destino</text>
+  </g>
+
+  <!-- arrow -->
+  <path d="M477 399h46m-13-13 13 13-13 13" fill="none" stroke="#5be2cd" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- panel 2 -->
+  <g filter="url(#shadow)">
+    <rect x="542" y="172" width="386" height="454" rx="28" fill="#101e1a" stroke="#31534a"/>
+    <text x="568" y="208" class="sans teal label">RESULTADO DE SEGURIDAD</text>
+    <text x="568" y="240" class="sans white title">Revisar antes de continuar</text>
+    <rect x="568" y="264" width="334" height="126" rx="20" fill="#342b16" stroke="#8b6b23"/>
+    <circle cx="609" cy="305" r="21" fill="#6d551f"/><path d="M609 291v17m0 9v1" stroke="#ffd488" stroke-width="4" stroke-linecap="round"/>
+    <text x="642" y="300" class="sans white body bold">2 señales observadas</text>
+    <text x="642" y="324" class="sans muted small">Decisión: confirmar</text>
+    <rect x="809" y="286" width="70" height="61" rx="15" fill="#ffd488"/>
+    <text x="829" y="314" class="sans bold" font-size="23" fill="#3b2b09">42</text><text x="829" y="334" class="sans tiny bold" fill="#3b2b09">/ 100</text>
+    <rect x="568" y="408" width="334" height="72" rx="16" fill="#152b24"/>
+    <text x="586" y="434" class="mono teal tiny">host-punycode</text><text x="586" y="459" class="sans white small bold">El host usa una forma codificada</text>
+    <rect x="568" y="490" width="334" height="72" rx="16" fill="#152b24"/>
+    <text x="586" y="516" class="mono teal tiny">credential-lure-path</text><text x="586" y="541" class="sans white small bold">La ruta solicita credenciales</text>
+    <rect x="568" y="574" width="334" height="31" rx="10" fill="#18352d"/>
+    <text x="586" y="595" class="sans teal small bold">02</text><text x="625" y="595" class="sans white small bold">Hechos ≠ hipótesis</text>
+  </g>
+
+  <!-- arrow -->
+  <path d="M947 399h46m-13-13 13 13-13 13" fill="none" stroke="#5be2cd" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- panel 3 -->
+  <g filter="url(#shadow)">
+    <rect x="1012" y="172" width="356" height="454" rx="28" fill="#101e1a" stroke="#31534a"/>
+    <text x="1038" y="208" class="sans teal label">EVIDENCIA REDACTADA</text>
+    <text x="1038" y="240" class="sans white title">Compartible sin exponer</text>
+    <rect x="1038" y="264" width="304" height="244" rx="20" fill="#08120f" stroke="#2d4b43"/>
+    <text x="1062" y="296" class="mono teal tiny">rootcause.evidence.qr.v1</text>
+    <text x="1062" y="329" class="mono muted tiny">"score"</text><text x="1165" y="329" class="mono white tiny">42</text>
+    <text x="1062" y="356" class="mono muted tiny">"decision"</text><text x="1165" y="356" class="mono white tiny">"confirm"</text>
+    <text x="1062" y="383" class="mono muted tiny">"payload"</text><text x="1165" y="383" class="mono teal tiny">omitted</text>
+    <text x="1062" y="410" class="mono muted tiny">"sha256"</text><text x="1165" y="410" class="mono white tiny">"8f3a…d91c"</text>
+    <text x="1062" y="437" class="mono muted tiny">"findings"</text><text x="1165" y="437" class="mono white tiny">[2]</text>
+    <text x="1062" y="464" class="mono muted tiny">"telemetry"</text><text x="1165" y="464" class="mono teal tiny">0</text>
+    <rect x="1038" y="526" width="304" height="50" rx="15" fill="url(#teal)"/>
+    <text x="1117" y="557" class="sans bold" font-size="15" fill="#03231d">EXPORTAR EVIDENCIA</text>
+    <text x="1038" y="605" class="sans teal small bold">03</text><text x="1077" y="605" class="sans white small bold">La persona conserva la decisión</text>
+  </g>
+
+  <text x="72" y="684" class="mono muted small">DIAGNÓSTICO PRIMERO · INTERVENCIÓN DESPUÉS</text>
+  <text x="1056" y="684" class="mono teal small">ROOTCAUSE QR INSPECTOR v0.1.0</text>
+</svg>

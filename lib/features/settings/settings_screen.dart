@@ -93,7 +93,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ],
         ),
         _Section(
-          title: 'Escáner',
+          title: 'Inspección QR',
           children: <Widget>[
             SwitchListTile(
               title: const Text('Marco de lectura real'),

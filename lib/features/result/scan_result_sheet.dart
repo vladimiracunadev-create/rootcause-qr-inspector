@@ -39,9 +39,43 @@ class ScanResultsSheet extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 16),
+              Row(
+                children: <Widget>[
+                  Container(
+                    width: 46,
+                    height: 46,
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.primaryContainer,
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    child: Icon(Icons.shield_outlined, color: Theme.of(context).colorScheme.onPrimaryContainer),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(
+                          'INSPECCIÓN COMPLETADA',
+                          style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                                color: Theme.of(context).colorScheme.primary,
+                                fontWeight: FontWeight.w900,
+                                letterSpacing: 1.15,
+                              ),
+                        ),
+                        Text(
+                          records.length == 1 ? 'Resultado de seguridad QR' : '${records.length} resultados de seguridad QR',
+                          style: Theme.of(context).textTheme.headlineSmall,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 6),
               Text(
-                records.length == 1 ? 'Código interpretado' : '${records.length} códigos interpretados',
-                style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w700),
+                'RootCause separa lo observado de lo que todavía debes comprobar.',
+                style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant),
               ),
               const SizedBox(height: 12),
               Flexible(
@@ -53,7 +87,11 @@ class ScanResultsSheet extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 12),
-              FilledButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Continuar escaneando')),
+              FilledButton.icon(
+                onPressed: () => Navigator.of(context).pop(),
+                icon: const Icon(Icons.qr_code_scanner),
+                label: const Text('Inspeccionar otro QR'),
+              ),
             ],
           ),
         ),
@@ -83,43 +121,44 @@ class _ScanRecordCardState extends State<ScanRecordCard> {
     final bool conceal = record.isSensitive && widget.settings.value.hideSensitiveValues && !_revealed;
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(18),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                CircleAvatar(child: Icon(_iconForKind(record.parsed.kind))),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(record.parsed.title, style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700)),
-                      Text('${record.format} · ${record.source}'),
-                      if (record.parsed.summary?.isNotEmpty == true)
-                        Text(record.parsed.summary!, maxLines: 2, overflow: TextOverflow.ellipsis),
-                    ],
-                  ),
-                ),
-                if (record.isSensitive)
-                  IconButton(
-                    tooltip: conceal ? 'Mostrar datos sensibles' : 'Ocultar datos sensibles',
-                    onPressed: () => setState(() => _revealed = !_revealed),
-                    icon: Icon(conceal ? Icons.visibility_off_outlined : Icons.visibility_outlined),
-                  ),
-              ],
+            _SecurityResultHeader(
+              record: record,
+              icon: _iconForKind(record.parsed.kind),
+              conceal: conceal,
+              onToggleVisibility: record.isSensitive ? () => setState(() => _revealed = !_revealed) : null,
             ),
-            const SizedBox(height: 14),
+            if (!widget.compact) ...<Widget>[
+              const SizedBox(height: 16),
+              _RiskBanner(record: record),
+            ],
+            const SizedBox(height: 16),
+            Text(
+              'CONTENIDO OBSERVADO',
+              style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                    color: Theme.of(context).colorScheme.primary,
+                    fontWeight: FontWeight.w900,
+                    letterSpacing: 1.05,
+                  ),
+            ),
+            const SizedBox(height: 10),
             ...record.parsed.fields.entries.map((MapEntry<String, String> field) {
               final bool sensitiveField = record.parsed.sensitive &&
                   <String>{'Contraseña', 'Secreto', 'Consulta', 'Dirección', 'IBAN', 'Carga'}
                       .contains(field.key);
               final String value = conceal && sensitiveField ? '••••••••' : field.value;
               if (value.isEmpty) return const SizedBox.shrink();
-              return Padding(
-                padding: const EdgeInsets.only(bottom: 8),
+              return Container(
+                margin: const EdgeInsets.only(bottom: 8),
+                padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 11),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.surfaceContainerLowest,
+                  border: Border.all(color: Theme.of(context).colorScheme.outlineVariant.withValues(alpha: 0.72)),
+                  borderRadius: BorderRadius.circular(14),
+                ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
@@ -130,9 +169,9 @@ class _ScanRecordCardState extends State<ScanRecordCard> {
               );
             }),
             if (!widget.compact) ...<Widget>[
-              const SizedBox(height: 6),
-              _RiskBanner(record: record),
-              const SizedBox(height: 12),
+              const SizedBox(height: 8),
+              Divider(color: Theme.of(context).colorScheme.outlineVariant),
+              const SizedBox(height: 8),
               Wrap(
                 spacing: 8,
                 runSpacing: 8,
@@ -156,7 +195,7 @@ class _ScanRecordCardState extends State<ScanRecordCard> {
                     FilledButton.icon(
                       onPressed: () => unawaited(_openRecord(context)),
                       icon: const Icon(Icons.open_in_new),
-                      label: Text(_actionLabel(record.parsed.kind)),
+                      label: Text('${_actionLabel(record.parsed.kind)} con confirmación'),
                     ),
                 ],
               ),
@@ -331,7 +370,64 @@ class _ScanRecordCardState extends State<ScanRecordCard> {
         ContentKind.identity => Icons.badge_outlined,
         ContentKind.binary => Icons.data_object,
         ContentKind.text => Icons.text_snippet_outlined,
-      };
+  };
+}
+
+class _SecurityResultHeader extends StatelessWidget {
+  const _SecurityResultHeader({
+    required this.record,
+    required this.icon,
+    required this.conceal,
+    required this.onToggleVisibility,
+  });
+
+  final ScanRecord record;
+  final IconData icon;
+  final bool conceal;
+  final VoidCallback? onToggleVisibility;
+
+  @override
+  Widget build(BuildContext context) {
+    final ColorScheme colors = Theme.of(context).colorScheme;
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Container(
+          width: 50,
+          height: 50,
+          decoration: BoxDecoration(
+            color: colors.primaryContainer,
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: Icon(icon, color: colors.onPrimaryContainer),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text(record.parsed.title, style: Theme.of(context).textTheme.titleMedium),
+              const SizedBox(height: 2),
+              Text(
+                '${record.format} · ${record.source}',
+                style: Theme.of(context).textTheme.labelMedium?.copyWith(color: colors.onSurfaceVariant),
+              ),
+              if (record.parsed.summary?.isNotEmpty == true) ...<Widget>[
+                const SizedBox(height: 5),
+                Text(record.parsed.summary!, maxLines: 2, overflow: TextOverflow.ellipsis),
+              ],
+            ],
+          ),
+        ),
+        if (onToggleVisibility != null)
+          IconButton.filledTonal(
+            tooltip: conceal ? 'Mostrar datos sensibles' : 'Ocultar datos sensibles',
+            onPressed: onToggleVisibility,
+            icon: Icon(conceal ? Icons.visibility_off_outlined : Icons.visibility_outlined),
+          ),
+      ],
+    );
+  }
 }
 
 class _RiskBanner extends StatelessWidget {
@@ -347,79 +443,137 @@ class _RiskBanner extends StatelessWidget {
       RiskLevel.caution => (colors.tertiaryContainer, colors.onTertiaryContainer, Icons.info_outline),
       RiskLevel.high => (colors.errorContainer, colors.onErrorContainer, Icons.warning_amber_rounded),
     };
+    final String title = switch (record.riskLevel) {
+      RiskLevel.low => 'Sin señales locales observadas',
+      RiskLevel.caution => 'Revisar antes de continuar',
+      RiskLevel.high => 'Señales críticas observadas',
+    };
     return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(color: style.$1, borderRadius: BorderRadius.circular(14)),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: style.$1,
+        border: Border.all(color: style.$2.withValues(alpha: 0.16)),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-          Icon(style.$3, color: style.$2),
-          const SizedBox(width: 10),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  record.riskLevel == RiskLevel.low
-                      ? 'Sin señales locales observadas'
-                      : record.riskLevel == RiskLevel.caution
-                          ? 'Revisar antes de continuar'
-                          : 'Señales críticas observadas',
-                  style: TextStyle(color: style.$2, fontWeight: FontWeight.w700),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Container(
+                width: 42,
+                height: 42,
+                decoration: BoxDecoration(
+                  color: style.$2.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(13),
                 ),
-                Text(
-                  '${QrFindingText.severityLabel(investigation.severity)} · ${investigation.score}/100 · ${QrFindingText.actionLabel(investigation.action)}',
-                  style: TextStyle(color: style.$2),
-                ),
-                const SizedBox(height: 6),
-                if (investigation.findings.isEmpty)
-                  Text(
-                    'No se observaron señales locales. Esto no demuestra que el destino sea seguro.',
-                    style: TextStyle(color: style.$2),
-                  )
-                else
-                  for (final QrFinding finding in investigation.findings) ...<Widget>[
+                child: Icon(style.$3, color: style.$2),
+              ),
+              const SizedBox(width: 11),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(title, style: TextStyle(color: style.$2, fontWeight: FontWeight.w800, fontSize: 16)),
                     Text(
-                      '• ${QrFindingText.title(finding.id)}',
-                      style: TextStyle(color: style.$2, fontWeight: FontWeight.w700),
+                      'Decisión: ${QrFindingText.actionLabel(investigation.action)}',
+                      style: TextStyle(color: style.$2.withValues(alpha: 0.82), fontWeight: FontWeight.w600),
                     ),
-                    Text(
-                      QrFindingText.explanation(finding.id),
-                      style: TextStyle(color: style.$2),
-                    ),
-                    Text(
-                      'Acción sugerida: ${QrFindingText.recommendation(finding.id)}',
-                      style: TextStyle(color: style.$2, fontStyle: FontStyle.italic),
-                    ),
-                    Text(
-                      finding.id,
-                      style: TextStyle(
-                        color: style.$2.withValues(alpha: 0.78),
-                        fontFamily: 'monospace',
-                        fontSize: 11,
-                      ),
-                    ),
-                    for (final QrEvidenceFact fact in finding.evidence)
-                      Text(
-                        '${QrFindingText.evidenceLabel(fact.id)}: ${fact.value}',
-                        style: TextStyle(color: style.$2, fontSize: 12),
-                      ),
-                    const SizedBox(height: 5),
                   ],
-                if (investigation.hypotheses.isNotEmpty) ...<Widget>[
-                  const SizedBox(height: 4),
-                  Text(
-                    'Hipótesis para investigar: ${investigation.hypotheses.map(_hypothesisLabel).join(' · ')}',
-                    style: TextStyle(color: style.$2, fontWeight: FontWeight.w700),
-                  ),
-                ],
-                const SizedBox(height: 5),
-                Text(
-                  'No comprobado: ${investigation.limitations.map(QrFindingText.limitationLabel).join(' · ')}',
-                  style: TextStyle(color: style.$2.withValues(alpha: 0.82), fontSize: 11),
                 ),
-              ],
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                decoration: BoxDecoration(
+                  color: style.$2,
+                  borderRadius: BorderRadius.circular(13),
+                ),
+                child: Column(
+                  children: <Widget>[
+                    Text(
+                      '${investigation.score}',
+                      style: TextStyle(color: style.$1, fontWeight: FontWeight.w900, fontSize: 19, height: 1),
+                    ),
+                    Text(
+                      '/ 100',
+                      style: TextStyle(color: style.$1.withValues(alpha: 0.85), fontSize: 10, fontWeight: FontWeight.w800),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Text(
+            investigation.findings.isEmpty
+                ? 'No se observaron señales locales. Esto no demuestra que el destino sea seguro.'
+                : '${investigation.findings.length} ${investigation.findings.length == 1 ? 'señal requiere' : 'señales requieren'} revisión antes de actuar.',
+            style: TextStyle(color: style.$2, height: 1.35),
+          ),
+          if (investigation.findings.isNotEmpty) ...<Widget>[
+            const SizedBox(height: 8),
+            Theme(
+              data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+              child: ExpansionTile(
+                tilePadding: EdgeInsets.zero,
+                childrenPadding: EdgeInsets.zero,
+                iconColor: style.$2,
+                collapsedIconColor: style.$2,
+                title: Text(
+                  'Ver señales, evidencia y recomendaciones',
+                  style: TextStyle(color: style.$2, fontWeight: FontWeight.w800),
+                ),
+                children: <Widget>[
+                  for (final QrFinding finding in investigation.findings)
+                    Container(
+                      width: double.infinity,
+                      margin: const EdgeInsets.only(bottom: 8),
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: style.$2.withValues(alpha: 0.07),
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text(QrFindingText.title(finding.id), style: TextStyle(color: style.$2, fontWeight: FontWeight.w800)),
+                          const SizedBox(height: 4),
+                          Text(QrFindingText.explanation(finding.id), style: TextStyle(color: style.$2)),
+                          const SizedBox(height: 5),
+                          Text(
+                            'Acción sugerida: ${QrFindingText.recommendation(finding.id)}',
+                            style: TextStyle(color: style.$2, fontWeight: FontWeight.w700),
+                          ),
+                          const SizedBox(height: 5),
+                          Text(
+                            finding.id,
+                            style: TextStyle(color: style.$2.withValues(alpha: 0.72), fontFamily: 'monospace', fontSize: 11),
+                          ),
+                          for (final QrEvidenceFact fact in finding.evidence)
+                            Text(
+                              '${QrFindingText.evidenceLabel(fact.id)}: ${fact.value}',
+                              style: TextStyle(color: style.$2.withValues(alpha: 0.88), fontSize: 12),
+                            ),
+                        ],
+                      ),
+                    ),
+                  if (investigation.hypotheses.isNotEmpty)
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        'Hipótesis: ${investigation.hypotheses.map(_hypothesisLabel).join(' · ')}',
+                        style: TextStyle(color: style.$2, fontWeight: FontWeight.w800),
+                      ),
+                    ),
+                ],
+              ),
             ),
+          ],
+          const SizedBox(height: 7),
+          Text(
+            'No comprobado: ${investigation.limitations.map(QrFindingText.limitationLabel).join(' · ')}',
+            style: TextStyle(color: style.$2.withValues(alpha: 0.78), fontSize: 11, height: 1.25),
           ),
         ],
       ),

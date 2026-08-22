@@ -18,13 +18,15 @@ class AppLocalizations {
 
   bool get _es => locale.languageCode != 'en';
   String get appTitle => 'RootCause QR Inspector';
-  String get scan => _es ? 'Escanear' : 'Scan';
+  String get scan => _es ? 'Inspeccionar' : 'Inspect';
   String get inventory => _es ? 'Inventario' : 'Inventory';
   String get generate => _es ? 'Generar' : 'Generate';
   String get history => _es ? 'Historial' : 'History';
   String get settings => _es ? 'Ajustes' : 'Settings';
-  String get scannerTitle => _es ? 'Escáner universal' : 'Universal scanner';
-  String get scannerSubtitle => _es ? 'Escanea, interpreta y verifica antes de ejecutar' : 'Scan, interpret, and verify before acting';
+  String get scannerTitle => _es ? 'Inspector de seguridad QR' : 'QR security inspector';
+  String get scannerSubtitle => _es
+      ? 'Observa el destino, explica el riesgo y decide antes de actuar'
+      : 'Observe the destination, explain the risk, and decide before acting';
   String get temporaryMode => _es ? 'Modo temporal' : 'Temporary mode';
   String get recoveryCenter => _es ? 'Centro de recuperación' : 'Recovery center';
   String get retry => _es ? 'Reintentar' : 'Retry';

@@ -11,7 +11,7 @@ void main() {
     await tester.pump(const Duration(seconds: 5));
     expect(
       find.byWidgetPredicate((Widget widget) =>
-          widget is Text && <String>{'Escáner universal', 'Universal scanner', 'Inicio seguro'}.contains(widget.data)),
+          widget is Text && <String>{'Inspector de seguridad QR', 'QR security inspector', 'Inicio seguro'}.contains(widget.data)),
       findsAtLeastNWidgets(1),
     );
   });

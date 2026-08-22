@@ -26,13 +26,14 @@ OUTPUT = ROOT / "SOURCE_MANIFEST.json"
 
 rows = []
 for path in sorted(ROOT.rglob("*")):
-    if not path.is_file() or any(part in EXCLUDED for part in path.parts) or path == OUTPUT:
+    relative = path.relative_to(ROOT)
+    if not path.is_file() or relative.parts[0] in EXCLUDED or path == OUTPUT:
         continue
     if path.name in EXCLUDED_FILES:
         continue
     rows.append(
         {
-            "path": path.relative_to(ROOT).as_posix(),
+            "path": relative.as_posix(),
             "size": path.stat().st_size,
             "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
         }
