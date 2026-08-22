@@ -187,7 +187,7 @@ abstract final class ImportService {
       allowedExtensions: const <String>['json'],
     );
     if (file == null) return null;
-    if (file.size > maxImportBytes) throw const FormatException('El archivo supera el límite de 25 MB.');
+    if (await file.length() > maxImportBytes) throw const FormatException('El archivo supera el límite de 25 MB.');
     final List<int> bytes = await file.readAsBytes();
     if (bytes.length > maxImportBytes) throw const FormatException('El archivo supera el límite de 25 MB.');
     return _PickedJson(fileName: file.name, bytes: bytes);

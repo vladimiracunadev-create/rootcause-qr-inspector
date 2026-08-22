@@ -583,8 +583,8 @@
     },
     {
       "path": "lib/services/import_service.dart",
-      "size": 7940,
-      "sha256": "806a89ad09048d83bf7de095147aa6dca784e74df123467eeb8186478fef119e"
+      "size": 7950,
+      "sha256": "22fc8002f4ddbb4641e75825ed583f665710ceeebbe1e94391782754a5218d37"
     },
     {
       "path": "lib/services/inventory_repository.dart",
