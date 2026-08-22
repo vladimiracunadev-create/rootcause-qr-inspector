@@ -17,6 +17,7 @@ on:
       - "lib/**"
       - "web/**"
       - "assets/**"
+      - "docs/images/android/**"
       - "pubspec.yaml"
       - "pubspec.lock"
       - "tool/bootstrap.py"
@@ -74,10 +75,16 @@ jobs:
           cp -r landing _site
           touch _site/.nojekyll
           mkdir -p _site/assets
+          mkdir -p _site/assets/android
           cp assets/launcher/web/Icon-512.png _site/assets/icon-512.png
+          cp docs/images/android/*.png _site/assets/android/
           cp -r build/web _site/app
           test -f _site/app/index.html
           test -f _site/assets/icon-512.png
+          test -f _site/assets/android/android-inspector-home.png
+          test -f _site/assets/android/android-generator.png
+          test -f _site/assets/android/android-settings.png
+          test -f _site/assets/android/android-analysis-result.png
 
       - uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
 

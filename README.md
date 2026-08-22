@@ -143,6 +143,25 @@ segura a otra aplicación: esquema no permitido, host inválido, caracteres de
 control o autoridad ambigua. Una URL crítica pero interpretable queda en
 **confirmación obligatoria**, acompañada de su evidencia.
 
+## 📱 APK Android abierto y comprobado
+
+Estas son capturas reales del APK publicado en el
+[`Release v0.1.0`](https://github.com/vladimiracunadev-create/rootcause-qr-inspector/releases/tag/v0.1.0),
+instalado desde GitHub en un emulador Android 36.1 de este equipo. No son
+mockups ni imágenes generadas.
+
+| Análisis local | Generador local | Privacidad y accesibilidad |
+|---|---|---|
+| <img src="docs/images/android/android-analysis-result.png" alt="Resultado real del análisis local de un QR en Android" width="260"> | <img src="docs/images/android/android-generator.png" alt="Generador local de QR abierto en Android" width="260"> | <img src="docs/images/android/android-settings.png" alt="Ajustes de privacidad y accesibilidad abiertos en Android" width="260"> |
+| La app importó el QR, separó lo observado de lo no comprobado y mostró `0/100` sin llamarlo seguro. | El generador produjo localmente un QR para `https://example.com`. | Ajustes de apariencia, inspección, privacidad y seguridad disponibles. |
+
+Comprobación del artefacto público: `adb install -r` devolvió `Success`, Android
+abrió `dev.vladimiracuna.rootcause_qr_inspector`, `apksigner` verificó APK
+Signature Scheme v2 y el SHA-256 local coincidió con el publicado:
+`78ed8e2194488029218f73aa17fdfa0fb9075e1d0dd110db1981b16c4418c51b`.
+La cámara virtual del AVD no entregó sensor y la app mostró un error recuperable;
+la importación desde Photo Picker sí completó el análisis de extremo a extremo.
+
 ## 🛡️ Las señales que observa en 0.1.0
 
 | Familia | Hallazgos principales |
@@ -281,15 +300,15 @@ flutter test test/core/qr_evidence_exporter_test.dart
 
 El estado comprobado y lo pendiente se declara en [`VALIDATION.md`](VALIDATION.md).
 
-La CI conserva como artefactos el APK de depuración, el build web, cobertura,
-SBOM CycloneDX, inventario de licencias y checksums. Estos artefactos de CI son
-evidencia técnica, no una release firmada para distribución.
+La CI conserva como artefactos el APK instalable de release, el build web,
+cobertura, SBOM CycloneDX, inventario de licencias y checksums. El tag `v0.1.0`
+publica además el APK y su SHA-256 en un GitHub Release verificable.
 
 ## 📱 Plataformas objetivo
 
 | Plataforma | Ruta | Limitación principal |
 |---|---|---|
-| Android 7+ | app Flutter nativa | APK inicial de evaluación; firma de publicación pendiente |
+| Android 7+ | app Flutter nativa | [APK v0.1.0 público](https://github.com/vladimiracunadev-create/rootcause-qr-inspector/releases/tag/v0.1.0); Play Store pendiente |
 | iOS 15.5+ | app Flutter nativa | compila para simulador en CI; dispositivo físico y firma pendientes |
 | macOS | app Flutter nativa | cámara/galería; dispositivo pendiente |
 | Web / PWA | Flutter Web | PDF local no soportado por el renderer actual |
@@ -303,11 +322,12 @@ evidencia técnica, no una release firmada para distribución.
 - motor de 26 reglas, contrato JSON, fixtures y pruebas unitarias/widgets;
 - historial e inventario cifrados, modo temporal y recuperación;
 - CI multi-plataforma, SBOM, licencias, checksums, landing y PWA;
+- GitHub Release `v0.1.0` con APK Android instalable y procedencia atestada;
 - documentación de arquitectura, operación, amenazas, privacidad y límites.
 
 ### ❌ Todavía no incluye
 
-- APK/IPA/app firmados como release para personas usuarias;
+- publicación en Play Store/App Store y paquetes instalables para iOS/macOS;
 - validación completa de cámara, biometría y ciclo de vida en dispositivo físico;
 - reputación, DNS, certificados o seguimiento de redirecciones en red;
 - editor visual de política organizacional ni correlación automática entre

@@ -196,8 +196,8 @@
         </ul>
         <div class="note" style="margin-top:1.5rem">
           <strong>Estado 0.1.0:</strong> contrato, estructura, análisis, 77 pruebas
-          y builds Android/web/Apple en verde. Hardware físico y firma siguen
-          pendientes antes de publicar binarios de producción.
+          y builds Android/web/Apple en verde. El APK Android v0.1.0 está
+          publicado; la matriz amplia de hardware físico y las tiendas siguen pendientes.
         </div>
       </div>
     </section>
@@ -205,15 +205,21 @@
     <section id="instalar" class="section section-alt">
       <div class="container">
         <p class="eyebrow">Usar RootCause QR Inspector</p>
-        <h2 class="section-title">Prueba la PWA o ejecuta el código auditado</h2>
-        <p class="section-sub">La PWA se publica desde el mismo commit que ves en GitHub. Los binarios firmados llegarán después de completar la matriz física.</p>
+        <h2 class="section-title">Instala Android o prueba la PWA</h2>
+        <p class="section-sub">El APK público se construye desde el tag v0.1.0, incluye SHA-256 y procedencia atestada. La PWA sale del mismo repositorio.</p>
         <div class="download-grid">
           <article class="download-card primary">
-            <span class="dl-badge">Recomendado</span>
+            <span class="dl-badge">Android 7+</span>
+            <h3>APK v0.1.0</h3>
+            <p>Descarga directa para revisar el producto en un teléfono Android. Es una distribución por GitHub, no por Play Store.</p>
+            <p class="dl-meta">APK · SHA-256 · procedencia pública</p>
+            <a class="btn-primary" href="https://github.com/vladimiracunadev-create/rootcause-qr-inspector/releases/download/v0.1.0/rootcause-qr-inspector-v0.1.0-android.apk">Descargar APK</a>
+          </article>
+          <article class="download-card">
             <h3>PWA en GitHub Pages</h3>
             <p>Abre la aplicación desde HTTPS sin instalar un APK. Cámara disponible según permisos y compatibilidad del navegador.</p>
             <p class="dl-meta">Web · instalable · telemetría cero</p>
-            <a class="btn-primary" href="app/">Inspeccionar un QR</a>
+            <a class="btn-ghost" href="app/">Inspeccionar un QR</a>
           </article>
           <article class="download-card">
             <h3>Código fuente</h3>
@@ -221,6 +227,20 @@
             <p class="dl-meta">Flutter 3.44.7 · Dart 3.12+</p>
             <a class="btn-ghost" href="https://github.com/vladimiracunadev-create/rootcause-qr-inspector#inicio-rápido">Ver instalación</a>
           </article>
+        </div>
+        <div class="shots" aria-label="Capturas reales de la aplicación Android v0.1.0">
+          <figure>
+            <img src="assets/android/android-analysis-result.png" alt="Resultado real de seguridad QR ejecutándose en Android" loading="lazy" />
+            <figcaption>Análisis real · hechos y límites separados</figcaption>
+          </figure>
+          <figure>
+            <img src="assets/android/android-generator.png" alt="Generador local de códigos QR ejecutándose en Android" loading="lazy" />
+            <figcaption>Generador local · datos sin salir del dispositivo</figcaption>
+          </figure>
+          <figure>
+            <img src="assets/android/android-settings.png" alt="Ajustes de privacidad y accesibilidad ejecutándose en Android" loading="lazy" />
+            <figcaption>Ajustes · privacidad y accesibilidad visibles</figcaption>
+          </figure>
         </div>
         <div class="note"><strong>Importante:</strong> una lectura sin señales locales no declara seguro el destino. Verifica de forma independiente pagos, credenciales y beneficiarios.</div>
       </div>

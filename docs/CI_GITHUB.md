@@ -9,6 +9,8 @@ flowchart LR
     S --> A["analyze + 77 casos"]
     A --> B["build web + Android"]
     B --> R["SBOM + licencias + checksums"]
+    T["tag vX.Y.Z"] --> V["APK release + verificación"]
+    V --> H["GitHub Release + SHA-256 + procedencia"]
     P --> M["build iOS + macOS"]
     L["cambio de app o landing"] --> G["GitHub Pages"]
     G --> W["landing / + PWA /app/"]
@@ -20,6 +22,7 @@ flowchart LR
 |---|---|---|
 | [`flutter-ci.yml`](../.github/workflows/flutter-ci.yml) | push a `main`/`develop`, pull request o manual | valida contrato, analiza, prueba, genera SBOM/licencias y compila Android, web, iOS Simulator y macOS |
 | [`deploy-landing.yml`](../.github/workflows/deploy-landing.yml) | cambios publicables en `main` o manual | compila la PWA, ensambla landing/capturas y despliega GitHub Pages |
+| [`android-release.yml`](../.github/workflows/android-release.yml) | tag semántico `vX.Y.Z` | valida la versión, analiza, prueba, compila y verifica el APK, atesta su procedencia y publica el GitHub Release |
 
 ## Controles de entrega
 
@@ -27,11 +30,12 @@ flowchart LR
 2. Las Actions usan commits SHA inmutables con su versión legible en comentario.
 3. CI usa `contents: read`; Pages añade únicamente `pages: write` e
    `id-token: write`.
-4. El job principal publica APK de depuración, web, cobertura, SBOM, licencias y
+4. El job principal publica APK instalable de release, web, cobertura, SBOM, licencias y
    checksums como artefactos de diagnóstico.
 5. Pages se ensambla desde fuentes del mismo commit: landing en `/` y PWA en
    `/app/` con `base-href` explícito.
-6. Ningún workflow de 0.1.0 crea una release firmada ni publica en tiendas.
+6. Un tag cuya versión coincide con `pubspec.yaml` publica el APK, SHA-256 y
+   procedencia en GitHub Releases. No publica en tiendas.
 
 ## Réplica local
 
@@ -43,7 +47,7 @@ python3 tool/verify_rootcause_contract.py
 flutter analyze --fatal-infos
 flutter test
 flutter build web --release
-flutter build apk --debug
+flutter build apk --release
 ```
 
 En macOS se pueden generar `ios,macos` y repetir el build de iOS Simulator y

@@ -2,6 +2,14 @@
 
 ## Inspeccionar un QR ahora
 
+Para Android 7 o posterior, descarga el APK público desde
+[`GitHub Release v0.1.0`](https://github.com/vladimiracunadev-create/rootcause-qr-inspector/releases/tag/v0.1.0)
+o usa la
+[`descarga directa`](https://github.com/vladimiracunadev-create/rootcause-qr-inspector/releases/download/v0.1.0/rootcause-qr-inspector-v0.1.0-android.apk).
+Android puede pedir autorización para instalar desde el navegador o gestor de
+archivos usado. El Release incluye el archivo `.sha256` para comprobar la
+descarga.
+
 La PWA pública está disponible en
 [`https://vladimiracunadev-create.github.io/rootcause-qr-inspector/app/`](https://vladimiracunadev-create.github.io/rootcause-qr-inspector/app/).
 En móvil y escritorio, la aplicación nativa añade cámara, imágenes y PDF según

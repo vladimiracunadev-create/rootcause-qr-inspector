@@ -17,3 +17,15 @@ La versión se considera candidata estable solamente cuando todos los casos obli
 | TalkBack/VoiceOver/teclado | Obligatorio | Obligatorio | Obligatorio | Obligatorio | Obligatorio | Obligatorio |
 
 Los recursos reproducibles están en `test_assets/manifest.json`. Las simbologías no generadas de forma confiable deben incorporarse únicamente como capturas reales verificadas.
+
+## Registro reproducible de v0.1.0
+
+| Entorno | Artefacto | Instalación/inicio | Generar/importar/analizar | Ajustes | Cámara |
+|---|---|---|---|---|---|
+| AVD Medium Phone, Android 36.1 x86_64, 1080×2400 | APK público `v0.1.0`, SHA-256 `78ed8e2194488029218f73aa17fdfa0fb9075e1d0dd110db1981b16c4418c51b` | `adb install -r`: Success; actividad principal visible | QR para `https://example.com` generado, importado desde Photo Picker y analizado: `0/100`, sin declarar el destino seguro | apariencia, inspección, privacidad y seguridad: visibles | el sensor virtual del AVD no inició; la app mostró error recuperable |
+
+Evidencia visual: [`android-inspector-home.png`](../images/android/android-inspector-home.png),
+[`android-generator.png`](../images/android/android-generator.png) y
+[`android-settings.png`](../images/android/android-settings.png), además del
+[`resultado de análisis`](../images/android/android-analysis-result.png). Este registro no
+sustituye las filas obligatorias en teléfonos físicos.
