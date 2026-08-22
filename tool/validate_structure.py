@@ -174,7 +174,6 @@ def check_landing() -> None:
     reference = re.compile(r'(?:href|src)="([^"]+)"')
     generated = {
         "assets/icon-512.png": ROOT / "assets" / "launcher" / "web" / "Icon-512.png",
-        "assets/rootcause-qr-security-flow.svg": ROOT / "docs" / "images" / "rootcause-qr-security-flow.svg",
     }
     for html in sorted(landing.glob("*.html")):
         text = html.read_text(encoding="utf-8")
@@ -193,7 +192,6 @@ def check_landing() -> None:
     workflow = (ROOT / ".github" / "workflows" / "deploy-landing.yml").read_text(encoding="utf-8")
     for required in (
         "cp assets/launcher/web/Icon-512.png _site/assets/icon-512.png",
-        "cp docs/images/rootcause-qr-security-flow.svg _site/assets/rootcause-qr-security-flow.svg",
         "cp -r build/web _site/app",
     ):
         if required not in workflow:

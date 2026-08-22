@@ -17,14 +17,19 @@
       "sha256": "ab17ac347988e28f053f6faa34de5c58a70e8a8a8419145a341d81e339fc1c1f"
     },
     {
+      "path": ".github/workflows/android-release.yml",
+      "size": 2930,
+      "sha256": "34a9318875cd328ac2edec025fc0491bdb3fbb0f69dd17945d62752e87d0c471"
+    },
+    {
       "path": ".github/workflows/deploy-landing.yml",
-      "size": 3233,
-      "sha256": "3f1a0d7b99ccae11e4201e950254e21751e2ce791ea3b049f2303582de804dfe"
+      "size": 3018,
+      "sha256": "4e61f95a27ebb91ca31458d9aef211dd11378e64e90beabea6369bb71d83a008"
     },
     {
       "path": ".github/workflows/flutter-ci.yml",
-      "size": 3331,
-      "sha256": "c62eea992909aca28f15c48815f81449bca146298f0b3c6bba8778b61d2c4400"
+      "size": 3351,
+      "sha256": "aa9f7c2e8f5ce5db716c9a957b67b56a913cd091d59c2e6fcf3ab6127d134711"
     },
     {
       "path": ".gitignore",
@@ -387,6 +392,11 @@
       "sha256": "92fe557be0df278be49ef85d476a53d46443c06a86b040e141a70fcf057b4698"
     },
     {
+      "path": "docs/releases/v0.1.0.md",
+      "size": 1718,
+      "sha256": "bca401cff5ad175b51b100f9eb09e0174dc721d0c75ea7631d9c37b8cbd9e815"
+    },
+    {
       "path": "docs/ROADMAP.md",
       "size": 1696,
       "sha256": "b281c5ff9935ca0bb8ae81bbc9e95769aa50b27722a87320557b7340ea2e1ae6"
@@ -483,13 +493,13 @@
     },
     {
       "path": "landing/assets/style.css",
-      "size": 14890,
-      "sha256": "19b72e98b440f2c257ae74572d294da5b1695e0f5bea255cab56f2c38706554c"
+      "size": 14533,
+      "sha256": "2c18077427ed672f7bda1900ab4f11eceb88061fb6c6ac11274b4f84ec745daa"
     },
     {
       "path": "landing/index.html",
-      "size": 19533,
-      "sha256": "f071842e7abbaff1025486cb7445e8e0fcf311aa0758f7794bbe8aea96fdd280"
+      "size": 19190,
+      "sha256": "7126b80c33c23f702b81fd82129c82bc4baf4eaccbef5acbefe1ad72d07aaa21"
     },
     {
       "path": "landing/privacidad.html",
@@ -843,8 +853,8 @@
     },
     {
       "path": "README.md",
-      "size": 19719,
-      "sha256": "8f7436ab750f4ee79b67003abdd3489aa9ee3bb670ace254d28f4c4803be8e8a"
+      "size": 19867,
+      "sha256": "514204bdcf415148c7a81416e7757ab3ab0a9bbc309c676d08933ad8213776ec"
     },
     {
       "path": "RELEASE_SOURCE.json",
@@ -1103,8 +1113,8 @@
     },
     {
       "path": "tool/validate_structure.py",
-      "size": 10039,
-      "sha256": "14bde6c1b5ccb2d0a3d9998fc1830fb378729b95d17532644379f9d95b059fd2"
+      "size": 9828,
+      "sha256": "222e786519dc51d20bb459dc288fca17be1278fb409d559c055e2b833c831522"
     },
     {
       "path": "tool/verify_rootcause_contract.py",

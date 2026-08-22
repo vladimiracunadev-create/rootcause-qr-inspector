@@ -48,15 +48,15 @@ jobs:
           python3 tool/generate_license_inventory.py
       - name: Build web
         run: flutter build web --release
-      - name: Build Android debug APK
-        run: flutter build apk --debug
+      - name: Build Android installable release APK
+        run: flutter build apk --release
       - name: Checksums
-        run: python3 tool/generate_checksums.py build/app/outputs/flutter-apk/app-debug.apk > build/checksums.txt
+        run: python3 tool/generate_checksums.py build/app/outputs/flutter-apk/app-release.apk > build/checksums.txt
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: android-web-quality-artifacts
           path: |
-            build/app/outputs/flutter-apk/app-debug.apk
+            build/app/outputs/flutter-apk/app-release.apk
             build/web
             build/reports/sbom.cdx.json
             build/reports/dependency-licenses.json

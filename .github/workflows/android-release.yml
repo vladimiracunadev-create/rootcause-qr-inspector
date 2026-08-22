@@ -1,0 +1,86 @@
+name: Android installable release
+
+on:
+  push:
+    tags:
+      - "v[0-9]+.[0-9]+.[0-9]+"
+
+permissions:
+  contents: write
+  id-token: write
+  attestations: write
+
+env:
+  FLUTTER_VERSION: 3.44.7
+
+jobs:
+  release:
+    name: Build, verify and publish installable APK
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.12"
+
+      - name: Install Python tooling
+        run: python3 -m pip install --upgrade pyyaml
+
+      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+
+      - name: Verify version and source contract
+        run: |
+          set -euo pipefail
+          version="$(python3 -c 'import yaml; print(str(yaml.safe_load(open("pubspec.yaml"))["version"]).split("+", 1)[0])')"
+          test "${GITHUB_REF_NAME}" = "v${version}"
+          python3 tool/validate_structure.py --require-lock
+          python3 tool/verify_rootcause_contract.py
+
+      - name: Generate Android project
+        run: python3 tool/bootstrap.py --platforms android
+
+      - name: Analyze and test release source
+        run: |
+          flutter analyze --fatal-infos
+          flutter test
+
+      - name: Build installable release APK
+        run: flutter build apk --release
+
+      - name: Verify APK signature and prepare publication
+        run: |
+          set -euo pipefail
+          source_apk="build/app/outputs/flutter-apk/app-release.apk"
+          release_apk="build/rootcause-qr-inspector-${GITHUB_REF_NAME}-android.apk"
+          test -s "$source_apk"
+          cp "$source_apk" "$release_apk"
+          apksigner="$(find "$ANDROID_HOME/build-tools" -name apksigner -type f | sort -V | tail -n 1)"
+          test -x "$apksigner"
+          "$apksigner" verify --verbose --print-certs "$release_apk"
+          python3 tool/generate_checksums.py "$release_apk" > "${release_apk}.sha256"
+
+      - name: Attest APK provenance
+        uses: actions/attest-build-provenance@977bb373ede98d70efdf65b84cb5f73e068dcc2a # v3
+        with:
+          subject-path: build/rootcause-qr-inspector-${{ github.ref_name }}-android.apk
+
+      - name: Publish GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          apk="build/rootcause-qr-inspector-${GITHUB_REF_NAME}-android.apk"
+          checksum="${apk}.sha256"
+          gh release create "$GITHUB_REF_NAME" "$apk" "$checksum" \
+            --repo "$GITHUB_REPOSITORY" \
+            --title "RootCause QR Inspector ${GITHUB_REF_NAME}" \
+            --notes-file "docs/releases/${GITHUB_REF_NAME}.md" \
+            --verify-tag

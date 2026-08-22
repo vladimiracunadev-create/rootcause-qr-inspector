@@ -260,15 +260,6 @@ pre code { background: none; color: inherit; padding: 0; font-size: inherit; }
 .risk-grid strong { display: block; margin-bottom: .35rem; color: var(--txt); font-size: 1rem; }
 .risk-grid p { color: var(--txt-sec); font-size: .87rem; line-height: 1.5; }
 
-.product-flow { margin-top: 2.25rem; text-align: center; }
-.product-flow img {
-  display: block;
-  width: 100%;
-  border: 1px solid var(--border);
-  border-radius: 18px;
-  box-shadow: var(--shadow);
-}
-.product-flow figcaption { margin-top: .85rem; color: var(--txt-sec); font-size: .88rem; }
 .section-sub {
   color: var(--txt-sec);
   margin-bottom: 2.5rem;
@@ -494,7 +485,6 @@ td strong { color: var(--txt); }
   .security-callout { grid-template-columns: 1fr; padding: 1.35rem; gap: 1.25rem; }
   .security-callout .btn-primary { text-align: center; }
   .risk-grid { grid-template-columns: 1fr 1fr; }
-  .product-flow { margin-left: -.25rem; margin-right: -.25rem; }
 }
 
 @media (max-width: 430px) {

@@ -27,6 +27,7 @@
 [![GitHub Pages](https://img.shields.io/badge/PWA-GitHub%20Pages-12847b.svg?logo=github)](https://vladimiracunadev-create.github.io/rootcause-qr-inspector/)
 
 🔍 **[Inspeccionar un QR ahora →](https://vladimiracunadev-create.github.io/rootcause-qr-inspector/app/)** ·
+📱 **[Descargar Android →](https://github.com/vladimiracunadev-create/rootcause-qr-inspector/releases/latest/download/rootcause-qr-inspector-v0.1.0-android.apk)** ·
 🌐 **[Página del producto →](https://vladimiracunadev-create.github.io/rootcause-qr-inspector/)** ·
 📘 **[Manual de usuario →](docs/MANUAL_USUARIO.md)**
 
@@ -45,7 +46,9 @@ QR puede ser peligroso y deja que la persona decida después de ver la evidencia
 
 > **Estado de 0.1.0:** contrato y estructura validados; CI pública en verde con
 > análisis, 77 casos Dart/Flutter y builds para Android, web, iOS simulador y
-> macOS. Las pruebas físicas y la firma de distribución siguen pendientes.
+> macOS. Android dispone además de APK instalable de evaluación, checksum y
+> procedencia pública; la firma estable, la matriz física amplia y la
+> publicación en tiendas siguen pendientes.
 
 ## 🔍 Qué problema resuelve
 
@@ -125,9 +128,7 @@ flowchart TD
     G --> K["Bloquear URI ambigua"]
 ```
 
-## 📸 Interfaz
-
-![Flujo visual de RootCause QR Inspector: inspección local, resultado explicable y evidencia redactada](docs/images/rootcause-qr-security-flow.svg)
+## 🧭 Flujo del producto
 
 La interfaz presenta primero la inspección de seguridad y mantiene una jerarquía
 única: **observar → explicar el riesgo → decidir → exportar evidencia**. El
