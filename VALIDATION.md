@@ -7,8 +7,8 @@
 `c1f98781575bf8223b19ad8344fdfddeaccef373`
 
 Este archivo distingue lo ejecutado sobre **RootCause QR Inspector** de lo que
-solo fue validado en la base heredada. No se atribuye a esta derivación una
-compilación que todavía no se ejecutó.
+solo fue validado en la base heredada y de lo que todavía exige hardware o
+credenciales de distribución.
 
 ## Ejecutado sobre 0.1.0+1 en este entorno
 
@@ -23,7 +23,27 @@ No se ejecutó un validador de metaschema Draft 2020-12 independiente; el
 verificador offline sí comprueba el dialecto, los 26 ids, las referencias de
 fixtures y las restricciones de redacción específicas del contrato.
 
-## Pruebas presentes, todavía no ejecutadas aquí
+## Validación pública de la aplicación
+
+La ejecución pública de GitHub Actions
+[`32543327067`](https://github.com/vladimiracunadev-create/rootcause-qr-inspector/actions/runs/32543327067)
+terminó en verde sobre el commit `2da6534`:
+
+| Gate | Resultado |
+|---|---|
+| Resolución reproducible | `flutter pub get --enforce-lockfile` correcto |
+| Análisis estático | `flutter analyze --fatal-infos` sin hallazgos |
+| Pruebas | 77 casos Dart/Flutter en verde |
+| Web / PWA | build release correcto |
+| Android | APK de depuración correcto, checksum y artefacto publicados por CI |
+| iOS | build debug para simulador correcto, sin identidad de firma |
+| macOS | build debug correcto |
+
+El despliegue de Pages
+[`32543327044`](https://github.com/vladimiracunadev-create/rootcause-qr-inspector/actions/runs/32543327044)
+también terminó en verde y publicó la landing y la PWA.
+
+## Cobertura de la suite
 
 El repositorio declara 77 casos Dart/Flutter entre pruebas unitarias, widgets e
 integración. Diecinueve cubren específicamente el contrato nuevo o sus fronteras:
@@ -38,10 +58,9 @@ integración. Diecinueve cubren específicamente el contrato nuevo o sus fronter
 - privacidad: una URL con token se clasifica como sensible antes de decidir su
   persistencia.
 
-Flutter y Dart no están instalados en el entorno de ensamblado actual. Por eso
-no se afirma que `flutter analyze`, `flutter test` o un build de 0.1.0 hayan
-pasado localmente. La CI incluida ejecuta esos pasos cuando el repositorio se
-publique o se abra como proyecto Git.
+Flutter y Dart no estaban instalados en el entorno local de ensamblado. Por eso
+los resultados de aplicación anteriores se atribuyen a la CI pública y no a una
+ejecución local. Los verificadores Python sí se ejecutaron localmente.
 
 ## Heredado y verificado en la fuente
 
@@ -58,7 +77,7 @@ Eso da confianza en el sustrato, pero **no sustituye** la validación de los
 cambios RootCause. El detalle histórico se conserva mediante el enlace al
 repositorio original en [`docs/rootcause/PROVENANCE.md`](docs/rootcause/PROVENANCE.md).
 
-## Gate requerido antes de un release binario
+## Gate reproducible antes de un release binario
 
 ```bash
 flutter pub get
@@ -71,9 +90,10 @@ flutter build web --release
 flutter build apk --release
 ```
 
-Después deben probarse en dispositivo físico la cámara, ciclo de vida, poca luz,
-biometría, almacenamiento seguro y apertura externa. Para iOS/macOS se requiere
-además entorno Apple; para distribución, firma y cuentas de tienda.
+La CI ya satisface estos gates de código y compilación. Antes de un release deben
+probarse en dispositivo físico la cámara, ciclo de vida, poca luz, biometría,
+almacenamiento seguro y apertura externa. Para distribución se requieren además
+firma, perfiles y cuentas de tienda.
 
 ## Criterio de honestidad
 

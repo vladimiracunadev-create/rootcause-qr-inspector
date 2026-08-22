@@ -278,8 +278,8 @@
     },
     {
       "path": "IMPLEMENTATION_STATUS.md",
-      "size": 3400,
-      "sha256": "c3538a450f0e48dc336de3f303293f7df96161c6a73bea4d26c843ec60e58934"
+      "size": 3448,
+      "sha256": "d8cb939dc9bc50fb08f62ad21ac8c911d6fb33acb99c786759ca6b9ea6f920d9"
     },
     {
       "path": "integration_test/app_launch_test.dart",
@@ -298,8 +298,8 @@
     },
     {
       "path": "landing/index.html",
-      "size": 18768,
-      "sha256": "f548fb82249889d1a302657ca4ea78de84fb55675b2fcc9eb091fd0f74260a71"
+      "size": 18826,
+      "sha256": "c958089950d87ec772f7a3bc096ec09a8b45f34149448e97b80b298bddb5d722"
     },
     {
       "path": "landing/privacidad.html",
@@ -653,8 +653,8 @@
     },
     {
       "path": "README.md",
-      "size": 15521,
-      "sha256": "cf45414624176267ed65a0f5368c1e9c87bb6816329904e558a185ca799b3a48"
+      "size": 15531,
+      "sha256": "e9634e02879ed7ce04e305d282d6417717fe0dccd9676538a7ad8debbd0de8e9"
     },
     {
       "path": "RELEASE_SOURCE.json",
@@ -923,8 +923,8 @@
     },
     {
       "path": "VALIDATION.md",
-      "size": 3711,
-      "sha256": "f07a60fb065660f223f4d9229cbd69375895a1ed7a9727c9181173c5b7437635"
+      "size": 4566,
+      "sha256": "64d68ffa68b5a593022421f49cb9576ee5ec49926d0209224acf16ab8e08ff0b"
     }
   ]
 }

@@ -15,9 +15,9 @@
 [Revisar límites](docs/rootcause/LIMITATIONS.md) ·
 [Política de seguridad](SECURITY.md)
 
-> **Estado de 0.1.0:** contrato y estructura validados offline. La CI pública
-> ejecuta análisis, 77 casos Dart/Flutter y builds para Android, web, iOS y
-> macOS. No se publican binarios hasta que esos gates estén en verde.
+> **Estado de 0.1.0:** contrato y estructura validados; CI pública en verde con
+> análisis, 77 casos Dart/Flutter y builds para Android, web, iOS simulador y
+> macOS. Las pruebas físicas y la firma de distribución siguen pendientes.
 
 ## 🔍 Qué problema resuelve
 

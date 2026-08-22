@@ -16,16 +16,18 @@
 | Política | El API del motor acepta marcas, dominios y umbrales; se incluye una configuración sintética de ejemplo |
 | Privacidad | Análisis local y telemetría cero; exportación solo por acción de la persona |
 
-## Coherente y validado offline
+## Coherente y validado
 
 - 26 reglas sincronizadas entre motor, textos, esquema y documentación.
 - 12 fixtures sintéticos sin destinos reales operables.
 - redacción verificada para impedir que `effectiveUri` reconstruya la carga;
 - frase obligatoria para resultados normales;
 - YAML, JSON, imports, enlaces, SBOM, versión y lockfile.
+- análisis estático sin hallazgos y 77 casos Dart/Flutter en verde;
+- builds correctos de Android, web/PWA, iOS para simulador y macOS.
 
-La suite Flutter de 77 casos está incluida, pero no se ejecutó en el entorno de
-ensamblado porque Flutter/Dart no estaban instalados. Ver [`VALIDATION.md`](VALIDATION.md).
+La evidencia y los enlaces de las ejecuciones públicas se registran en
+[`VALIDATION.md`](VALIDATION.md).
 
 ## Parcial y declarado
 
@@ -42,14 +44,13 @@ ensamblado porque Flutter/Dart no estaban instalados. Ver [`VALIDATION.md`](VALI
 - **Idioma:** interfaz en español; la infraestructura de localización heredada
   no cubre todavía todos los textos nuevos.
 
-## Requiere validación de runtime
+## Requiere validación en hardware y distribución
 
-- análisis estático y suite Flutter completa;
-- build Android/PWA y compilación iOS/macOS;
 - cámara, enfoque, poca luz, etiquetas curvas/dañadas y lotes grandes;
 - ciclo de vida, biometría, Keychain/Keystore y recuperación;
 - accesibilidad con TalkBack/VoiceOver;
 - apertura externa y confirmaciones en cada plataforma.
+- firma de producción y prueba de los binarios distribuibles.
 
 ## Próximas capas, no presentes
 
