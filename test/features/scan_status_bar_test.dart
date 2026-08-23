@@ -13,12 +13,15 @@ void main() {
   }) async {
     await tester.pumpWidget(MaterialApp(
       home: Scaffold(
-        body: ScanStatusBar(
-          phase: phase,
-          message: 'Mensaje de estado',
-          animate: animate,
-          actionLabel: actionLabel,
-          onAction: onAction,
+        body: Align(
+          alignment: Alignment.topCenter,
+          child: ScanStatusBar(
+            phase: phase,
+            message: 'Mensaje de estado',
+            animate: animate,
+            actionLabel: actionLabel,
+            onAction: onAction,
+          ),
         ),
       ),
     ));
@@ -66,6 +69,24 @@ void main() {
 
     expect(find.text('Sensor no disponible'), findsOneWidget);
     expect(find.text('Mensaje de estado'), findsOneWidget);
+  });
+
+  testWidgets('the status stays compact on a narrow phone with large text', (WidgetTester tester) async {
+    tester.view.physicalSize = const Size(320, 640);
+    tester.view.devicePixelRatio = 1;
+    tester.platformDispatcher.textScaleFactorTestValue = 1.6;
+    addTearDown(tester.view.reset);
+    addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
+
+    await pumpBar(
+      tester,
+      phase: ScanPhase.paused,
+      actionLabel: 'Reanudar',
+      onAction: () {},
+    );
+
+    expect(tester.getSize(find.byType(ScanStatusBar)).height, lessThan(110));
+    expect(tester.takeException(), isNull);
   });
 
   testWidgets('the frame only sweeps while the camera is analysing frames', (WidgetTester tester) async {

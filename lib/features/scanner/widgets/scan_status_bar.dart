@@ -15,12 +15,12 @@ enum ScanPhase {
   unavailable,
 }
 
-/// Permanent, always-visible answer to "is it scanning right now?".
+/// Permanent, compact answer to "is it scanning right now?".
 ///
-/// The first version of the scanner showed only a hint text, so a camera that
-/// silently failed to start looked exactly like a camera waiting for a code.
-/// The moving bar is the part that makes the difference legible at a glance,
-/// and the action button gives the user a way out without leaving the screen.
+/// It deliberately stays short: the camera frame is the primary surface and
+/// must remain usable on short and narrow phones. Recovery actions can still
+/// be supplied, but the component never turns the preview itself into a hidden
+/// button.
 class ScanStatusBar extends StatelessWidget {
   const ScanStatusBar({
     required this.phase,
@@ -70,11 +70,11 @@ class ScanStatusBar extends StatelessWidget {
       label: '$_title. $message',
       excludeSemantics: true,
       child: Container(
-        padding: const EdgeInsets.fromLTRB(14, 12, 14, 12),
+        padding: const EdgeInsets.fromLTRB(10, 9, 10, 8),
         decoration: BoxDecoration(
           color: const Color(0xFF07120F).withValues(alpha: 0.9),
           border: Border.all(color: Colors.white.withValues(alpha: 0.12)),
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(16),
           boxShadow: <BoxShadow>[
             BoxShadow(color: Colors.black.withValues(alpha: 0.25), blurRadius: 18, offset: const Offset(0, 8)),
           ],
@@ -86,46 +86,48 @@ class ScanStatusBar extends StatelessWidget {
             Row(
               children: <Widget>[
                 Container(
-                  width: 34,
-                  height: 34,
-                  decoration: BoxDecoration(color: accent.withValues(alpha: 0.16), borderRadius: BorderRadius.circular(11)),
-                  child: Icon(_icon, color: accent, size: 19),
+                  width: 30,
+                  height: 30,
+                  decoration: BoxDecoration(color: accent.withValues(alpha: 0.16), borderRadius: BorderRadius.circular(10)),
+                  child: Icon(_icon, color: accent, size: 18),
                 ),
-                const SizedBox(width: 10),
+                const SizedBox(width: 9),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
                         _title,
-                        style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w800),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 13),
                       ),
                       Text(
-                        phase == ScanPhase.scanning ? 'QR · ANÁLISIS LOCAL' : 'ROOTCAUSE SENSOR',
-                        style: TextStyle(
-                          color: accent,
-                          fontSize: 10,
-                          fontWeight: FontWeight.w800,
-                          letterSpacing: 1.1,
-                        ),
+                        message,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(color: Colors.white70, fontSize: 11),
                       ),
                     ],
                   ),
                 ),
+                if (actionLabel != null && onAction != null) ...<Widget>[
+                  const SizedBox(width: 6),
+                  TextButton.icon(
+                    onPressed: onAction,
+                    style: TextButton.styleFrom(
+                      foregroundColor: accent,
+                      visualDensity: VisualDensity.compact,
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                    ),
+                    icon: Icon(phase == ScanPhase.paused ? Icons.play_arrow : Icons.refresh, size: 18),
+                    label: Text(actionLabel!, maxLines: 1),
+                  ),
+                ],
               ],
             ),
-            const SizedBox(height: 4),
-            Text(message, style: const TextStyle(color: Colors.white)),
-            const SizedBox(height: 10),
+            const SizedBox(height: 7),
             _ScanProgressBar(phase: phase, accent: accent, animate: animate),
-            if (actionLabel != null && onAction != null) ...<Widget>[
-              const SizedBox(height: 10),
-              FilledButton.icon(
-                onPressed: onAction,
-                icon: Icon(phase == ScanPhase.paused ? Icons.play_arrow : Icons.refresh),
-                label: Text(actionLabel!),
-              ),
-            ],
           ],
         ),
       ),
@@ -151,7 +153,7 @@ class _ScanProgressBar extends StatelessWidget {
         // A null value is the moving, indeterminate bar; a fixed value draws a
         // still bar, which is what a paused camera or reduced motion needs.
         value: busy && animate ? null : (busy ? 1 : 0),
-        minHeight: 6,
+        minHeight: 4,
         backgroundColor: Colors.white24,
         valueColor: AlwaysStoppedAnimation<Color>(accent),
       ),

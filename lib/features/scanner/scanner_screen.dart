@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:math' as math;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +11,7 @@ import 'package:rootcause_qr_inspector/features/scanner/data/mobile_scanner_engi
 import 'package:rootcause_qr_inspector/features/scanner/domain/scanner_engine.dart';
 import 'package:rootcause_qr_inspector/features/scanner/widgets/scan_status_bar.dart';
 import 'package:rootcause_qr_inspector/features/scanner/widgets/scanner_overlay.dart';
+import 'package:rootcause_qr_inspector/features/scanner/widgets/scanner_viewport_geometry.dart';
 import 'package:rootcause_qr_inspector/models/app_settings.dart';
 import 'package:rootcause_qr_inspector/models/scan_record.dart';
 import 'package:rootcause_qr_inspector/services/pdf_page_renderer.dart';
@@ -138,10 +138,13 @@ class _ScannerScreenState extends State<ScannerScreen> with WidgetsBindingObserv
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints viewport) {
+        final bool compactHeader = viewport.maxHeight < 700;
+        return Column(
       children: <Widget>[
         Padding(
-          padding: const EdgeInsets.fromLTRB(20, 18, 20, 14),
+          padding: EdgeInsets.fromLTRB(20, compactHeader ? 10 : 18, 20, compactHeader ? 8 : 14),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
@@ -163,12 +166,19 @@ class _ScannerScreenState extends State<ScannerScreen> with WidgetsBindingObserv
                               ),
                         ),
                         const SizedBox(height: 3),
-                        Text(context.strings.scannerTitle, style: Theme.of(context).textTheme.titleLarge),
-                        const SizedBox(height: 3),
                         Text(
-                          context.strings.scannerSubtitle,
-                          style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant),
+                          context.strings.scannerTitle,
+                          style: compactHeader
+                              ? Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w800)
+                              : Theme.of(context).textTheme.titleLarge,
                         ),
+                        if (!compactHeader) ...<Widget>[
+                          const SizedBox(height: 3),
+                          Text(
+                            context.strings.scannerSubtitle,
+                            style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant),
+                          ),
+                        ],
                       ],
                     ),
                   ),
@@ -202,16 +212,18 @@ class _ScannerScreenState extends State<ScannerScreen> with WidgetsBindingObserv
                   ),
                 ],
               ),
-              const SizedBox(height: 12),
-              const Wrap(
-                spacing: 8,
-                runSpacing: 8,
-                children: <Widget>[
-                  _SecurityCapability(icon: Icons.phonelink_lock_outlined, label: 'Análisis local'),
-                  _SecurityCapability(icon: Icons.rule_outlined, label: '26 señales'),
-                  _SecurityCapability(icon: Icons.visibility_off_outlined, label: 'Telemetría cero'),
-                ],
-              ),
+              if (!compactHeader) ...<Widget>[
+                const SizedBox(height: 12),
+                const Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: <Widget>[
+                    _SecurityCapability(icon: Icons.phonelink_lock_outlined, label: 'Análisis local'),
+                    _SecurityCapability(icon: Icons.rule_outlined, label: '26 señales'),
+                    _SecurityCapability(icon: Icons.visibility_off_outlined, label: 'Telemetría cero'),
+                  ],
+                ),
+              ],
             ],
           ),
         ),
@@ -240,12 +252,11 @@ class _ScannerScreenState extends State<ScannerScreen> with WidgetsBindingObserv
                   borderRadius: BorderRadius.circular(29),
                   child: LayoutBuilder(
                 builder: (BuildContext context, BoxConstraints constraints) {
-                  final double side = math.min(constraints.maxWidth, constraints.maxHeight) * 0.68;
-                  final Rect window = Rect.fromCenter(
-                    center: Offset(constraints.maxWidth / 2, constraints.maxHeight / 2),
-                    width: side,
-                    height: side,
+                  final ScannerViewportGeometry geometry = ScannerViewportGeometry.forSize(
+                    Size(constraints.maxWidth, constraints.maxHeight),
                   );
+                  final bool compactPreview = geometry.compact;
+                  final Rect window = geometry.scanWindow;
                   return ValueListenableBuilder<MobileScannerState>(
                     valueListenable: _engine.state,
                     builder: (BuildContext context, MobileScannerState state, Widget? child) {
@@ -276,41 +287,25 @@ class _ScannerScreenState extends State<ScannerScreen> with WidgetsBindingObserv
                               animate: !_settings.reduceMotion,
                             ),
                           if (phase == ScanPhase.paused)
-                            // A dimmed preview is not a control: tapping
-                            // anywhere resumes, the way every camera app does.
-                            // The unavailable state keeps its own retry button
-                            // visible instead of covering it with this layer.
                             Positioned.fill(
-                              child: GestureDetector(
-                                behavior: HitTestBehavior.opaque,
-                                onTap: _resumeScanning,
+                              child: IgnorePointer(
                                 child: ColoredBox(color: Colors.black.withValues(alpha: 0.35)),
                               ),
                             ),
                           Positioned(
-                            top: 18,
-                            left: 18,
-                            right: 18,
+                            top: compactPreview ? 10 : 18,
+                            left: compactPreview ? 10 : 18,
+                            right: compactPreview ? 10 : 18,
                             child: ScanStatusBar(
                               phase: phase,
                               message: _messageFor(phase),
                               animate: !_settings.reduceMotion,
-                              actionLabel: switch (phase) {
-                                ScanPhase.paused => 'Reanudar inspección',
-                                ScanPhase.unavailable => 'Reintentar',
-                                ScanPhase.starting || ScanPhase.scanning => null,
-                              },
-                              onAction: switch (phase) {
-                                ScanPhase.paused => _resumeScanning,
-                                ScanPhase.unavailable => () => unawaited(_restartCamera()),
-                                ScanPhase.starting || ScanPhase.scanning => null,
-                              },
                             ),
                           ),
                           Positioned(
                             left: 18,
                             right: 18,
-                            bottom: 82,
+                            bottom: compactPreview ? 76 : 82,
                             child: Row(
                               children: <Widget>[
                                 const Icon(Icons.zoom_out, color: Colors.white),
@@ -330,7 +325,7 @@ class _ScannerScreenState extends State<ScannerScreen> with WidgetsBindingObserv
                           Positioned(
                             left: 12,
                             right: 12,
-                            bottom: 18,
+                            bottom: compactPreview ? 10 : 18,
                             // Wrap, not Row: with large controls or a big text
                             // scale these four actions do not fit on one line,
                             // and a second line is better than a clipped one.
@@ -346,13 +341,27 @@ class _ScannerScreenState extends State<ScannerScreen> with WidgetsBindingObserv
                                   icon: state.torchState == TorchState.on ? Icons.flash_on : Icons.flash_off,
                                 ),
                                 FilledButton.icon(
-                                  onPressed: _togglePause,
+                                  onPressed: switch (phase) {
+                                    ScanPhase.scanning || ScanPhase.paused => _togglePause,
+                                    ScanPhase.unavailable => _restartCamera,
+                                    ScanPhase.starting => null,
+                                  },
                                   style: FilledButton.styleFrom(
                                     backgroundColor: scanning ? Colors.white : Theme.of(context).colorScheme.primary,
                                     foregroundColor: scanning ? Colors.black : Theme.of(context).colorScheme.onPrimary,
                                   ),
-                                  icon: Icon(scanning ? Icons.pause : Icons.play_arrow),
-                                  label: Text(scanning ? 'Pausar inspección' : 'Inspeccionar'),
+                                  icon: Icon(switch (phase) {
+                                    ScanPhase.scanning => Icons.pause,
+                                    ScanPhase.paused => Icons.play_arrow,
+                                    ScanPhase.unavailable => Icons.refresh,
+                                    ScanPhase.starting => Icons.hourglass_top,
+                                  }),
+                                  label: Text(switch (phase) {
+                                    ScanPhase.scanning => 'Pausar',
+                                    ScanPhase.paused => 'Reanudar',
+                                    ScanPhase.unavailable => 'Reintentar',
+                                    ScanPhase.starting => 'Preparando',
+                                  }),
                                 ),
                                 _CameraButton(
                                   tooltip: 'Cambiar cámara',
@@ -379,6 +388,8 @@ class _ScannerScreenState extends State<ScannerScreen> with WidgetsBindingObserv
           ),
         ),
       ],
+        );
+      },
     );
   }
 
@@ -390,11 +401,11 @@ class _ScannerScreenState extends State<ScannerScreen> with WidgetsBindingObserv
   }
 
   String _messageFor(ScanPhase phase) => switch (phase) {
-        ScanPhase.starting => 'Preparando el enfoque. Si no aparece la imagen, toca «Reiniciar cámara».',
+        ScanPhase.starting => 'Iniciando cámara',
         ScanPhase.scanning => _settings.useScanWindow
-            ? 'Alinea uno o varios códigos dentro del marco.'
-            : 'Apunta la cámara hacia uno o varios códigos.',
-        ScanPhase.paused => 'La cámara no está leyendo. Toca la pantalla para continuar.',
+            ? 'Lectura automática dentro del marco'
+            : 'Lectura automática en toda la imagen',
+        ScanPhase.paused => 'Lectura detenida',
         ScanPhase.unavailable => _startFailure ?? 'Revisa el permiso de cámara y vuelve a intentarlo.',
       };
 

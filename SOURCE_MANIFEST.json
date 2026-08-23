@@ -703,18 +703,23 @@
     },
     {
       "path": "lib/features/scanner/scanner_screen.dart",
-      "size": 31643,
-      "sha256": "4b625b881b02582972479dde59034be9b8a8de3d0952c7f440dd75625067e43e"
+      "size": 32079,
+      "sha256": "cdaab128ebf73acba0905d0e38373c14007c21b42e21abb036661c17f1f4e320"
     },
     {
       "path": "lib/features/scanner/widgets/scan_status_bar.dart",
-      "size": 5769,
-      "sha256": "4f317c09ccd6652ba7f443132d908a9c7f0fe968de8b22190f0ababc4da63ab4"
+      "size": 5866,
+      "sha256": "03214a40ac9f50c59ae7d1cf76fe2358b41767d9a19a29b0d95f9104d06b2c34"
     },
     {
       "path": "lib/features/scanner/widgets/scanner_overlay.dart",
       "size": 4611,
       "sha256": "9426a51385ed7e595b6cb1b9e1583e83a85c40923e8b0bdd5f0bba2166d67819"
+    },
+    {
+      "path": "lib/features/scanner/widgets/scanner_viewport_geometry.dart",
+      "size": 1303,
+      "sha256": "dfcbf64ebdec508343b60005adbf9830027eb6c803fa5ef873b0074532e07c8c"
     },
     {
       "path": "lib/features/settings/settings_screen.dart",
@@ -928,8 +933,13 @@
     },
     {
       "path": "test/features/scan_status_bar_test.dart",
-      "size": 3284,
-      "sha256": "a85ce251a9a699d9c4778e14c188ec7572037934d1ef798d0d47cc04e6620f73"
+      "size": 3998,
+      "sha256": "5982303181c78dcc1f9fdd02408eb3bd0b994725b9afcec19429950791cbef64"
+    },
+    {
+      "path": "test/features/scanner_viewport_geometry_test.dart",
+      "size": 1388,
+      "sha256": "bc52796756088e359c91bec4145c35d09de37256c7e4d2b4069f8a6f3a0813f6"
     },
     {
       "path": "test/inventory_session_test.dart",
