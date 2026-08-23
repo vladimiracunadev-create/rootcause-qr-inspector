@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:rootcause_qr_inspector/app.dart';
-import 'package:rootcause_qr_inspector/core/localization/app_localizations.dart';
 
 void main() {
   const Key content = Key('content');
@@ -44,32 +43,10 @@ void main() {
     expect(box.left, (viewport - HandheldFrame.maxWidth) / 2);
   });
 
-  testWidgets('five Spanish navigation labels stay on one line at 320 dp', (WidgetTester tester) async {
-    tester.view.physicalSize = const Size(320, 640);
-    tester.view.devicePixelRatio = 1;
-    addTearDown(tester.view.reset);
-    final AppLocalizations strings = const AppLocalizations(Locale('es', 'CL'));
-
-    await tester.pumpWidget(
-      MaterialApp(
-        home: Scaffold(
-          bottomNavigationBar: NavigationBar(
-            selectedIndex: 0,
-            destinations: <NavigationDestination>[
-              NavigationDestination(icon: const Icon(Icons.shield_outlined), label: strings.scan),
-              NavigationDestination(icon: const Icon(Icons.inventory_2_outlined), label: strings.inventory),
-              NavigationDestination(icon: const Icon(Icons.qr_code_2_outlined), label: strings.generate),
-              NavigationDestination(icon: const Icon(Icons.history_outlined), label: strings.history),
-              NavigationDestination(icon: const Icon(Icons.settings_outlined), label: strings.settings),
-            ],
-          ),
-        ),
-      ),
-    );
-
-    expect(tester.takeException(), isNull);
-    for (final String label in <String>[strings.scan, strings.inventory, strings.generate, strings.history, strings.settings]) {
-      expect(tester.getSize(find.text(label)).height, lessThan(22));
-    }
+  test('navigation hides visual labels only on phones narrower than 360 dp', () {
+    expect(navigationLabelBehaviorForWidth(320), NavigationDestinationLabelBehavior.alwaysHide);
+    expect(navigationLabelBehaviorForWidth(359), NavigationDestinationLabelBehavior.alwaysHide);
+    expect(navigationLabelBehaviorForWidth(360), NavigationDestinationLabelBehavior.alwaysShow);
+    expect(navigationLabelBehaviorForWidth(430), NavigationDestinationLabelBehavior.alwaysShow);
   });
 }

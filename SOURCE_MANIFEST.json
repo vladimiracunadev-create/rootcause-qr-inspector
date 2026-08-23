@@ -503,8 +503,8 @@
     },
     {
       "path": "lib/app.dart",
-      "size": 10973,
-      "sha256": "f207ee6a60a689944430f6d52d9af6409bc28c1b0554829878acde959e5e6af0"
+      "size": 11372,
+      "sha256": "ecb570f67285bc6a0ceccfd2f7d9bfd2c792d32f26be63273245bf4b83ddf527"
     },
     {
       "path": "lib/bootstrap.dart",
@@ -898,8 +898,8 @@
     },
     {
       "path": "test/core/handheld_frame_test.dart",
-      "size": 2973,
-      "sha256": "f240628babf3ad5244bb5de656dd0c79a43f60d8784e2c674633e016a2fc97ac"
+      "size": 2022,
+      "sha256": "3f23df71363276afada27fd89fdb78397e60e0d57e1c5af8148b81b032afcbaf"
     },
     {
       "path": "test/core/localization_test.dart",

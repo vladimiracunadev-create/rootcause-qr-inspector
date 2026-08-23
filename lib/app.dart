@@ -17,6 +17,9 @@ import 'package:rootcause_qr_inspector/state/inventory_store.dart';
 import 'package:rootcause_qr_inspector/state/scan_store.dart';
 import 'package:rootcause_qr_inspector/state/settings_store.dart';
 
+NavigationDestinationLabelBehavior navigationLabelBehaviorForWidth(double width) =>
+    width < 360 ? NavigationDestinationLabelBehavior.alwaysHide : NavigationDestinationLabelBehavior.alwaysShow;
+
 class RootCauseQrInspectorApp extends StatelessWidget {
   const RootCauseQrInspectorApp({
     required this.scanStore,
@@ -272,16 +275,19 @@ class _HomeShellState extends State<HomeShell> {
             ),
           ],
         ),
-        child: NavigationBar(
-          selectedIndex: _index,
-          onDestinationSelected: (int value) => setState(() => _index = value),
-          destinations: <NavigationDestination>[
-            NavigationDestination(icon: const Icon(Icons.shield_outlined), selectedIcon: const Icon(Icons.shield), label: context.strings.scan),
-            NavigationDestination(icon: const Icon(Icons.inventory_2_outlined), selectedIcon: const Icon(Icons.inventory_2), label: context.strings.inventory),
-            NavigationDestination(icon: const Icon(Icons.qr_code_2_outlined), selectedIcon: const Icon(Icons.qr_code_2), label: context.strings.generate),
-            NavigationDestination(icon: const Icon(Icons.history_outlined), selectedIcon: const Icon(Icons.history), label: context.strings.history),
-            NavigationDestination(icon: const Icon(Icons.settings_outlined), selectedIcon: const Icon(Icons.settings), label: context.strings.settings),
-          ],
+        child: LayoutBuilder(
+          builder: (BuildContext context, BoxConstraints constraints) => NavigationBar(
+            selectedIndex: _index,
+            labelBehavior: navigationLabelBehaviorForWidth(constraints.maxWidth),
+            onDestinationSelected: (int value) => setState(() => _index = value),
+            destinations: <NavigationDestination>[
+              NavigationDestination(icon: const Icon(Icons.shield_outlined), selectedIcon: const Icon(Icons.shield), label: context.strings.scan),
+              NavigationDestination(icon: const Icon(Icons.inventory_2_outlined), selectedIcon: const Icon(Icons.inventory_2), label: context.strings.inventory),
+              NavigationDestination(icon: const Icon(Icons.qr_code_2_outlined), selectedIcon: const Icon(Icons.qr_code_2), label: context.strings.generate),
+              NavigationDestination(icon: const Icon(Icons.history_outlined), selectedIcon: const Icon(Icons.history), label: context.strings.history),
+              NavigationDestination(icon: const Icon(Icons.settings_outlined), selectedIcon: const Icon(Icons.settings), label: context.strings.settings),
+            ],
+          ),
         ),
       ),
     );
