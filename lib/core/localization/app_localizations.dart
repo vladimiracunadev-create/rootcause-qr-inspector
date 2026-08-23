@@ -18,7 +18,9 @@ class AppLocalizations {
 
   bool get _es => locale.languageCode != 'en';
   String get appTitle => 'RootCause QR Inspector';
-  String get scan => _es ? 'Inspeccionar' : 'Inspect';
+  // Keep navigation labels short enough for five destinations on 320 dp
+  // phones. The screen title retains the full security-inspection wording.
+  String get scan => _es ? 'Escanear' : 'Scan';
   String get inventory => _es ? 'Inventario' : 'Inventory';
   String get generate => _es ? 'Generar' : 'Generate';
   String get history => _es ? 'Historial' : 'History';

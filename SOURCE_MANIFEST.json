@@ -593,8 +593,8 @@
     },
     {
       "path": "lib/core/localization/app_localizations.dart",
-      "size": 2330,
-      "sha256": "1d2dddae2e9448e95c9e511e84abd3ffc7d8bed8920af09367e7a005c408c3cf"
+      "size": 2472,
+      "sha256": "e3765825821f91843fce113c28315c8ec82cbb28010e64b9e9ebbbe085def909"
     },
     {
       "path": "lib/core/performance/async_write_queue.dart",
@@ -898,13 +898,13 @@
     },
     {
       "path": "test/core/handheld_frame_test.dart",
-      "size": 1545,
-      "sha256": "48df9ad2f0bbcf4f3de94901f80f891c322974ae86fb87e44a03f5cbae283413"
+      "size": 2973,
+      "sha256": "f240628babf3ad5244bb5de656dd0c79a43f60d8784e2c674633e016a2fc97ac"
     },
     {
       "path": "test/core/localization_test.dart",
-      "size": 1563,
-      "sha256": "4b604840e0dbf8037a778fe0aa1fb2b0bf6316cec0e553e21ae8393ca5529e28"
+      "size": 1556,
+      "sha256": "a8e2823285c4bbade720236646ee1cc16feb30c200ee145c72a1002b7da6db21"
     },
     {
       "path": "test/core/payload_cipher_test.dart",

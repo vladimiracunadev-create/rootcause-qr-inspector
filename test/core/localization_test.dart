@@ -12,7 +12,7 @@ void main() {
   test('Spanish navigation labels resolve for every supported locale', () {
     for (final Locale locale in AppLocalizations.supportedLocales) {
       final AppLocalizations strings = AppLocalizations(locale);
-      expect(strings.scan, 'Inspeccionar');
+      expect(strings.scan, 'Escanear');
       expect(strings.inventory, 'Inventario');
       expect(strings.generate, 'Generar');
       expect(strings.history, 'Historial');
@@ -29,6 +29,6 @@ void main() {
   });
 
   test('English keys remain available for the pending translation', () {
-    expect(const AppLocalizations(Locale('en')).scan, 'Inspect');
+    expect(const AppLocalizations(Locale('en')).scan, 'Scan');
   });
 }
