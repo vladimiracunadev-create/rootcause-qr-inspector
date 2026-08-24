@@ -25,14 +25,16 @@ una regla local aplicable.
 
 ## Flujo recomendado
 
-1. Abre **Inspeccionar** y concede cámara solo si usarás captura en vivo.
+1. Abre **Escanear** y concede cámara solo si usarás captura en vivo.
 2. Enmarca un código o elige una imagen/PDF iniciado por ti.
 3. Espera el estado visible de lectura; el tono confirma una captura, no la
    seguridad del contenido.
-4. Revisa tipo, destino, campos interpretados y hallazgos.
-5. Distingue hechos de hipótesis antes de continuar.
-6. Si el caso lo exige, exporta **Evidencia** en modo redactado.
-7. Abre el destino solo cuando también lo hayas validado por otra fuente.
+4. No necesitas tocar el visor para activar la lectura. Usa **Pausar** y
+   **Reanudar** cuando quieras detener o recuperar explícitamente la cámara.
+5. Revisa tipo, destino, campos interpretados y hallazgos.
+6. Distingue hechos de hipótesis antes de continuar.
+7. Si el caso lo exige, exporta **Evidencia** en modo redactado.
+8. Abre el destino solo cuando también lo hayas validado por otra fuente.
 
 ## Cómo leer el resultado
 

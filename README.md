@@ -149,20 +149,26 @@ Estas son capturas reales del APK publicado en el
 instalado desde GitHub en un emulador Android 36.1 de este equipo. No son
 mockups ni imágenes generadas.
 
-| Análisis local | Generador local | Privacidad y accesibilidad |
+| Lectura automática | Pausa explícita | Análisis local |
 |---|---|---|
-| <img src="docs/images/android/android-analysis-result.png" alt="Resultado real del análisis local de un QR en Android" width="260"> | <img src="docs/images/android/android-generator.png" alt="Generador local de QR abierto en Android" width="260"> | <img src="docs/images/android/android-settings.png" alt="Ajustes de privacidad y accesibilidad abiertos en Android" width="260"> |
-| La app importó el QR, separó lo observado de lo no comprobado y mostró `0/100` sin llamarlo seguro. | El generador produjo localmente un QR para `https://example.com`. | Ajustes de apariencia, inspección, privacidad y seguridad disponibles. |
+| <img src="docs/images/android/android-inspector-home.png" alt="Cámara de RootCause leyendo automáticamente dentro de un marco despejado" width="260"> | <img src="docs/images/android/android-inspector-paused.png" alt="Cámara de RootCause pausada con botón Reanudar explícito" width="260"> | <img src="docs/images/android/android-analysis-result.png" alt="Resultado real del análisis local de un QR en Android" width="260"> |
+| La cámara analiza automáticamente: no exige pulsar la pantalla y el estado compacto no tapa el QR. | `Pausar` detiene la cámara y ofrece `Reanudar`; tocar el visor no es una instrucción ni una acción oculta. | La app separa lo observado de lo no comprobado y no presenta un resultado normal como garantía. |
 
-Comprobación del artefacto público: `adb install -r` devolvió `Success`, Android
-abrió `dev.vladimiracuna.rootcause_qr_inspector`, `apksigner` verificó la firma
-técnica del APK con Signature Scheme v2 y el SHA-256 local coincidió con el publicado:
-`78ed8e2194488029218f73aa17fdfa0fb9075e1d0dd110db1981b16c4418c51b`.
+| Generador local | Privacidad y accesibilidad |
+|---|---|
+| <img src="docs/images/android/android-generator.png" alt="Generador local de QR abierto en Android" width="260"> | <img src="docs/images/android/android-settings.png" alt="Ajustes de privacidad y accesibilidad abiertos en Android" width="260"> |
+| El generador produjo localmente un QR para `https://example.com`. | Ajustes de apariencia, inspección, privacidad y seguridad disponibles. |
+
+Comprobación del artefacto actualizado: instalación limpia `Success`, Android
+abrió `dev.vladimiracuna.rootcause_qr_inspector` 0.1.0, `apksigner` verificó la
+firma técnica con Signature Scheme v2 y el SHA-256 del APK es
+`d1f765a9a61f235cf0f9825d594abb7e37d0c60c98f167f66aef95e41e6c5a34`.
 Esto no equivale a firma comercial de Play Store/App Store. La firma y
 distribución de este producto se evalúan únicamente para Android e iOS;
 Windows, macOS y Linux no son plataformas objetivo.
-La cámara virtual del AVD no entregó sensor y la app mostró un error recuperable;
-la importación desde Photo Picker sí completó el análisis de extremo a extremo.
+La cámara virtual del AVD entregó imagen: se verificaron lectura automática,
+`Pausar`, `Reanudar` y retorno efectivo a `Inspección activa`. La jerarquía
+accesible no contiene la antigua instrucción de tocar la pantalla.
 
 ## 🛡️ Las señales que observa en 0.1.0
 

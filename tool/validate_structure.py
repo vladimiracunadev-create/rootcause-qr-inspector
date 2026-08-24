@@ -175,6 +175,7 @@ def check_landing() -> None:
     generated = {
         "assets/icon-512.png": ROOT / "assets" / "launcher" / "web" / "Icon-512.png",
         "assets/android/android-inspector-home.png": ROOT / "docs" / "images" / "android" / "android-inspector-home.png",
+        "assets/android/android-inspector-paused.png": ROOT / "docs" / "images" / "android" / "android-inspector-paused.png",
         "assets/android/android-generator.png": ROOT / "docs" / "images" / "android" / "android-generator.png",
         "assets/android/android-settings.png": ROOT / "docs" / "images" / "android" / "android-settings.png",
         "assets/android/android-analysis-result.png": ROOT / "docs" / "images" / "android" / "android-analysis-result.png",

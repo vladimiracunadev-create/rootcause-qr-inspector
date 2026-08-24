@@ -80,6 +80,7 @@ jobs:
           test -f _site/app/index.html
           test -f _site/assets/icon-512.png
           test -f _site/assets/android/android-inspector-home.png
+          test -f _site/assets/android/android-inspector-paused.png
           test -f _site/assets/android/android-generator.png
           test -f _site/assets/android/android-settings.png
           test -f _site/assets/android/android-analysis-result.png

@@ -23,8 +23,8 @@
     },
     {
       "path": ".github/workflows/deploy-landing.yml",
-      "size": 3458,
-      "sha256": "7de574e56eebb32dc3f6b38f7df6b2aafebedcedb75ff49f256d0a0869e534d2"
+      "size": 3526,
+      "sha256": "f0dd1721ea750a425dc623734818c390aa504094499b7954d9b30b4e489c1141"
     },
     {
       "path": ".github/workflows/flutter-ci.yml",
@@ -234,7 +234,7 @@
     {
       "path": "docs/CI_GITHUB.md",
       "size": 2818,
-      "sha256": "092fe0582c672b8d979f8b9359de346b3584a93b971ae1dabce190083145d439"
+      "sha256": "c8e9176a3baec88158fd9831ea8293e79683931e378e42b5a1727cc9cf2b7070"
     },
     {
       "path": "docs/DETECCION_AMENAZAS.md",
@@ -258,8 +258,13 @@
     },
     {
       "path": "docs/images/android/android-inspector-home.png",
-      "size": 1062724,
-      "sha256": "2689ee148d3c2f5a505bc9c5f75a58aff45dddb9b2922d7bd656d133755c0411"
+      "size": 1015627,
+      "sha256": "c714f91ad96bccd5577f68b5d21163f8155d2a7f0981c2cf84a10c4603547e78"
+    },
+    {
+      "path": "docs/images/android/android-inspector-paused.png",
+      "size": 271333,
+      "sha256": "0cfa952af6ed00adbe4ae8f5dac7d08bb1bb1c1e36699b95656475017310f219"
     },
     {
       "path": "docs/images/android/android-settings.png",
@@ -318,8 +323,8 @@
     },
     {
       "path": "docs/MANUAL_USUARIO.md",
-      "size": 3595,
-      "sha256": "034a09b2377416113428b0e77940e3b9dde9a3a277680a493edf20f8b1a06db0"
+      "size": 3743,
+      "sha256": "4b90184c0c9d160fad8bcbb9329b3e0918222121a80cde5a35bad35dcc87205f"
     },
     {
       "path": "docs/PRIVACY_POLICY.md",
@@ -338,8 +343,8 @@
     },
     {
       "path": "docs/quality/DEVICE_TEST_MATRIX.md",
-      "size": 3498,
-      "sha256": "f8897223ea1c2a0e796c25c74b41ad8feb1dd0ecc8ae66c02b6f056dbf79aba8"
+      "size": 3640,
+      "sha256": "30b9b8a309f823ab45d3a2a71e2a50c23f0964ae4d0daf2e6e67c1b52b76e031"
     },
     {
       "path": "docs/quality/FEATURE_FLAGS.md",
@@ -368,8 +373,8 @@
     },
     {
       "path": "docs/quality/SCANNER_UX.md",
-      "size": 6908,
-      "sha256": "cd1b577fc3b92f5952748affc0b7c5e20cee399ebcb23ceaf0d137ff19ffc4d2"
+      "size": 7405,
+      "sha256": "45aa8db9bcdee46ac142697f596f58b7b09977d2043d56682ad1796bb358380c"
     },
     {
       "path": "docs/quality/SCOPE_1_0.md",
@@ -383,8 +388,8 @@
     },
     {
       "path": "docs/releases/v0.1.0.md",
-      "size": 2114,
-      "sha256": "a60da1946a9cc8c369a50764681dc9e5478c8e54ea93bd492c4d9bfd6e0e6c50"
+      "size": 2464,
+      "sha256": "731b3c17f9d86b321cef0c0baaeeabacf4460529f6c2bc2aed94415bafa0ab7e"
     },
     {
       "path": "docs/ROADMAP.md",
@@ -488,8 +493,8 @@
     },
     {
       "path": "landing/index.html",
-      "size": 20894,
-      "sha256": "3e03c0c0396aac3028c296bf12ef4826a6ac24e37213bf9ca27c960ade200127"
+      "size": 21444,
+      "sha256": "029c310f40b7921f6a7d7f32990188a2934b4c3a5be7c0290633099a9c82268e"
     },
     {
       "path": "landing/privacidad.html",
@@ -848,8 +853,8 @@
     },
     {
       "path": "README.md",
-      "size": 22482,
-      "sha256": "9331f443535a4135c1ecbc9de8149263492e7ee0dbb51f7b7b004f7cf96afd5e"
+      "size": 23071,
+      "sha256": "06b90b037bb7612bfb16b85b34a99bf1a7a3be450c7cc2aca811f85ad381407f"
     },
     {
       "path": "RELEASE_SOURCE.json",
@@ -1113,8 +1118,8 @@
     },
     {
       "path": "tool/validate_structure.py",
-      "size": 11642,
-      "sha256": "9b6aa78783b5a6c3e5b98836aae554495af0d0cb1876a3c6c3f55f5e1306efea"
+      "size": 11768,
+      "sha256": "f98d2c1f72bfdb42fe51ac13b52f65b22e3493c3afb90c1c083352abd509c586"
     },
     {
       "path": "tool/verify_rootcause_contract.py",

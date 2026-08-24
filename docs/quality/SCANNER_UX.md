@@ -1,9 +1,8 @@
 # Comportamiento del escáner en cámara
 
-> Documento heredado del subsistema de captura de Universal Code Scanner
-> 1.1.0. Los resultados de compilación y pruebas al final corresponden a esa
-> fuente; el estado de la derivación RootCause está en
-> [`../../VALIDATION.md`](../../VALIDATION.md).
+> Registro vivo de la interfaz de cámara de RootCause QR Inspector 0.1.0. La
+> procedencia del subsistema heredado se conserva, pero los estados, controles
+> y comprobaciones descritos aquí corresponden al producto RootCause actual.
 
 Este documento explica **qué hace la pantalla de lectura en cada estado**, por
 qué se eligió ese comportamiento y qué convenciones del sector se adoptaron.
@@ -42,15 +41,17 @@ está analizando cuadros de verdad.
 
 | Estado | Título | Barra | Acción ofrecida |
 |---|---|---|---|
-| `starting` | «Iniciando cámara…» | En movimiento | — |
-| `scanning` | «Inspección activa» | En movimiento + línea que recorre el marco | Botón «Pausar inspección» |
-| `paused` | «Inspección en pausa» | Detenida y vacía | «Reanudar inspección» + toque en cualquier punto de la vista |
+| `starting` | «Preparando inspección…» | En movimiento | Botón desactivado «Preparando» |
+| `scanning` | «Inspección activa» | En movimiento + línea que recorre el marco | Botón «Pausar» |
+| `paused` | «Inspección en pausa» | Detenida y vacía | Botón «Reanudar»; el visor no es un control oculto |
 | `unavailable` | «Sensor no disponible» | Detenida, en color de error | «Reintentar» (reconstruye el controlador) |
 
 El escaneo **sigue siendo automático**: no hay que pulsar nada para leer un
 código, que es lo que hace cualquier lector del sector. Lo que se añadió es la
 respuesta permanente a la pregunta «¿está escaneando ahora mismo?», más un botón
-explícito para pausar y reanudar cuando el usuario quiere controlarlo.
+explícito para pausar y reanudar cuando el usuario quiere controlarlo. La barra
+es compacta, usa una línea por texto con elipsis y reserva el área central para
+el QR incluso en vistas de 288×320, 400×560 y 430×760.
 
 Con **movimiento reducido** activado en Ajustes, la barra se dibuja llena y
 quieta, y el marco no barre la línea: el estado sigue siendo legible sin
@@ -89,12 +90,12 @@ ZXing—, y estado en esta aplicación:
 |---|---|---|
 | Lectura automática sin pulsar nada | Sí | Sí |
 | Indicador visible de «escaneando» | No | **Barra en movimiento + línea que recorre el marco** |
-| Botón explícito de activar/pausar | Icono sin etiqueta | **Botón con texto «Inspeccionar» / «Pausar inspección»** |
+| Botón explícito de activar/pausar | Icono sin etiqueta | **Botón con texto «Pausar» / «Reanudar»** |
 | Pitido de lectura conseguida | Dependiente de los sonidos táctiles del sistema | **Tono propio empaquetado** |
 | Vibración de confirmación | Sí | Sí |
 | Recuperación cuando la cámara no arranca | No existía | **«Reintentar» y «Reiniciar cámara»** |
 | Mensaje específico de permiso denegado | No | Sí |
-| Reanudar tocando la vista previa | No | Sí |
+| Reanudar tocando la vista previa | No | **No; se eliminó el gesto oculto** |
 | Linterna | Sí | Sí |
 | Enfoque al tocar | Sí | Sí |
 | Zoom | Deslizador | Deslizador |
@@ -111,15 +112,18 @@ decisión no se toca.
 
 ---
 
-## 5. Qué se comprobó en la fuente heredada
+## 5. Qué se comprobó en RootCause QR Inspector
 
 | Comprobación | Resultado |
 |---|---|
 | `flutter analyze --fatal-infos` | 0 hallazgos |
-| `flutter test` | 57 de 57 en verde |
-| Pruebas nuevas de estado de escaneo | 9 (barra, marco, sonido y vibración) |
-| `flutter build apk --debug` | Compila con la dependencia de audio añadida |
+| `flutter test --coverage` | 81 de 81 en verde |
+| Geometría responsive | Marco sin solaparse con estado/controles en tres proporciones, desde 288×320 |
+| Texto ampliado | Barra compacta sin overflow a 320×640 y escala 1,6 |
+| `flutter build apk --release` | APK 0.1.0 generado por el mismo workflow verde |
+| Emulador Android 36.1, 1080×2400 | Lectura automática → Pausar → Reanudar → lectura automática |
 
-Estos resultados no se atribuyen automáticamente a RootCause QR Inspector. La
-derivación debe ejecutar su propio gate Flutter y repetir la lectura en
-teléfono físico antes de publicar un binario.
+La jerarquía accesible del APK instalado confirmó `Lectura detenida` y
+`Reanudar` durante la pausa, y `Lectura automática` y `Pausar` después de
+reanudar. No contiene la antigua instrucción «toca la pantalla». La matriz de
+teléfonos físicos continúa siendo necesaria antes de una publicación en tienda.
