@@ -10,6 +10,9 @@ coverage/
 .flutter-plugins-dependencies
 .pub-cache/
 __pycache__/
+
+# Caché intermedia de los diagramas de la documentación
+docs/system-documentation/pdf/.mermaid-cache/
 *.py[cod]
 
 # Se generan con tool/bootstrap.py

@@ -410,6 +410,31 @@ dispositivo. El historial y los inventarios se cifran antes de escribirse. OTP,
 Wi-Fi con contraseña y URLs con claves sensibles quedan fuera del historial
 automático. La evidencia solo sale cuando la persona la exporta.
 
+## 📖 Documentación del sistema
+
+La documentación técnica, funcional, arquitectónica y operativa completa —20
+documentos escritos recorriendo el código fuente, con sus equivalentes en PDF—
+está en [`docs/system-documentation/`](docs/system-documentation/README.md):
+
+- [Índice general de documentación](docs/system-documentation/README.md)
+- [Descripción general](docs/system-documentation/01-system-overview.md)
+- [Instalación y ejecución](docs/system-documentation/02-installation-and-execution.md)
+- [Arquitectura](docs/system-documentation/03-architecture.md)
+- [Mapa completo del código](docs/system-documentation/04-code-map.md)
+- [Referencia técnica](docs/system-documentation/05-technical-reference.md)
+- [Explicación profunda del código](docs/system-documentation/06-deep-code-explanation.md)
+- [Base de datos](docs/system-documentation/07-database.md)
+- [Flujo de datos](docs/system-documentation/08-data-flow.md)
+- [Seguridad](docs/system-documentation/11-security.md)
+- [Riesgos y deuda técnica](docs/system-documentation/15-risks-and-technical-debt.md)
+- [Resumen ejecutivo](docs/system-documentation/17-executive-summary.md)
+- [Guía para nuevos desarrolladores](docs/system-documentation/18-new-developer-guide.md)
+- [Matriz de trazabilidad](docs/system-documentation/19-traceability-matrix.md)
+- [Documentos en PDF](docs/system-documentation/pdf/)
+
+Los PDF se generan desde esos mismos Markdown con
+`python tool/build_system_documentation_pdf.py`; el Markdown es la única fuente.
+
 ## 📚 Rutas de lectura
 
 | Documento | Contenido |

@@ -8,8 +8,8 @@
     },
     {
       "path": ".gitattributes",
-      "size": 329,
-      "sha256": "505ddd00ef43c7d93ef7d07ff5ddc96a79433a78202e43e9c7b12b15d87ae231"
+      "size": 342,
+      "sha256": "cd0c2ec0db85a72a1b1dccb2c2cd37bb3869161947765158fa327ad810de1d1c"
     },
     {
       "path": ".github/dependabot.yml",
@@ -33,8 +33,8 @@
     },
     {
       "path": ".gitignore",
-      "size": 215,
-      "sha256": "8070cf0b3789d348adee78f171089ea0b7017eefbe2f3b1239bd2989166a5924"
+      "size": 320,
+      "sha256": "7d374f54566ab9570dfc9c3c88ee256fecade14582a6665891f9570e156a7f70"
     },
     {
       "path": "analysis_options.yaml",
@@ -318,8 +318,8 @@
     },
     {
       "path": "docs/INDEX.md",
-      "size": 3054,
-      "sha256": "b62c800e56a30c4e35e6bfdbe971f0176666dd8187892c3ca61c66b753771dda"
+      "size": 4073,
+      "sha256": "cb976de6dfc98cdb1f61a4bafb776476461baa14f6c21a85c952d4d22bbcbf60"
     },
     {
       "path": "docs/MANUAL_USUARIO.md",
@@ -465,6 +465,346 @@
       "path": "docs/SUPPORTED_FORMATS.md",
       "size": 968,
       "sha256": "9fe614baa0114d0a9b4431c01e7ecdcaa7386577fa1120b86e26ea3fe72571dd"
+    },
+    {
+      "path": "docs/system-documentation/01-system-overview.md",
+      "size": 12573,
+      "sha256": "4877b4e6ea1662fa7697275232b473ebb626353eb37eeb39333aa83fa9927d47"
+    },
+    {
+      "path": "docs/system-documentation/02-installation-and-execution.md",
+      "size": 9828,
+      "sha256": "00bedaf357eebb9b76ab023198022517f23b84703b12373aa3530ec2c1efa294"
+    },
+    {
+      "path": "docs/system-documentation/03-architecture.md",
+      "size": 15004,
+      "sha256": "c3aa91d4b2adbf250162ee17aee5ca8c3c6847895012f2d6e63958ce78580925"
+    },
+    {
+      "path": "docs/system-documentation/04-code-map.md",
+      "size": 16111,
+      "sha256": "e5138f046847c85243352909051dcd041857c5aee859f064eb56bb6824a0eb70"
+    },
+    {
+      "path": "docs/system-documentation/05-technical-reference.md",
+      "size": 17212,
+      "sha256": "13225c2dadc8d0dd2512d31167de4cf08cdc2f00dd96e7a2caa0175bef6c4726"
+    },
+    {
+      "path": "docs/system-documentation/06-deep-code-explanation.md",
+      "size": 26371,
+      "sha256": "939e272fca7260d304ad8b7a01ac2b0f9c228d93d8a3fa95a9d575fd0107ae4c"
+    },
+    {
+      "path": "docs/system-documentation/07-database.md",
+      "size": 14792,
+      "sha256": "699524fe4892ebc0dcf4b75b7d46e85df3eb00343ee5ce9b9535ca2795e6a16e"
+    },
+    {
+      "path": "docs/system-documentation/08-data-flow.md",
+      "size": 13000,
+      "sha256": "fe38aedda47fcbc204356fe98f40bf95225c14ea7b77e36de2acc8abbaa3547f"
+    },
+    {
+      "path": "docs/system-documentation/09-apis-and-integrations.md",
+      "size": 12565,
+      "sha256": "a1b6fe269fb28fd9a7d60ac59af74c6eda15bf833654d69790aabe0168a39e32"
+    },
+    {
+      "path": "docs/system-documentation/10-configuration.md",
+      "size": 11708,
+      "sha256": "64057d609699b66c7c3f9544fb181ea6104a72ebb3c9ab798cc97f1063860ec4"
+    },
+    {
+      "path": "docs/system-documentation/11-security.md",
+      "size": 16049,
+      "sha256": "46bc9046c2c68833892026d46b02e893bc8ea727820ba1b04f42d02e2acf35ac"
+    },
+    {
+      "path": "docs/system-documentation/12-testing-and-quality.md",
+      "size": 13194,
+      "sha256": "bf0fc58b44b7786f775811d67e722d8b855ab9c872c03985ee9cea4f33765bc0"
+    },
+    {
+      "path": "docs/system-documentation/13-deployment-and-operations.md",
+      "size": 12502,
+      "sha256": "9452b492bbeb251203d8941dc95ba7149ace0fedeb5c857035d263ac4a6ad549"
+    },
+    {
+      "path": "docs/system-documentation/14-troubleshooting.md",
+      "size": 15581,
+      "sha256": "64fb2ce0aaf6fa8caa5538b3f66637d16cfe7fa0d2d8c53d720fc8070c77d808"
+    },
+    {
+      "path": "docs/system-documentation/15-risks-and-technical-debt.md",
+      "size": 15644,
+      "sha256": "76e4a160e1daf2b96649542b634be59a40499f654d39c862a5e824e994a2d130"
+    },
+    {
+      "path": "docs/system-documentation/16-glossary.md",
+      "size": 9420,
+      "sha256": "cd30c53a46342c3ae8c168bc2d43353485e35cfcb5427d60972ea53564316c12"
+    },
+    {
+      "path": "docs/system-documentation/17-executive-summary.md",
+      "size": 7719,
+      "sha256": "95f02e53dd995fc5ff6bd10cff25512649e73a8ba65185c25ff9da062a880400"
+    },
+    {
+      "path": "docs/system-documentation/18-new-developer-guide.md",
+      "size": 13127,
+      "sha256": "6e65f752a8aed7944e964e277e828a7aa3a5496625b8520e4a1e9bfacd9bbca1"
+    },
+    {
+      "path": "docs/system-documentation/19-traceability-matrix.md",
+      "size": 15903,
+      "sha256": "e016bc9c83b2ad361b17cbd486ebbbbee2e37400e6770bd23f3a9311a0e96b18"
+    },
+    {
+      "path": "docs/system-documentation/pdf/.mermaid-cache/0c1dc5db7ad31a4ece15.mmd",
+      "size": 476,
+      "sha256": "0c1dc5db7ad31a4ece153245e5adbafc51a0e5acb2f51440a551c8d176fe70fb"
+    },
+    {
+      "path": "docs/system-documentation/pdf/.mermaid-cache/0c1dc5db7ad31a4ece15.png",
+      "size": 42245,
+      "sha256": "5dc0606fbd2520feb60710385f723944362239ad3dbf16414925bd7e01503b20"
+    },
+    {
+      "path": "docs/system-documentation/pdf/.mermaid-cache/3e6ea42995a07ea30605.mmd",
+      "size": 839,
+      "sha256": "3e6ea42995a07ea306051232e988977f489a659b02a556c47108a9ab74ec8c80"
+    },
+    {
+      "path": "docs/system-documentation/pdf/.mermaid-cache/3e6ea42995a07ea30605.png",
+      "size": 43487,
+      "sha256": "d1b272cd5c75628296f56f1a213df2f86b6d5234c373b1c288d2b77f7cf1978d"
+    },
+    {
+      "path": "docs/system-documentation/pdf/.mermaid-cache/524ea2ff38a4dcbb133b.mmd",
+      "size": 479,
+      "sha256": "524ea2ff38a4dcbb133baa4cc73f6e371bf76a36ea65a9bf248dd8267ced5f75"
+    },
+    {
+      "path": "docs/system-documentation/pdf/.mermaid-cache/524ea2ff38a4dcbb133b.png",
+      "size": 35071,
+      "sha256": "5a3ae9435fc5de196b4ec01ab6f49582a5d8a7ae4f72ab579b71ed41c88c75eb"
+    },
+    {
+      "path": "docs/system-documentation/pdf/.mermaid-cache/72be5492c9424e006e57.mmd",
+      "size": 626,
+      "sha256": "72be5492c9424e006e5764b26ea9a3d23e7b439d14b5f73d28d604cf7aa95b2f"
+    },
+    {
+      "path": "docs/system-documentation/pdf/.mermaid-cache/72be5492c9424e006e57.png",
+      "size": 52184,
+      "sha256": "feed960499b19260edaf762714ddd0ceba390f5903ac22b21d9e27bec2c10605"
+    },
+    {
+      "path": "docs/system-documentation/pdf/.mermaid-cache/786dfabfc3ee9612f944.mmd",
+      "size": 693,
+      "sha256": "786dfabfc3ee9612f944e67e5b74abf977fb175cf8bcbf60fa24a368b303d7bb"
+    },
+    {
+      "path": "docs/system-documentation/pdf/.mermaid-cache/786dfabfc3ee9612f944.png",
+      "size": 57700,
+      "sha256": "e69efaf3b7923c1f1fd424c5ae7ed5a35bfb1929945e36006314181465f15465"
+    },
+    {
+      "path": "docs/system-documentation/pdf/.mermaid-cache/7a8dbd3986f0996a5cb7.mmd",
+      "size": 775,
+      "sha256": "7a8dbd3986f0996a5cb7b28a30609198cf8acf68f52fef54a29c70095d4caf5e"
+    },
+    {
+      "path": "docs/system-documentation/pdf/.mermaid-cache/7a8dbd3986f0996a5cb7.png",
+      "size": 36338,
+      "sha256": "38a98f5487364f1437c72393f6f86a660454907a47ef75c25e61a48a11ac76bd"
+    },
+    {
+      "path": "docs/system-documentation/pdf/.mermaid-cache/80eac3edb82a57d89db5.mmd",
+      "size": 686,
+      "sha256": "80eac3edb82a57d89db5869e96a897aadb37fe6fc3eb0c0f67097c4fcfdde76d"
+    },
+    {
+      "path": "docs/system-documentation/pdf/.mermaid-cache/80eac3edb82a57d89db5.png",
+      "size": 58121,
+      "sha256": "4e6ae36415632e961a896879d75c056d63692a2695fa54c3b12da1bea97eba53"
+    },
+    {
+      "path": "docs/system-documentation/pdf/.mermaid-cache/93eab7e8f32c24e78b65.mmd",
+      "size": 383,
+      "sha256": "93eab7e8f32c24e78b65e786e6052daaa77dfc182df9eba1f99c48c7de4a0685"
+    },
+    {
+      "path": "docs/system-documentation/pdf/.mermaid-cache/93eab7e8f32c24e78b65.png",
+      "size": 11465,
+      "sha256": "d7060c8c34e3267c289e314ace875ff22bb49ed19774ccd50ff89c36caeec8b4"
+    },
+    {
+      "path": "docs/system-documentation/pdf/.mermaid-cache/a2be040994151ed67b04.mmd",
+      "size": 806,
+      "sha256": "a2be040994151ed67b04d13d07835ddc2c7c85aa070cc2d424a37be9dd03dec6"
+    },
+    {
+      "path": "docs/system-documentation/pdf/.mermaid-cache/a2be040994151ed67b04.png",
+      "size": 48873,
+      "sha256": "4416bc7a3c2719d869a6ef26361d5d4691d3ed2b97ee64d9bd3792834b17bcdc"
+    },
+    {
+      "path": "docs/system-documentation/pdf/.mermaid-cache/a46c9d4d998dc2e15e74.mmd",
+      "size": 1762,
+      "sha256": "a46c9d4d998dc2e15e7412b7e87853d6b8476922a2730186dcde1d36bbf46581"
+    },
+    {
+      "path": "docs/system-documentation/pdf/.mermaid-cache/a46c9d4d998dc2e15e74.png",
+      "size": 94420,
+      "sha256": "27556c67da5df6aa21774f188fff9bfcca41ffd6630dc124dadf4495b265fc68"
+    },
+    {
+      "path": "docs/system-documentation/pdf/.mermaid-cache/a709c41641edb0a28765.mmd",
+      "size": 269,
+      "sha256": "a709c41641edb0a28765912903217f966221191e147082124b8cf52ad94715a0"
+    },
+    {
+      "path": "docs/system-documentation/pdf/.mermaid-cache/a709c41641edb0a28765.png",
+      "size": 15290,
+      "sha256": "de6d35a4fb0f8bc4bcaa6c6ec401a7a1dc469cea1dab8f0a843250819418d7fa"
+    },
+    {
+      "path": "docs/system-documentation/pdf/.mermaid-cache/ac60c5227ea5e6be221a.mmd",
+      "size": 609,
+      "sha256": "ac60c5227ea5e6be221a4d591092cc8d856d8ef3fc4c53d1d07baae8bab10b7c"
+    },
+    {
+      "path": "docs/system-documentation/pdf/.mermaid-cache/ac60c5227ea5e6be221a.png",
+      "size": 44050,
+      "sha256": "6de691e2eb51c3679317aa7d2b35ddadb7be38e55a13cd25788a4a1800f05a6b"
+    },
+    {
+      "path": "docs/system-documentation/pdf/.mermaid-cache/b68076c25ede00945a51.mmd",
+      "size": 1286,
+      "sha256": "b68076c25ede00945a51095e67bf30953353b2dd4cee2ff174ecdd688ce805b8"
+    },
+    {
+      "path": "docs/system-documentation/pdf/.mermaid-cache/b68076c25ede00945a51.png",
+      "size": 46593,
+      "sha256": "08e20b4b1ebb91433cb83e85068748e6217579e79b15e4829ebe3fd1386c1c41"
+    },
+    {
+      "path": "docs/system-documentation/pdf/.mermaid-cache/ccab24d4f5ef4d94bd20.mmd",
+      "size": 1047,
+      "sha256": "ccab24d4f5ef4d94bd20ff88a53d1ce4acf422bb8378aebbd5081afe8d8d0c41"
+    },
+    {
+      "path": "docs/system-documentation/pdf/.mermaid-cache/ccab24d4f5ef4d94bd20.png",
+      "size": 37777,
+      "sha256": "587a12912bb9e46fd23dd94b2e1005a57a7794e45edb7e3bb4c1fa36e4dc3be1"
+    },
+    {
+      "path": "docs/system-documentation/pdf/00-documentacion-completa.pdf",
+      "size": 1185604,
+      "sha256": "bf86a650aefd69fc4e424087baa6946693d930cac47f12e8947f4831444fed13"
+    },
+    {
+      "path": "docs/system-documentation/pdf/01-system-overview.pdf",
+      "size": 76882,
+      "sha256": "160cba157c13422e0dd9c745706116ec4222ed4a5273a555a68e3e893b63bead"
+    },
+    {
+      "path": "docs/system-documentation/pdf/02-installation-and-execution.pdf",
+      "size": 24054,
+      "sha256": "0f818d81be7c79daa159ce949cb344e129276df281c0517471a16aa4b3bb5557"
+    },
+    {
+      "path": "docs/system-documentation/pdf/03-architecture.pdf",
+      "size": 252050,
+      "sha256": "f9e92c61d52ab0461acfeed983c868f1462c25e6abde93863d5d97c265c4a94e"
+    },
+    {
+      "path": "docs/system-documentation/pdf/04-code-map.pdf",
+      "size": 40759,
+      "sha256": "e5bcdac038ba7fbaa4bab066c15ee59b7eeda16332e5fbe7947df46611645b0b"
+    },
+    {
+      "path": "docs/system-documentation/pdf/05-technical-reference.pdf",
+      "size": 49115,
+      "sha256": "aa8eefd1e8a6bb292209ebb123bffc2e5c39a39c240211c6da1c95a6a260d3d2"
+    },
+    {
+      "path": "docs/system-documentation/pdf/06-deep-code-explanation.pdf",
+      "size": 83259,
+      "sha256": "8dff20fbd4b42bfd6971980e364df5f71ea36fd4d84e84f840ba210c1821d2e2"
+    },
+    {
+      "path": "docs/system-documentation/pdf/07-database.pdf",
+      "size": 121625,
+      "sha256": "df6e3f89cebfcf420d3fd6673daa6443a6563ffe8af760e35affc3623c44c625"
+    },
+    {
+      "path": "docs/system-documentation/pdf/08-data-flow.pdf",
+      "size": 165592,
+      "sha256": "42f67a6223634356ab183f27684fe17989425200d03d31af695647f6db2bae1d"
+    },
+    {
+      "path": "docs/system-documentation/pdf/09-apis-and-integrations.pdf",
+      "size": 48246,
+      "sha256": "dc807c928854a677c10adeb168a883e4277097576d98da9d6fe2005c4f095237"
+    },
+    {
+      "path": "docs/system-documentation/pdf/10-configuration.pdf",
+      "size": 30775,
+      "sha256": "37a8b16a58fb7ddc7d1a8e78ec08fcb1d0cc7185440df4c271dd5df18736568e"
+    },
+    {
+      "path": "docs/system-documentation/pdf/11-security.pdf",
+      "size": 86577,
+      "sha256": "e084d3e4ff737cdd8a6371a8919767688615aa5fa21af309fc145589caebc9ee"
+    },
+    {
+      "path": "docs/system-documentation/pdf/12-testing-and-quality.pdf",
+      "size": 33752,
+      "sha256": "508e86539dba8bcb2c135db3d9dda02ac39d276899a64fe0c710706789cdb09d"
+    },
+    {
+      "path": "docs/system-documentation/pdf/13-deployment-and-operations.pdf",
+      "size": 39727,
+      "sha256": "669324a58e3f21946ccb0bb27780f087d84282e8ff0bcca1660f768752d38188"
+    },
+    {
+      "path": "docs/system-documentation/pdf/14-troubleshooting.pdf",
+      "size": 41457,
+      "sha256": "1ac79d48050d739cff8c106071a72ad6254a8d94ba96a3ff498b04d532bbbf2a"
+    },
+    {
+      "path": "docs/system-documentation/pdf/15-risks-and-technical-debt.pdf",
+      "size": 35910,
+      "sha256": "689122ed2584de400e7b0c44ee95df70b92b13ce0453848f1393cbf4e3f1480c"
+    },
+    {
+      "path": "docs/system-documentation/pdf/16-glossary.pdf",
+      "size": 14166,
+      "sha256": "f95d373b5460e720e41cb123b6d9362d617dda6f7cba6e94a1b88dd3fd8fc485"
+    },
+    {
+      "path": "docs/system-documentation/pdf/17-executive-summary.pdf",
+      "size": 17755,
+      "sha256": "b7a342005b249ca238f893a96deae65c7b4a58c7c61ec258f124ab26f700e325"
+    },
+    {
+      "path": "docs/system-documentation/pdf/18-new-developer-guide.pdf",
+      "size": 33475,
+      "sha256": "0a959c4c794a395bd22a5eb1a7bd80385a360e6c052824a4b6c350c97d10a152"
+    },
+    {
+      "path": "docs/system-documentation/pdf/19-traceability-matrix.pdf",
+      "size": 40249,
+      "sha256": "475dbb2fab9165d30be39e325aede8ced05193382b7fd22d220f647262e1b790"
+    },
+    {
+      "path": "docs/system-documentation/pdf/README.pdf",
+      "size": 18062,
+      "sha256": "2dc127650e1240a961059bd7804c300aaf735b22ddaeef35b890d2e6fc43c8a5"
     },
     {
       "path": "docs/system-documentation/README.md",
@@ -863,8 +1203,8 @@
     },
     {
       "path": "README.md",
-      "size": 24600,
-      "sha256": "7e16362f6ff79b77cefa75ff74248c8475c8c6acf34160c31719bfa88407005c"
+      "size": 26120,
+      "sha256": "61811af680173af610f070e33f5e64fdcb00b7418c2cb369fea0f0a8c1f684af"
     },
     {
       "path": "RELEASE_SOURCE.json",
@@ -1092,14 +1432,19 @@
       "sha256": "78d8c83d703e764b44fec6dfb9e0d1b7c742483c128848d0ccbf52ccf84816b5"
     },
     {
+      "path": "tool/build_system_documentation_pdf.py",
+      "size": 13267,
+      "sha256": "f73ccfcd4c93a6297e3802b6ebee33453cbf39225616daddc0783d8664c042bc"
+    },
+    {
       "path": "tool/finalize_stable.sh",
       "size": 597,
       "sha256": "4fba43e96b980be744969a8ee26fe6e9993f5776b0ee1493e97b38036cd79ba1"
     },
     {
       "path": "tool/generate_checksums.py",
-      "size": 281,
-      "sha256": "f7fc53a0a142e0f6c9cf630a14da00f14d775f8327c96697812c060cd5679159"
+      "size": 1549,
+      "sha256": "53f30466ef3913cae138cf368c8ceef96688ef66455c150c0a4608a21a15dd82"
     },
     {
       "path": "tool/generate_launcher_icons.py",

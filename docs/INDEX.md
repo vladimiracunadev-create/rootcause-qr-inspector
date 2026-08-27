@@ -47,4 +47,19 @@ completo ni la reputación remota del destino.
 | [`rootcause/ADOPTION_MATRIX.md`](rootcause/ADOPTION_MATRIX.md) | Qué se heredó, cambió o excluyó |
 | [`../VALIDATION.md`](../VALIDATION.md) | Evidencia ejecutada y comprobaciones pendientes |
 
+## Documentación de sistema
+
+Un recorrido completo del repositorio en 20 documentos, escrito leyendo el
+código fuente: arquitectura, mapa del código, referencia técnica, explicación
+profunda, datos, seguridad, pruebas, operación, riesgos y trazabilidad. Con
+versión en PDF de cada documento.
+
+| Documento | Contenido |
+|---|---|
+| [`system-documentation/README.md`](system-documentation/README.md) | Índice, convenciones y qué quedó pendiente de validar |
+| [`system-documentation/17-executive-summary.md`](system-documentation/17-executive-summary.md) | Presentación para decisión |
+| [`system-documentation/18-new-developer-guide.md`](system-documentation/18-new-developer-guide.md) | Itinerario de incorporación |
+| [`system-documentation/15-risks-and-technical-debt.md`](system-documentation/15-risks-and-technical-debt.md) | 19 hallazgos clasificados |
+| [`system-documentation/19-traceability-matrix.md`](system-documentation/19-traceability-matrix.md) | De la funcionalidad al dato y a su prueba |
+
 Documento raíz: [`../README.md`](../README.md) — visión general y comienzo rápido.
