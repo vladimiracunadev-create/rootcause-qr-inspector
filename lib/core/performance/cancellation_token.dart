@@ -1,11 +1,20 @@
 import 'package:flutter/foundation.dart';
 
+/// Señal de cancelación voluntaria; no es un error que deba reportarse.
+///
+/// Las pantallas la capturan por separado para distinguir «el usuario canceló»
+/// de «el análisis falló», y en ambos casos dejan el historial intacto.
 class OperationCancelledException implements Exception {
   const OperationCancelledException();
   @override
   String toString() => 'OperationCancelledException';
 }
 
+/// Testigo de cancelación cooperativa para los lotes de imagen y PDF.
+///
+/// Es cooperativo: el trabajo largo debe llamar a `throwIfCancelled` entre
+/// pasos. Al ser un `ChangeNotifier`, también permite propagar la cancelación
+/// a un renderizador que ya está en curso, como hace `PdfPageRenderer`.
 class CancellationToken extends ChangeNotifier {
   bool _cancelled = false;
   bool get isCancelled => _cancelled;
@@ -21,6 +30,10 @@ class CancellationToken extends ChangeNotifier {
   }
 }
 
+/// Progreso observable de un lote, para el diálogo cancelable.
+///
+/// `fraction` devuelve `null` mientras no se conoce el total, lo que la barra
+/// de progreso interpreta como indeterminada.
 class BatchProgress extends ChangeNotifier {
   BatchProgress({this.label = ''});
 

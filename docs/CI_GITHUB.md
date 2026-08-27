@@ -6,7 +6,7 @@
 flowchart LR
     P["push / pull request"] --> Q["Flutter quality"]
     Q --> S["estructura + contrato"]
-    S --> A["analyze + 81 casos"]
+    S --> A["analyze + 87 casos"]
     A --> B["build web + Android"]
     B --> R["SBOM + licencias + checksums"]
     T["tag vX.Y.Z"] --> V["APK release + verificación"]

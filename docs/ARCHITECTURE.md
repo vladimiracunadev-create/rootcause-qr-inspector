@@ -35,12 +35,20 @@ controlador es suyo. `ScannerScreen` e `InventoryScreen` observan
 reinician al volver.
 
 Toda llamada al controlador —arrancar, detener, reiniciar— pasa por métodos que
-capturan la excepción y la traducen a uno de cuatro estados visibles:
-`starting`, `scanning`, `paused` y `unavailable` (`ScanPhase`). `ScanStatusBar`
-los nombra y dibuja; la barra horizontal solo se mueve mientras el motor analiza
-cuadros. `ScanFeedback` concentra la confirmación de lectura —tono empaquetado y
-vibración— con degradación al sonido del sistema si el reproductor falla.
-Comportamiento por estado en
+capturan la excepción y la traducen a uno de cinco estados visibles:
+`starting`, `scanning`, `captured`, `paused` y `unavailable` (`ScanPhase`).
+`ScanStatusBar` los nombra y dibuja; la barra horizontal solo se mueve mientras
+el motor analiza cuadros, y se llena y detiene cuando hay una captura.
+`ScanFeedback` concentra la confirmación de lectura —tono empaquetado y
+vibración— con degradación al sonido del sistema si el reproductor falla; el
+reproductor se precalienta al abrir la pantalla y su reproducción no bloquea la
+apertura del resultado.
+
+El marco central **no filtra** la detección: se dibuja como guía de encuadre y
+el motor analiza toda la vista previa. La repetición del mismo código se filtra
+en la pantalla, con una ventana que se reinicia mientras el código siga a la
+vista, y se anuncia en la barra de estado en lugar de producir silencio.
+Comportamiento por estado y causa de cada corrección en
 [`quality/SCANNER_UX.md`](quality/SCANNER_UX.md).
 
 ## Persistencia
@@ -74,8 +82,9 @@ un móvil es idéntico al que habría sin esa capa.
 ## Extensión de motores
 
 `ScannerEngine` es la frontera estable alrededor del paquete de captura;
-`MobileScannerEngine` es su única implementación en 0.1.0. La interpretación y la
-persistencia no dependen de `mobile_scanner`.
+`MobileScannerEngine` es su única implementación en 0.1.1, y también el lugar
+donde se declara la resolución de captura pedida a la plataforma. La
+interpretación y la persistencia no dependen de `mobile_scanner`.
 
 Windows, macOS y Linux no son plataformas objetivo. Cualquier implementación
 de escritorio requeriría otro producto y no se incorpora a este repositorio.

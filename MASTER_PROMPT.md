@@ -121,7 +121,7 @@ Diseña para integrar:
 - QR → Windows por destino y artefacto;
 - todos → `rootcause-schema` por ids y hashes.
 
-La integración 0.1.0 es export manual. No simules un bus o correlación que no
+La integración 0.1.1 es export manual. No simules un bus o correlación que no
 existe.
 
 ## Calidad mínima por cambio

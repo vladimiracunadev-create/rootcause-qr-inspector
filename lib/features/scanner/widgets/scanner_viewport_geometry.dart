@@ -13,6 +13,12 @@ class ScannerViewportGeometry {
     required this.scanWindow,
   });
 
+  /// Calcula el marco a partir del tamaño real de la vista previa.
+  ///
+  /// Reserva primero el alto de la barra de estado y el de los controles, y solo
+  /// después dimensiona el cuadrado. Por eso el marco nunca queda debajo de un
+  /// botón, ni siquiera en una pantalla corta: `compact` reduce las reservas en
+  /// lugar de permitir que el área útil se vuelva negativa.
   factory ScannerViewportGeometry.forSize(Size size) {
     final bool compact = size.height < 520 || size.width < 360;
     final double statusReserve = compact ? 68 : 80;

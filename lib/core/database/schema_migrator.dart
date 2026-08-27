@@ -7,6 +7,20 @@ class SchemaMigrationResult {
   final List<int> applied;
 }
 
+/// Aplica los pasos de esquema pendientes dentro de una sola transacción.
+///
+/// El número de esquema vive en el almacén `_schema_meta`; una instalación sin
+/// ese registro se interpreta como versión 1. Cada paso es idempotente y
+/// aditivo: Sembast crea los almacenes de forma perezosa, así que las
+/// migraciones solo registran metadatos que otros componentes consultan.
+///
+/// Historial de pasos:
+/// - 2: marca de tiempo de la primera migración;
+/// - 3: reserva el almacén de recuperación y fija la versión de sobre cifrado;
+/// - 4: traslada el identificador de llave activa desde preferencias a la base.
+///
+/// Ejecutar `migrate()` dos veces no produce cambios adicionales; la prueba
+/// `test/core/schema_migrator_test.dart` lo comprueba.
 class SchemaMigrator {
   SchemaMigrator(this.database);
   static const int currentVersion = 4;

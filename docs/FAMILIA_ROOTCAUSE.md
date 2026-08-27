@@ -16,7 +16,7 @@ codificado antes de la entrega**: no observa todo el teléfono ni navega el siti
 | Hechos | Estructura de URI, host, codificación, intención textual y tipo de acción |
 | Hipótesis | Phishing, robo de credenciales, redirección o entrega riesgosa sospechados |
 | Evidencia común | Instante, hash, ids estables, severidad, decisión y límites |
-| Entrega a otra edición | Exportación explícita; no hay telemetría ni bus automático en 0.1.0 |
+| Entrega a otra edición | Exportación explícita; no hay telemetría ni bus automático en 0.1.1 |
 
 ## Superficies complementarias
 
@@ -38,7 +38,7 @@ codificado antes de la entrega**: no observa todo el teléfono ni navega el siti
 4. La persona investigadora conserva hechos de cada superficie sin convertir
    una sola señal en veredicto.
 
-En 0.1.0 los pasos son manuales. El contrato futuro se bosqueja en
+En 0.1.1 los pasos son manuales. El contrato futuro se bosqueja en
 [`rootcause/INTEGRATION.md`](rootcause/INTEGRATION.md).
 
 ## Diferencias que no se disimulan

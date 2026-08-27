@@ -27,7 +27,7 @@ sequenceDiagram
     F-->>Q: incidente cross-surface con evidencia
 ```
 
-## Contrato 0.1.0
+## Contrato 0.1.1
 
 La integración disponible hoy es explícita:
 

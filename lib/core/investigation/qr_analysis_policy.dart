@@ -1,3 +1,12 @@
+/// Marca protegida por una organización: sus tokens y sus dominios válidos.
+///
+/// El motor no incorpora marcas reales. Una integración inyecta las suyas, y
+/// un token que aparece fuera de [allowedHosts] produce
+/// `brand-domain-mismatch`. Los tokens se comparan reducidos a letras y
+/// dígitos, así que `banco-ejemplo` también detecta `bancoejemplo`.
+///
+/// Un token de menos de cuatro caracteres alfanuméricos se ignora, para no
+/// disparar la regla con fragmentos genéricos.
 class QrTrustedBrand {
   const QrTrustedBrand({
     required this.id,
@@ -23,6 +32,18 @@ class QrTrustedBrand {
       };
 }
 
+/// Umbrales y marcas que parametrizan el motor, sin tocar su código.
+///
+/// Los valores por defecto son los que usa la aplicación cuando nadie inyecta
+/// una política: 240 caracteres de URL, 5 etiquetas de dominio, destinos
+/// privados tratados como hallazgo y ninguna marca configurada.
+///
+/// `allowPrivateTargets` existe para despliegues internos donde un panel en
+/// `192.168.x.x` es el destino esperado; activarlo silencia
+/// `host-private-or-local` y debe declararse en la política de la organización.
+///
+/// En 0.1.1 la interfaz no carga este archivo: es un contrato para
+/// integradores. Ejemplo en `config/rootcause-qr-policy.example.json`.
 class QrAnalysisPolicy {
   const QrAnalysisPolicy({
     this.maxUrlLength = 240,

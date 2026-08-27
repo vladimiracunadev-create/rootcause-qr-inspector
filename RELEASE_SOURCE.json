@@ -1,8 +1,8 @@
 {
   "application": "RootCause QR Inspector",
-  "version": "0.1.0+1",
+  "version": "0.1.1+2",
   "releaseType": "source-preview",
-  "assembledAt": "2026-08-21",
+  "assembledAt": "2026-08-26",
   "toolchainTarget": {
     "flutter": "3.44.7",
     "dart": ">=3.12.0 <4.0.0"
@@ -18,7 +18,7 @@
       "valid": true,
       "rules": 26,
       "fixtures": 12,
-      "declaredDartFlutterCases": 77
+      "declaredDartFlutterCases": 88
     },
     "flutterRuntimeExecuted": false,
     "reason": "Flutter and Dart were not installed in the assembly environment"

@@ -10,6 +10,11 @@ import 'package:rootcause_qr_inspector/models/parsed_content.dart';
 /// romper filtros, importaciones y widgets de RootCause QR Inspector.
 enum RiskLevel { low, caution, high }
 
+/// Vista simplificada de una investigación para las pantallas heredadas.
+///
+/// `canOpen` no significa «seguro»: significa que existe una URI entregable y
+/// que la decisión del motor no fue `block`. La confirmación previa sigue
+/// dependiendo de la decisión y de las preferencias.
 class SecurityAssessment {
   const SecurityAssessment({
     required this.level,

@@ -6,6 +6,17 @@ import 'package:share_plus/share_plus.dart';
 import 'package:rootcause_qr_inspector/models/inventory_session.dart';
 import 'package:rootcause_qr_inspector/models/scan_record.dart';
 
+/// Exportaciones completas de historial e inventario hacia otra aplicación.
+///
+/// **Estos archivos no están redactados.** JSON, CSV y XLSX contienen la carga
+/// cruda, las notas y las etiquetas en claro; son lo contrario del paquete de
+/// evidencia de `QrEvidenceExporter`, que omite la carga por defecto. Por eso
+/// la interfaz exige una confirmación explícita antes de invocarlos.
+///
+/// El CSV se escribe con BOM UTF-8 y todas las celdas entrecomilladas, para que
+/// una hoja de cálculo no reinterprete acentos ni separadores. La codificación
+/// de CSV y XLSX se delega a `compute`, en un isolate aparte, porque un
+/// historial de miles de registros bloquearía la interfaz.
 abstract final class ExportService {
   static Future<void> shareHistoryJson(List<ScanRecord> records) {
     final Uint8List bytes = Uint8List.fromList(

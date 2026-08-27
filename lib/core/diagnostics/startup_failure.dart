@@ -1,3 +1,8 @@
+/// Fallo de arranque reducido a lo que se puede mostrar sin riesgo.
+///
+/// El texto visible es siempre el mismo y no proviene de la excepción; lo
+/// único variable es el tipo de error y una huella de las primeras líneas de
+/// la pila, suficiente para correlacionar dos informes del mismo problema.
 class StartupFailure {
   const StartupFailure({required this.errorType, required this.message, required this.stackFingerprint});
 

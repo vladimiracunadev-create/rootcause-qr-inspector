@@ -5,10 +5,21 @@
 /// para poder comparar resultados entre versiones y superficies RootCause.
 library;
 
+/// Gravedad de un hallazgo y, por agregación, de toda la investigación.
+///
+/// La severidad global es el **máximo** de las severidades observadas; no se
+/// deduce del puntaje. `normal` significa «ninguna regla aplicable disparó»,
+/// nunca «destino seguro».
 enum QrSeverity { normal, warning, critical }
 
+/// Cuánta confianza merece la observación por sí sola.
+///
+/// Una confianza baja indica que el hecho es cierto pero admite explicaciones
+/// legítimas frecuentes: un dominio internacional válido dispara
+/// `host-unicode` sin que exista ningún engaño.
 enum QrFindingConfidence { low, medium, high }
 
+/// Familia del hallazgo, usada para agrupar y para el mapeo a otros productos.
 enum QrFindingCategory {
   transport,
   identity,
@@ -20,8 +31,22 @@ enum QrFindingCategory {
   sensitiveAction,
 }
 
+/// Política local de entrega de la carga a otra aplicación.
+///
+/// - `allow`: la URI es interpretable y ninguna regla aplicable disparó.
+/// - `confirm`: es interpretable, pero exige una decisión humana explícita.
+/// - `inspectOnly`: el contenido se explica, pero no hay acción externa segura.
+/// - `block`: la semántica de ejecución es inválida, desconocida o ambigua.
+///
+/// `block` no significa «malicioso», sino que el sistema no puede delegar la
+/// acción sin riesgo de que otra aplicación la interprete distinto. `allow` no
+/// significa «seguro».
 enum QrActionDecision { allow, confirm, inspectOnly, block }
 
+/// Hecho mínimo que sustenta un hallazgo: par id/valor neutral al idioma.
+///
+/// El id se traduce en la interfaz con `QrFindingText.evidenceLabel`; el JSON
+/// forense conserva el id crudo para poder compararse entre versiones.
 class QrEvidenceFact {
   const QrEvidenceFact({required this.id, required this.value});
 
@@ -39,6 +64,15 @@ class QrEvidenceFact {
       );
 }
 
+/// Una propiedad observada en la carga, no una acusación.
+///
+/// [id] es estable y no depende del idioma; cambiar su condición o su [score]
+/// obliga a subir `QrInvestigationEngine.engineVersion`, porque de lo
+/// contrario dos exportaciones con la misma versión dejarían de ser
+/// comparables.
+///
+/// [score] es un peso declarado que ordena evidencia; no es una probabilidad
+/// de fraude.
 class QrFinding {
   const QrFinding({
     required this.id,
@@ -86,6 +120,24 @@ class QrFinding {
       );
 }
 
+/// Resultado completo y serializable de analizar una carga.
+///
+/// Separa deliberadamente cuatro cosas que suelen confundirse:
+///
+/// - [findings]: hechos observados, con su evidencia;
+/// - [hypotheses]: explicaciones que requieren investigación humana y que
+///   **no** suman puntos;
+/// - `severity`/`score`/`action`: el veredicto operativo;
+/// - [limitations]: lo que este análisis no pudo comprobar, y que nunca debe
+///   interpretarse como «sin riesgo».
+///
+/// [payloadSha256] cubre la carga **exacta**, incluidos espacios y controles
+/// alrededor: dos códigos que se ven iguales pero difieren en un byte
+/// invisible producen huellas distintas, que es justo lo que una investigación
+/// necesita distinguir.
+///
+/// [evaluatedRuleIds] lista las reglas que llegaron a evaluarse, no solo las
+/// que dispararon: permite saber si una regla no aplicó o no se ejecutó.
 class QrInvestigation {
   const QrInvestigation({
     required this.engineVersion,

@@ -9,6 +9,10 @@ La versión se considera candidata estable solamente cuando todos los casos obli
 | Permiso denegado y revocado | Obligatorio | Obligatorio | Obligatorio | Obligatorio | Obligatorio | Obligatorio |
 | Poca luz y enfoque | Obligatorio | Obligatorio | Obligatorio | Obligatorio | Obligatorio | Obligatorio |
 | Código pequeño, curvo y dañado | Obligatorio | Obligatorio | Obligatorio | Obligatorio | Obligatorio | Obligatorio |
+| Código lejano y fuera del marco central | Obligatorio | Obligatorio | Obligatorio | Obligatorio | Obligatorio | Obligatorio |
+| Confirmación de captura: tono, vibración y estado `Código leído` | Obligatorio | Obligatorio | Obligatorio | Obligatorio | Obligatorio | Obligatorio |
+| Relectura del mismo código tras cerrar el resultado | Obligatorio | Obligatorio | Obligatorio | Obligatorio | Obligatorio | Obligatorio |
+| Inventario: diez unidades del mismo código | Obligatorio | Obligatorio | Obligatorio | Obligatorio | Obligatorio | Obligatorio |
 | Varios códigos simultáneos | Obligatorio | Obligatorio | Obligatorio | Obligatorio | Obligatorio | Obligatorio |
 | Galería y PDF de 1/10/25/50 páginas | Obligatorio | Obligatorio | Obligatorio | Obligatorio | Obligatorio | Obligatorio |
 | Biometría y regreso desde segundo plano | Obligatorio | Obligatorio | Obligatorio | Obligatorio | Obligatorio | Obligatorio |
@@ -22,6 +26,14 @@ columnas de aceptación del producto; la compatibilidad de archivos exportados
 se verifica por separado y no convierte al escritorio en plataforma objetivo.
 
 Los recursos reproducibles están en `test_assets/manifest.json`. Las simbologías no generadas de forma confiable deben incorporarse únicamente como capturas reales verificadas.
+
+## Pendiente en v0.1.1
+
+Las cuatro filas añadidas para la corrección de lectura de 0.1.1 —código lejano
+y descentrado, confirmación de captura, relectura y conteo de unidades
+repetidas— **no tienen todavía ningún registro**. La resolución de captura y el
+modo de detección son configuración de plataforma: ninguna prueba automatizada
+puede sustituir un teléfono. Ver [`../releases/v0.1.1.md`](../releases/v0.1.1.md).
 
 ## Registro reproducible de v0.1.0
 

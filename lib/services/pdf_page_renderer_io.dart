@@ -7,6 +7,10 @@ import 'package:rootcause_qr_inspector/core/performance/cancellation_token.dart'
 import 'package:path_provider/path_provider.dart';
 import 'package:pdfrx/pdfrx.dart';
 
+/// Una página de PDF ya rasterizada a un PNG temporal.
+///
+/// [imagePath] apunta a un archivo del directorio temporal del sistema que
+/// `PdfPageRenderer.cleanup` debe eliminar en cuanto termine el análisis.
 class RenderedPdfPage {
   const RenderedPdfPage({required this.pageNumber, required this.imagePath});
 
@@ -14,6 +18,19 @@ class RenderedPdfPage {
   final String imagePath;
 }
 
+/// Rasteriza páginas de un PDF para buscar códigos en ellas.
+///
+/// Solo existe en plataformas con `dart:io`; la variante stub lanza
+/// `UnsupportedError`, que es lo que ocurre en la demo web.
+///
+/// Controles de recursos, todos deliberados:
+/// - como máximo 50 páginas por documento;
+/// - escala ajustada para que el lado mayor no supere unos 2400 px, con un
+///   mínimo de 1,5x para que un QR pequeño siga siendo legible;
+/// - cada imagen de página se libera en cuanto se escribe en disco;
+/// - la cancelación se propaga al renderizador nativo, no solo al bucle;
+/// - ante cualquier error se limpian los archivos ya escritos y el directorio
+///   temporal antes de relanzar.
 class PdfPageRenderer {
   static Future<List<RenderedPdfPage>> pickAndRender({
     int maxPages = 50,

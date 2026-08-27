@@ -14,6 +14,10 @@ import 'package:rootcause_qr_inspector/services/clipboard_service.dart';
 import 'package:rootcause_qr_inspector/state/settings_store.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+/// Hoja modal con el resultado de una o varias lecturas.
+///
+/// Es la superficie donde el producto cumple su promesa: primero explica lo
+/// observado y solo después ofrece una acción.
 class ScanResultsSheet extends StatelessWidget {
   const ScanResultsSheet({required this.records, required this.settings, super.key});
 
@@ -100,6 +104,23 @@ class ScanResultsSheet extends StatelessWidget {
   }
 }
 
+/// Tarjeta de un caso: contenido observado, riesgo y acciones.
+///
+/// Se reutiliza en la hoja de resultado y en el detalle del historial; el modo
+/// `compact` oculta el bloque de riesgo y las acciones.
+///
+/// Tres controles de exposición conviven aquí:
+///
+/// - los campos sensibles se ocultan tras puntos mientras el usuario no pulse
+///   el ojo, si tiene activada la opción correspondiente;
+/// - copiar o compartir una carga sensible exige confirmación previa;
+/// - **Evidencia** comparte el paquete redactado de `QrEvidenceExporter`, sin
+///   carga cruda; la interfaz no expone ningún botón que active
+///   `includeRawPayload`.
+///
+/// La acción externa respeta la decisión del motor: `block` retira el botón, y
+/// `confirm` obliga a un diálogo aunque el usuario haya desactivado la
+/// confirmación general.
 class ScanRecordCard extends StatefulWidget {
   const ScanRecordCard({required this.record, required this.settings, this.compact = false, super.key});
 

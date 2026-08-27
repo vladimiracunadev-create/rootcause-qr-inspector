@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
 
+/// Catálogo informativo de simbologías, abierto desde Ajustes.
+///
+/// La lista es estática y describe lo que la aplicación **solicita** al motor
+/// nativo, no lo que un dispositivo concreto garantiza: la compatibilidad real
+/// depende de ML Kit en Android, Vision en iOS o el backend del navegador.
 class FormatsScreen extends StatelessWidget {
   const FormatsScreen({super.key});
 

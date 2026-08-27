@@ -8,7 +8,7 @@ landing, descripción o release promete más, prevalecen aquí los límites.
 | Campo | Definición |
 |---|---|
 | Producto | RootCause QR Inspector |
-| Versión | 0.1.0 |
+| Versión | 0.1.1 |
 | Superficie | Cargas QR y otros códigos 1D/2D antes de entregarlos a otra app |
 | Tecnología | Flutter y Dart; producto exclusivamente móvil para Android/iOS |
 | Formato primario | teléfonos; tablet Android/iPad quedan pendientes de verificación específica |

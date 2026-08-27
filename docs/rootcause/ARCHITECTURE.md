@@ -129,7 +129,7 @@ bundleHash = SHA-256(JSON_con_claves_ordenadas_sin_bundleHash)
 
 Opcionalmente incluye `previousEvidenceHash` para formar una secuencia externa.
 La aplicación exporta un paquete individual; no afirma mantener una cadena
-automática entre todos los registros en 0.1.0. Un hash sin clave puede
+automática entre todos los registros en 0.1.1. Un hash sin clave puede
 recalcularse después de modificar el archivo: prueba consistencia frente a una
 huella anclada externamente, no origen ni autenticidad. El contrato lo marca
 como `checksum-only-not-authenticated`.

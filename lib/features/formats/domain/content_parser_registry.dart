@@ -2,6 +2,14 @@ import 'package:rootcause_qr_inspector/features/formats/domain/content_parser.da
 import 'package:rootcause_qr_inspector/models/parsed_content.dart';
 import 'package:rootcause_qr_inspector/services/content_interpreter.dart';
 
+/// Registro ordenado de parsers, con el intérprete integrado como respaldo.
+///
+/// `register` sustituye cualquier parser con el mismo id y reordena por
+/// prioridad descendente. `unregister` protege explícitamente a `builtin-v2`:
+/// una extensión no puede dejar la aplicación sin intérprete.
+///
+/// Es un singleton (`instance`) porque `ScanRecord` lo consulta desde sus
+/// constructores, donde no hay contexto de inyección disponible.
 class ContentParserRegistry {
   ContentParserRegistry._() : _parsers = <ContentParser>[const LegacyContentParser()];
   static final ContentParserRegistry instance = ContentParserRegistry._();
@@ -25,6 +33,9 @@ class ContentParserRegistry {
   }
 }
 
+/// Parser integrado: acepta cualquier carga y delega en [ContentInterpreter].
+///
+/// Su prioridad negativa garantiza que siempre sea el último candidato.
 class LegacyContentParser implements ContentParser {
   const LegacyContentParser();
   @override

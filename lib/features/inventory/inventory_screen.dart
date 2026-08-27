@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
+import 'package:rootcause_qr_inspector/features/scanner/data/mobile_scanner_engine.dart';
 import 'package:rootcause_qr_inspector/features/scanner/widgets/scan_status_bar.dart';
 import 'package:rootcause_qr_inspector/models/inventory_session.dart';
 import 'package:rootcause_qr_inspector/models/scan_record.dart';
@@ -11,6 +12,19 @@ import 'package:rootcause_qr_inspector/services/scan_feedback.dart';
 import 'package:rootcause_qr_inspector/state/inventory_store.dart';
 import 'package:rootcause_qr_inspector/state/settings_store.dart';
 
+/// Inventario continuo: sesiones de conteo con cámara siempre activa.
+///
+/// Tiene dos modos según haya o no sesión activa: la lista de sesiones, o el
+/// conteo con la cámara embebida donde cada lectura suma una unidad.
+///
+/// Mantiene su propio `MobileScannerController` en vez de compartir el de
+/// `ScannerScreen`: la navegación monta una sola pestaña a la vez, así que
+/// cada pantalla crea y libera su sesión de cámara al entrar y salir. Como el
+/// controlador es suyo, `MobileScanner` no gestiona el ciclo de vida y esta
+/// pantalla vuelve a observar `didChangeAppLifecycleState`.
+///
+/// El filtro antirrebote es de 1200 ms, más corto que el del escáner: contar
+/// productos exige leer muchos códigos seguidos.
 class InventoryScreen extends StatefulWidget {
   const InventoryScreen({required this.store, required this.settings, super.key});
 
@@ -30,6 +44,10 @@ class _InventoryScreenState extends State<InventoryScreen> with WidgetsBindingOb
   String? _lastCode;
   DateTime? _lastAt;
 
+  /// Short confirmation shown right after a unit is added.
+  bool _justCounted = false;
+  Timer? _countedTimer;
+
   @override
   void initState() {
     super.initState();
@@ -40,7 +58,13 @@ class _InventoryScreenState extends State<InventoryScreen> with WidgetsBindingOb
 
   void _createController() {
     _controller = MobileScannerController(
-      detectionSpeed: DetectionSpeed.noDuplicates,
+      // Counting ten identical boxes requires reading the same code ten
+      // times. `noDuplicates` made the platform emit a value once and never
+      // again until a different code appeared, so repeated units were simply
+      // never counted. The 1200 ms filter in `_onDetect` is what prevents a
+      // single box from being counted on every frame.
+      detectionSpeed: DetectionSpeed.normal,
+      cameraResolution: MobileScannerEngine.inventoryResolution,
       formats: const <BarcodeFormat>[],
       autoZoom: true,
       invertImage: true,
@@ -52,6 +76,7 @@ class _InventoryScreenState extends State<InventoryScreen> with WidgetsBindingOb
     WidgetsBinding.instance.removeObserver(this);
     widget.store.removeListener(_refresh);
     _nameController.dispose();
+    _countedTimer?.cancel();
     unawaited(_controller.dispose());
     unawaited(_feedback.dispose());
     super.dispose();
@@ -257,16 +282,20 @@ class _InventoryScreenState extends State<InventoryScreen> with WidgetsBindingOb
                           ? ScanPhase.unavailable
                           : _paused
                               ? ScanPhase.paused
-                              : state.isRunning
-                                  ? ScanPhase.scanning
-                                  : ScanPhase.starting;
+                              : _justCounted
+                                  ? ScanPhase.captured
+                                  : state.isRunning
+                                      ? ScanPhase.scanning
+                                      : ScanPhase.starting;
                       return Stack(
                         fit: StackFit.expand,
                         children: <Widget>[
                           MobileScanner(
                             key: _previewKey,
+                            // No `scanWindow`: as in the inspector, the guide
+                            // must not silently discard a code the person can
+                            // see perfectly well.
                             controller: _controller,
-                            scanWindow: widget.settings.value.useScanWindow ? scanWindow : null,
                             tapToFocus: true,
                             onDetect: _onDetect,
                           ),
@@ -277,7 +306,9 @@ class _InventoryScreenState extends State<InventoryScreen> with WidgetsBindingOb
                                 height: scanWindow.height,
                                 decoration: BoxDecoration(
                                   border: Border.all(
-                                    color: phase == ScanPhase.scanning ? Theme.of(context).colorScheme.primary : Colors.white70,
+                                    color: phase == ScanPhase.scanning || phase == ScanPhase.captured
+                                        ? Theme.of(context).colorScheme.primary
+                                        : Colors.white70,
                                     width: 4,
                                   ),
                                   borderRadius: BorderRadius.circular(20),
@@ -292,6 +323,7 @@ class _InventoryScreenState extends State<InventoryScreen> with WidgetsBindingOb
                               phase: phase,
                               message: switch (phase) {
                                 ScanPhase.scanning => 'Cada código leído suma una unidad.',
+                                ScanPhase.captured => 'Unidad sumada al inventario.',
                                 ScanPhase.starting => 'Preparando la cámara del inventario.',
                                 ScanPhase.paused => 'Reanuda para seguir sumando unidades.',
                                 ScanPhase.unavailable => 'Revisa el permiso de cámara y reinicia la lectura.',
@@ -300,12 +332,12 @@ class _InventoryScreenState extends State<InventoryScreen> with WidgetsBindingOb
                               actionLabel: switch (phase) {
                                 ScanPhase.paused => 'Reanudar',
                                 ScanPhase.unavailable => 'Reintentar',
-                                ScanPhase.starting || ScanPhase.scanning => null,
+                                ScanPhase.starting || ScanPhase.scanning || ScanPhase.captured => null,
                               },
                               onAction: switch (phase) {
                                 ScanPhase.paused => _togglePause,
                                 ScanPhase.unavailable => _restartCamera,
-                                ScanPhase.starting || ScanPhase.scanning => null,
+                                ScanPhase.starting || ScanPhase.scanning || ScanPhase.captured => null,
                               },
                             ),
                           ),
@@ -321,9 +353,9 @@ class _InventoryScreenState extends State<InventoryScreen> with WidgetsBindingOb
                                 ),
                                 const SizedBox(height: 8),
                                 IconButton.filled(
-                                  tooltip: phase == ScanPhase.scanning ? 'Pausar lectura' : 'Reanudar lectura',
+                                  tooltip: _paused ? 'Reanudar lectura' : 'Pausar lectura',
                                   onPressed: _togglePause,
-                                  icon: Icon(phase == ScanPhase.scanning ? Icons.pause : Icons.play_arrow),
+                                  icon: Icon(_paused ? Icons.play_arrow : Icons.pause),
                                 ),
                               ],
                             ),
@@ -392,6 +424,9 @@ class _InventoryScreenState extends State<InventoryScreen> with WidgetsBindingOb
     for (final Barcode barcode in capture.barcodes) {
       final String raw = ScanRecord.payloadForBarcode(barcode);
       if (raw.isEmpty) continue;
+      // Same code, same second: one box in front of the lens must not be
+      // counted on every frame. A code presented again after this window is a
+      // new unit and does get counted.
       if (_lastCode == raw && _lastAt != null && now.difference(_lastAt!) < const Duration(milliseconds: 1200)) continue;
       _lastCode = raw;
       _lastAt = now;
@@ -401,7 +436,20 @@ class _InventoryScreenState extends State<InventoryScreen> with WidgetsBindingOb
         sound: widget.settings.value.soundEnabled,
         vibration: widget.settings.value.vibrationEnabled,
       ));
+      _flagCounted();
     }
+  }
+
+  /// Confirms on screen that a unit was added.
+  ///
+  /// The tone and the vibration can both be off, and the list scrolls away
+  /// from what the person is looking at, so the status bar has to say it too.
+  void _flagCounted() {
+    _countedTimer?.cancel();
+    _countedTimer = Timer(const Duration(milliseconds: 900), () {
+      if (mounted) setState(() => _justCounted = false);
+    });
+    if (!_justCounted && mounted) setState(() => _justCounted = true);
   }
 
 

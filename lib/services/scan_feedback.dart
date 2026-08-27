@@ -9,6 +9,13 @@ import 'package:flutter/services.dart';
 /// user turns off touch sounds — that is, the confirmation would be missing on
 /// most phones, which is exactly the problem this abstraction exists to fix.
 abstract interface class ScanTonePlayer {
+  /// Builds the platform player ahead of the first read.
+  ///
+  /// Without it the first tone paid for player creation, audio context, player
+  /// mode and asset loading — several platform round trips — while the person
+  /// was already waiting for a result. Failing here is not an error: [play]
+  /// falls back on its own.
+  Future<void> warmUp();
   Future<void> play();
   Future<void> dispose();
 }
@@ -43,6 +50,11 @@ class AssetScanTonePlayer implements ScanTonePlayer {
   }
 
   @override
+  Future<void> warmUp() async {
+    await (_preparation ??= _prepare());
+  }
+
+  @override
   Future<void> play() async {
     final Future<AudioPlayer> preparation = _preparation ??= _prepare();
     final AudioPlayer player = await preparation;
@@ -71,10 +83,25 @@ class ScanFeedback {
   @visibleForTesting
   bool get toneUnavailable => _toneUnavailable;
 
+  /// Prepares the tone player before the first read.
+  ///
+  /// Safe to call more than once and safe to ignore: a platform without an
+  /// audio plugin simply leaves the player unavailable.
+  Future<void> warmUp() async {
+    if (_toneUnavailable) return;
+    try {
+      await _tonePlayer.warmUp();
+    } on Object {
+      _toneUnavailable = true;
+    }
+  }
+
   Future<void> success({required bool sound, required bool vibration}) async {
     if (vibration) {
       try {
-        await HapticFeedback.mediumImpact();
+        // Heavy, not medium: this is the confirmation that a code was read,
+        // and on a phone held at arm's length a soft tick goes unnoticed.
+        await HapticFeedback.heavyImpact();
       } on Object {
         // A device without a vibrator must not interrupt the reading.
       }

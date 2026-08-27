@@ -10,6 +10,26 @@ import 'package:rootcause_qr_inspector/core/utils/barcode_labels.dart';
 import 'package:rootcause_qr_inspector/models/parsed_content.dart';
 import 'package:rootcause_qr_inspector/features/formats/domain/content_parser_registry.dart';
 
+/// Una lectura observada, con su interpretación y su investigación.
+///
+/// Es la entidad central del producto: agrupa la carga exacta, cómo se leyó,
+/// qué se pudo interpretar y qué observó el motor local. Se serializa completa
+/// dentro del sobre AES-256-GCM del historial.
+///
+/// Constructores:
+/// - [ScanRecord.fromBarcode] parte de una captura de `mobile_scanner`;
+/// - [ScanRecord.manual] parte de un texto ya conocido (pruebas o entrada
+///   directa);
+/// - [ScanRecord.fromJson] reconstruye desde la base o desde un respaldo.
+///
+/// El parámetro `trustDerivedAnalysis` de [ScanRecord.fromJson] es un control
+/// de seguridad, no una optimización: con `false` —el valor que usa la
+/// importación— el id, los hallazgos, el puntaje y la decisión se recalculan
+/// con el motor actual, de modo que un archivo manipulado no pueda imponer un
+/// veredicto favorable. Ver `ImportService.parseHistoryBytes`.
+///
+/// [id] es un SHA-256 truncado de `carga|instante`: dos lecturas idénticas en
+/// microsegundos distintos son registros distintos.
 class ScanRecord {
   const ScanRecord({
     required this.id,
@@ -85,6 +105,12 @@ class ScanRecord {
     );
   }
 
+  /// Carga canónica de un código, incluso cuando no es texto.
+  ///
+  /// Un código binario no tiene `rawValue`; en ese caso devuelve
+  /// `binary-base64:<bytes>` para que exista una carga estable que hashear,
+  /// deduplicar y clasificar como `opaque-binary-payload`. Devuelve la cadena
+  /// vacía cuando no hay ni texto ni bytes, y quien llama debe descartarla.
   static String payloadForBarcode(Barcode barcode) {
     final String text = (barcode.rawValue ?? barcode.displayValue ?? '').trim();
     if (text.isNotEmpty) return text;

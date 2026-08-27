@@ -43,5 +43,5 @@ un bloqueo local aplicable.
 ## Correlación
 
 Una investigación puede combinar el hash y el instante de la evidencia con
-RootCause Web o Mobile. En 0.1.0 esa correlación es manual y por exportación; no
+RootCause Web o Mobile. En 0.1.1 esa correlación es manual y por exportación; no
 existe envío automático entre productos.

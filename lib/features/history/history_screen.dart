@@ -9,6 +9,14 @@ import 'package:rootcause_qr_inspector/services/import_service.dart';
 import 'package:rootcause_qr_inspector/state/scan_store.dart';
 import 'package:rootcause_qr_inspector/state/settings_store.dart';
 
+/// Historial de casos: búsqueda, filtros, edición, importación y exportación.
+///
+/// Los filtros se aplican en memoria sobre `ScanStore.history`, que ya viene
+/// descifrado y ordenado por fecha descendente.
+///
+/// La exportación del historial completo advierte de forma explícita que el
+/// archivo incluye cargas y metadatos **sin cifrar**, y remite al botón
+/// «Evidencia» de un caso concreto cuando se busca mínima exposición.
 class HistoryScreen extends StatefulWidget {
   const HistoryScreen({required this.store, required this.settings, super.key});
 

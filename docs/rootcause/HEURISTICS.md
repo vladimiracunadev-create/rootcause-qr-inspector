@@ -52,7 +52,7 @@ El puntaje no es probabilidad. La severidad no se obtiene del puntaje.
 
 ## Catálogo de descarga
 
-Extensiones en 0.1.0:
+Extensiones en 0.1.1:
 
 ```text
 7z aab apk appx bat cmd com dmg exe hta iso jar js jse lnk

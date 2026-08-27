@@ -1,7 +1,7 @@
 # Contrato de compatibilidad
 
 Compromisos heredados de Universal Code Scanner 1.0.0 y adoptados por RootCause
-QR Inspector 0.1.0. Cada punto restringe cambios futuros para no romper datos o
+QR Inspector 0.1.1. Cada punto restringe cambios futuros para no romper datos o
 instalaciones existentes.
 
 ## Datos del usuario
@@ -48,3 +48,9 @@ instalaciones existentes.
 18. Un resultado normal conserva la frase que niega una garantía de seguridad.
 19. `rootcause.evidence.qr.v1` omite carga, parseo y URL efectiva por defecto.
 20. El checksum de evidencia nunca se describe como firma o prueba de autoría.
+21. Cambiar el significado de una preferencia conserva su clave y no reinterpreta
+    la elección existente hacia un valor más permisivo. En 0.1.1, `use_scan_window`
+    pasó de filtrar la detección a dibujar la guía de encuadre; quien lo tenía
+    apagado sigue sin ver el marco.
+22. La lectura nunca descarta un código en silencio: si se ignora por repetición,
+    la interfaz lo dice.

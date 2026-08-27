@@ -1,5 +1,14 @@
 import 'package:mobile_scanner/mobile_scanner.dart';
 
+/// Nombres legibles para las simbologías y los tipos de `mobile_scanner`.
+///
+/// [contentType] antepone la inspección del prefijo de la carga al `type` que
+/// reporta el motor nativo: ML Kit y Vision clasifican de forma distinta el
+/// mismo código, y un prefijo como `wifi:` u `otpauth:` es una evidencia más
+/// estable que la etiqueta de la plataforma.
+///
+/// Este texto es solo presentación. La clasificación que usa el motor de reglas
+/// proviene de `ContentInterpreter`, no de aquí.
 abstract final class BarcodeLabels {
   static String format(BarcodeFormat format) {
     return switch (format) {

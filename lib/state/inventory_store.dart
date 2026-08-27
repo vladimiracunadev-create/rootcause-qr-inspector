@@ -5,6 +5,15 @@ import 'package:rootcause_qr_inspector/models/inventory_session.dart';
 import 'package:rootcause_qr_inspector/models/scan_record.dart';
 import 'package:rootcause_qr_inspector/services/inventory_repository.dart';
 
+/// Estado observable de las sesiones de inventario.
+///
+/// Toda mutación pasa por una [AsyncWriteQueue]. No es un detalle de estilo: el
+/// inventario recibe lecturas continuas de la cámara mientras el usuario edita
+/// cantidades y notas, y dos escrituras simultáneas sobre el mismo mapa de
+/// productos se pisarían.
+///
+/// Solo hay una sesión activa a la vez, y solo si sigue abierta: `activeSession`
+/// devuelve `null` cuando la sesión se cerró, lo que retira la cámara de conteo.
 class InventoryStore extends ChangeNotifier {
   InventoryStore(this._repository);
 

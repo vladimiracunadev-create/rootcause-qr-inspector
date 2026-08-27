@@ -5,6 +5,11 @@ import 'package:rootcause_qr_inspector/core/recovery/recovery_repository.dart';
 import 'package:rootcause_qr_inspector/core/security/payload_cipher.dart';
 import 'package:rootcause_qr_inspector/models/inventory_session.dart';
 
+/// Persistencia de las sesiones de inventario, con el mismo sobre cifrado.
+///
+/// Repite deliberadamente la política del historial: metadatos mínimos en claro
+/// (`id`, `createdAt`), carga cifrada, aislamiento —no borrado— del registro
+/// ilegible y actualización perezosa del sobre.
 class InventoryRepository {
   InventoryRepository(this._database, this._cipher, {RecoveryRepository? recovery})
       : _recovery = recovery ?? RecoveryRepository(_database);

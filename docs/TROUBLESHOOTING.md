@@ -8,16 +8,28 @@
 - Cierra otra aplicación que esté usando la cámara y vuelve a abrir el sensor.
 - Si la plataforma no ofrece cámara nativa compatible, importa una imagen.
 
-## El código no se reconoce o se repite
+## El código no se reconoce
 
 - Limpia la lente, aumenta la luz y evita reflejos o curvatura.
-- Mantén el código completo dentro del marco y deja margen alrededor.
+- Acércate o usa el deslizador de zoom. Desde 0.1.1 la cámara pide 1920×1080 en
+  la pantalla de inspección —antes Android caía a 640×480, y a esa resolución un
+  código lejano no llega al decodificador aunque se vea nítido en pantalla—,
+  pero un código muy pequeño o muy distante sigue teniendo un límite físico.
+- No hace falta centrarlo en el marco: la detección analiza toda la imagen y el
+  marco solo ayuda a encuadrar.
 - Aleja la cámara si no logra enfocar.
 - El estado visible y el tono indican captura; no seguridad del resultado.
 
+## La barra dice que el código «ya se inspeccionó»
+
+Es el filtro de repetición, no un fallo. Mientras el mismo código siga delante
+del lente se trata como repetición para no reabrir su resultado en bucle.
+Aparta la cámara unos segundos y vuelve a apuntar, o pulsa **Reiniciar cámara**.
+Un código distinto se lee de inmediato.
+
 ## Un PDF no se procesa en la demo web
 
-El renderer PDF de 0.1.0 no está disponible en web. Usa una imagen exportada del
+El renderer PDF de 0.1.1 no está disponible en web. Usa una imagen exportada del
 PDF o ejecuta una plataforma nativa compatible. Esta limitación es deliberada y
 se muestra en [`rootcause/LIMITATIONS.md`](rootcause/LIMITATIONS.md).
 

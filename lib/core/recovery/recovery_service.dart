@@ -8,6 +8,20 @@ import 'package:rootcause_qr_inspector/core/security/payload_cipher.dart';
 import 'package:rootcause_qr_inspector/models/inventory_session.dart';
 import 'package:rootcause_qr_inspector/models/scan_record.dart';
 
+/// Acciones que el usuario puede tomar sobre un registro aislado.
+///
+/// [retry] intenta descifrar con la llave disponible; si lo consigue, reescribe
+/// el registro con el sobre actualizado y marca la incidencia como recuperada.
+/// Devuelve `false` —nunca lanza— cuando la llave falta o la carga está
+/// manipulada, porque el objetivo es informar sin interrumpir el resto de la
+/// aplicación.
+///
+/// [discard] elimina únicamente el registro afectado. Ningún camino borra datos
+/// de forma automática: el descarte siempre nace de una confirmación explícita
+/// en la pantalla de recuperación.
+///
+/// [exportBundle] produce un JSON con las incidencias y sus cargas todavía
+/// cifradas; no incluye la llave, y así lo declara su campo `notice`.
 class RecoveryService {
   RecoveryService(this._database, this._cipher, this.repository);
 

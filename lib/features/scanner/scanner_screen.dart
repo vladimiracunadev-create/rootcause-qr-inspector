@@ -19,6 +19,26 @@ import 'package:rootcause_qr_inspector/services/scan_feedback.dart';
 import 'package:rootcause_qr_inspector/state/scan_store.dart';
 import 'package:rootcause_qr_inspector/state/settings_store.dart';
 
+/// Pantalla principal: cámara, estado visible y entrada por imagen o PDF.
+///
+/// Reúne tres responsabilidades que en esta app no pueden separarse:
+///
+/// - **ciclo de vida de la cámara.** El controlador lo crea esta pantalla, así
+///   que `MobileScanner` no lo gestiona: sin `didChangeAppLifecycleState`, al
+///   volver del segundo plano —o del diálogo de permisos— la vista previa
+///   quedaba congelada.
+/// - **estado observable.** Cada fallo del controlador se traduce a una de las
+///   cuatro fases de `ScanPhase` en vez de propagarse como excepción, y la
+///   barra de estado siempre dice si se está leyendo.
+/// - **lotes cancelables.** Galería y PDF detienen la cámara, muestran
+///   progreso, aceptan cancelación y la reanudan al terminar.
+///
+/// Una lectura repetida en menos de dos segundos se descarta: sin ese filtro,
+/// el mismo QR delante del lente reabriría la hoja de resultado sin parar.
+///
+/// Los registros sensibles nunca llegan al historial, aunque el usuario tenga
+/// activado guardarlo: `_persistAndShow` los filtra antes de escribir y aun
+/// así los muestra en el resultado inmediato.
 class ScannerScreen extends StatefulWidget {
   const ScannerScreen({required this.store, required this.settings, super.key});
 
@@ -46,6 +66,19 @@ class _ScannerScreenState extends State<ScannerScreen> with WidgetsBindingObserv
   DateTime? _lastDetectedAt;
   double _zoom = 0;
 
+  /// Transient explanation shown when the same code is skipped as a repeat.
+  String? _repeatNotice;
+  Timer? _repeatNoticeTimer;
+
+  /// How long the same payload keeps being treated as a repetition.
+  ///
+  /// The clock restarts on every frame that still shows the code, so the
+  /// window is measured from the moment the code leaves the camera, not from
+  /// the first read. Pointing at the same QR again therefore works as soon as
+  /// the person moves away and comes back, and a different code is never
+  /// delayed.
+  static const Duration _repeatWindow = Duration(milliseconds: 2500);
+
   AppSettings get _settings => widget.settings.value;
 
   @override
@@ -53,6 +86,10 @@ class _ScannerScreenState extends State<ScannerScreen> with WidgetsBindingObserv
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     _createEngine();
+    // Building the audio player costs several platform round trips. Doing it
+    // now means the first successful read is confirmed on time instead of
+    // after a silent pause.
+    unawaited(_feedback.warmUp());
   }
 
   void _createEngine() {
@@ -62,6 +99,7 @@ class _ScannerScreenState extends State<ScannerScreen> with WidgetsBindingObserv
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
+    _repeatNoticeTimer?.cancel();
     unawaited(_engine.dispose());
     unawaited(_feedback.dispose());
     super.dispose();
@@ -133,6 +171,11 @@ class _ScannerScreenState extends State<ScannerScreen> with WidgetsBindingObserv
       _startFailure = null;
       _paused = false;
       _zoom = 0;
+      // A manual restart is an explicit «try again»: the repetition filter
+      // must not keep ignoring the code the person is pointing at.
+      _lastSignature = null;
+      _lastDetectedAt = null;
+      _repeatNotice = null;
     });
   }
 
@@ -268,13 +311,13 @@ class _ScannerScreenState extends State<ScannerScreen> with WidgetsBindingObserv
                           MobileScanner(
                             key: _previewKey,
                             controller: _engine.controller,
-                            scanWindow: _settings.useScanWindow ? window : null,
-                            // No threshold: the scan window is recalculated from
-                            // the camera output size and the device orientation,
-                            // both of which can arrive after the first frame. A
-                            // threshold froze the first — sometimes wrong —
-                            // window, and every code outside it was ignored
-                            // until the screen was rebuilt from scratch.
+                            // No `scanWindow`: the frame is a guide, not a
+                            // gate. As a gate it discarded every code whose
+                            // bounding box fell outside the central square,
+                            // and it did so in silence — a QR the person could
+                            // read perfectly well on screen simply produced
+                            // nothing. Detection now covers the whole preview
+                            // and the frame only helps to aim.
                             tapToFocus: true,
                             onDetect: (BarcodeCapture capture) => unawaited(_handleCapture(capture, source: 'Cámara')),
                             errorBuilder: (BuildContext context, MobileScannerException error) =>
@@ -283,8 +326,11 @@ class _ScannerScreenState extends State<ScannerScreen> with WidgetsBindingObserv
                           if (_settings.useScanWindow && phase != ScanPhase.unavailable)
                             ScannerOverlay(
                               scanWindow: window,
-                              active: scanning,
-                              animate: !_settings.reduceMotion,
+                              // A captured code keeps the frame lit but still:
+                              // the sweep means «analysing», and analysis is
+                              // over.
+                              active: scanning || phase == ScanPhase.captured,
+                              animate: !_settings.reduceMotion && phase != ScanPhase.captured,
                             ),
                           if (phase == ScanPhase.paused)
                             Positioned.fill(
@@ -344,7 +390,7 @@ class _ScannerScreenState extends State<ScannerScreen> with WidgetsBindingObserv
                                   onPressed: switch (phase) {
                                     ScanPhase.scanning || ScanPhase.paused => _togglePause,
                                     ScanPhase.unavailable => _restartCamera,
-                                    ScanPhase.starting => null,
+                                    ScanPhase.starting || ScanPhase.captured => null,
                                   },
                                   style: FilledButton.styleFrom(
                                     backgroundColor: scanning ? Colors.white : Theme.of(context).colorScheme.primary,
@@ -352,12 +398,14 @@ class _ScannerScreenState extends State<ScannerScreen> with WidgetsBindingObserv
                                   ),
                                   icon: Icon(switch (phase) {
                                     ScanPhase.scanning => Icons.pause,
+                                    ScanPhase.captured => Icons.check_circle,
                                     ScanPhase.paused => Icons.play_arrow,
                                     ScanPhase.unavailable => Icons.refresh,
                                     ScanPhase.starting => Icons.hourglass_top,
                                   }),
                                   label: Text(switch (phase) {
                                     ScanPhase.scanning => 'Pausar',
+                                    ScanPhase.captured => 'Leído',
                                     ScanPhase.paused => 'Reanudar',
                                     ScanPhase.unavailable => 'Reintentar',
                                     ScanPhase.starting => 'Preparando',
@@ -395,19 +443,36 @@ class _ScannerScreenState extends State<ScannerScreen> with WidgetsBindingObserv
 
   ScanPhase _phaseFor(MobileScannerState state) {
     if (_startFailure != null || state.error != null) return ScanPhase.unavailable;
-    if (_paused || _handlingResult) return ScanPhase.paused;
+    // A read in progress is announced as a capture, not as a pause: the two
+    // states are opposite in meaning and used to share the same wording.
+    if (_handlingResult) return ScanPhase.captured;
+    if (_paused) return ScanPhase.paused;
     if (state.isRunning) return ScanPhase.scanning;
     return ScanPhase.starting;
   }
 
   String _messageFor(ScanPhase phase) => switch (phase) {
         ScanPhase.starting => 'Iniciando cámara',
-        ScanPhase.scanning => _settings.useScanWindow
-            ? 'Lectura automática dentro del marco'
-            : 'Lectura automática en toda la imagen',
+        ScanPhase.scanning => _repeatNotice ?? 'Lectura automática en toda la imagen',
+        ScanPhase.captured => 'Abriendo el análisis local',
         ScanPhase.paused => 'Lectura detenida',
         ScanPhase.unavailable => _startFailure ?? 'Revisa el permiso de cámara y vuelve a intentarlo.',
       };
+
+  /// Explains a skipped repetition instead of leaving the screen silent.
+  ///
+  /// The timer restarts while the code stays in front of the lens, so the
+  /// message lasts as long as the situation it describes.
+  void _showRepeatNotice() {
+    if (!mounted) return;
+    _repeatNoticeTimer?.cancel();
+    _repeatNoticeTimer = Timer(const Duration(seconds: 3), () {
+      if (mounted) setState(() => _repeatNotice = null);
+    });
+    if (_repeatNotice == null) {
+      setState(() => _repeatNotice = 'Ese código ya se inspeccionó; aparta y apunta otra vez');
+    }
+  }
 
   Future<void> _resumeScanning() async {
     if (mounted) setState(() => _paused = false);
@@ -574,19 +639,39 @@ class _ScannerScreenState extends State<ScannerScreen> with WidgetsBindingObserv
     final List<String> signature = unique.keys.toList()..sort();
     final String joined = signature.join('|');
     final DateTime now = DateTime.now();
-    if (_lastSignature == joined && _lastDetectedAt != null && now.difference(_lastDetectedAt!) < const Duration(seconds: 2)) return;
+    if (_lastSignature == joined &&
+        _lastDetectedAt != null &&
+        now.difference(_lastDetectedAt!) < _repeatWindow) {
+      // Keep the cooldown alive while the code is still in view, and say so.
+      // Silence here was indistinguishable from a broken scanner.
+      _lastDetectedAt = now;
+      _showRepeatNotice();
+      return;
+    }
     _lastSignature = joined;
     _lastDetectedAt = now;
-    if (mounted) setState(() => _handlingResult = true);
+    _repeatNoticeTimer?.cancel();
+    if (mounted) {
+      setState(() {
+        _handlingResult = true;
+        _repeatNotice = null;
+      });
+    }
 
     try {
       await _stopCamera();
-      await _feedback.success(sound: _settings.soundEnabled, vibration: _settings.vibrationEnabled);
+      // Not awaited: the tone and the vibration confirm the read, but making
+      // the result wait for the audio plugin is what made a successful scan
+      // feel like nothing had happened.
+      unawaited(_feedback.success(sound: _settings.soundEnabled, vibration: _settings.vibrationEnabled));
       final List<ScanRecord> records = unique.values
           .map((Barcode barcode) => ScanRecord.fromBarcode(barcode, source: source, scannedAt: now))
           .toList(growable: false);
       await _persistAndShow(records);
     } finally {
+      // Restart the window when the sheet closes, so a code left in front of
+      // the camera does not immediately reopen its own result.
+      _lastDetectedAt = DateTime.now();
       if (mounted) setState(() => _handlingResult = false);
       if (mounted && !_paused) await _startCamera();
     }

@@ -1,5 +1,23 @@
 import 'package:rootcause_qr_inspector/models/parsed_content.dart';
 
+/// Traduce una carga cruda a campos legibles, sin juzgarla.
+///
+/// Es una función pura: mismo texto, mismo resultado. No consulta red, base de
+/// datos ni plataforma, y por eso puede probarse sin dispositivo.
+///
+/// El orden de las comprobaciones en [parse] es significativo, porque varios
+/// formatos comparten prefijo o forma. Se resuelven primero los esquemas
+/// explícitos (`wifi:`, `otpauth:`, `bitcoin:`), después las estructuras con
+/// cabecera fija (`SPC`/`BCD` para pagos europeos, `000201` para EMVCo,
+/// `@…ANSI ` para AAMVA), después GS1 e ISBN, y solo al final la URL y el
+/// texto plano. Reordenar esas ramas cambia la interpretación de cargas reales.
+///
+/// La marca `sensitive` se decide aquí y determina si el registro puede
+/// guardarse en el historial automático. Se activa con OTP, Wi-Fi con
+/// contraseña, pagos, identidad y URL cuya consulta, fragmento o `userinfo`
+/// contenga una clave de la lista de secretos (`token`, `secret`, `password`,
+/// `code`, `jwt`, `sig`, entre otras). Quitar una clave de esa lista amplía en
+/// silencio lo que se persiste.
 abstract final class ContentInterpreter {
   static ParsedContent parse(String rawValue) {
     final String raw = rawValue.trim();

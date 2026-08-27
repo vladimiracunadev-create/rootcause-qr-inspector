@@ -11,6 +11,11 @@ import 'package:rootcause_qr_inspector/state/inventory_store.dart';
 import 'package:rootcause_qr_inspector/state/scan_store.dart';
 import 'package:rootcause_qr_inspector/state/settings_store.dart';
 
+/// Conjunto de servicios ya inicializados que la interfaz recibe.
+///
+/// Se construye una sola vez por arranque y se pasa hacia abajo por
+/// constructor: el proyecto no usa un contenedor de inyección ni localizadores
+/// globales, de modo que las dependencias de cada pantalla son explícitas.
 class AppServices {
   const AppServices({
     required this.database,
@@ -33,6 +38,25 @@ class AppServices {
   bool get temporary => database.temporary;
 }
 
+/// Compone la aplicación: base, cifrado, repositorios y stores.
+///
+/// Orden y motivos:
+///
+/// 1. abre la base —persistente o en memoria si `temporary`—, lo que también
+///    ejecuta las migraciones de esquema;
+/// 2. lee el identificador de llave activa desde la base, no desde
+///    preferencias, para que coincida con los registros ya escritos;
+/// 3. en modo temporal usa un [MemoryEncryptionKeyProvider], así que nada
+///    escrito en esa sesión puede recuperarse después;
+/// 4. inicializa historial e inventario en paralelo y aplica la retención
+///    configurada.
+///
+/// En modo temporal, un fallo al leer preferencias se ignora deliberadamente:
+/// ese modo existe precisamente para arrancar cuando el almacenamiento del
+/// sistema no responde. En modo normal ese mismo fallo sí se propaga.
+///
+/// Cualquier excepción cierra la base antes de relanzar, para no dejar el
+/// archivo abierto ante un reintento.
 abstract final class AppBootstrapper {
   static Future<AppServices> initialize({bool temporary = false}) async {
     AppDatabase? database;

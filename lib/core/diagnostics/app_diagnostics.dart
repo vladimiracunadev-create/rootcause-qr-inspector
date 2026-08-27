@@ -2,6 +2,11 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 
+/// Un evento técnico: instante, área, tipo de error y huella de la pila.
+///
+/// No hay campo de mensaje. Es deliberado: el mensaje de una excepción puede
+/// arrastrar una ruta de archivo, una consulta o un valor introducido por la
+/// persona usuaria.
 class DiagnosticEntry {
   const DiagnosticEntry({required this.at, required this.area, required this.errorType, required this.stackFingerprint});
   final DateTime at;
@@ -58,6 +63,12 @@ class AppDiagnostics extends ChangeNotifier {
   }
 }
 
+/// Redirige los errores no capturados de Flutter y de la plataforma al
+/// diagnóstico privado.
+///
+/// `FlutterError.presentError` se sigue llamando para no perder la traza en
+/// depuración. El manejador de plataforma devuelve `true` —error consumido—
+/// porque el objetivo es registrar y continuar, no terminar el proceso.
 void installGlobalErrorHandlers() {
   FlutterError.onError = (FlutterErrorDetails details) {
     AppDiagnostics.instance.record(details.exception, details.stack ?? StackTrace.current, area: 'flutter');

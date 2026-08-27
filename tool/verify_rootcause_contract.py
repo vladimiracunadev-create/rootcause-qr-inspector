@@ -34,7 +34,7 @@ def engine_rule_ids() -> set[str]:
     )
     ids = set(re.findall(r"evaluate\('([a-z0-9-]+)'\)", text))
     if len(ids) != 26:
-        fail(f"El motor debe declarar 26 reglas en 0.1.0; encontró {len(ids)}")
+        fail(f"El motor 0.1.0 debe declarar 26 reglas; encontró {len(ids)}")
     return ids
 
 

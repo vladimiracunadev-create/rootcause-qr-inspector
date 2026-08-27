@@ -6,6 +6,16 @@ import 'package:rootcause_qr_inspector/core/diagnostics/app_diagnostics.dart';
 import 'package:rootcause_qr_inspector/core/diagnostics/startup_failure.dart';
 import 'package:rootcause_qr_inspector/services/settings_repository.dart';
 
+/// Widget raíz: decide entre la aplicación y la pantalla de inicio seguro.
+///
+/// Si [AppBootstrapper] falla, en vez de una pantalla en blanco o un error del
+/// framework se muestra `Inicio seguro`, con cuatro salidas: reintentar, abrir
+/// sin datos persistentes, restablecer las preferencias visuales o copiar un
+/// diagnóstico que no contiene ninguna carga escaneada.
+///
+/// El diagnóstico se reduce a tipo de error y huella de la pila, nunca al
+/// mensaje: un mensaje de excepción puede arrastrar una ruta, una consulta o
+/// un valor del usuario.
 class BootstrapHost extends StatefulWidget {
   const BootstrapHost({super.key});
 

@@ -8,6 +8,10 @@ import 'package:rootcause_qr_inspector/core/recovery/recovery_repository.dart';
 import 'package:rootcause_qr_inspector/core/security/payload_cipher.dart';
 import 'package:rootcause_qr_inspector/models/scan_record.dart';
 
+/// Resultado de la conversión del historial heredado guardado en preferencias.
+///
+/// `completed == false` no significa pérdida: la fuente original y su respaldo
+/// cifrado siguen intactos, y la pantalla de ajustes ofrece reintentar.
 class HistoryMigrationStatus {
   const HistoryMigrationStatus({required this.completed, this.migrated = 0, this.errorCode, this.backupPresent = false});
   final bool completed;
@@ -16,6 +20,26 @@ class HistoryMigrationStatus {
   final bool backupPresent;
 }
 
+/// Persistencia del historial: metadatos en claro, carga siempre cifrada.
+///
+/// Cada registro del almacén `scan_history` guarda tres campos: `id`,
+/// `scannedAt` —necesario para ordenar y podar sin descifrar— y `payload`, el
+/// sobre AES-256-GCM con el `ScanRecord` completo.
+///
+/// Comportamientos que sostienen el contrato de datos:
+///
+/// - un registro que no se puede descifrar **no se borra**: se aísla como
+///   incidencia de recuperación con su sobre original, y el resto del historial
+///   sigue cargando;
+/// - los sobres antiguos se actualizan de forma perezosa, al leerlos;
+/// - [maxItems] limita el historial a 5000 registros y el recorte elimina
+///   siempre los más antiguos;
+/// - la conversión desde `scan_history_v1` guarda antes un respaldo cifrado del
+///   origen exacto, verifica dentro de la transacción que todo lo esperado
+///   quedó escrito y solo entonces borra la clave antigua.
+///
+/// Riesgo al modificarla: cualquier atajo que elimine el origen heredado antes
+/// de verificar la escritura reintroduce una migración destructiva.
 class HistoryRepository {
   HistoryRepository(this._database, this._cipher, {RecoveryRepository? recovery})
       : _recovery = recovery ?? RecoveryRepository(_database);

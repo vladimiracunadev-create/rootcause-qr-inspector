@@ -4,8 +4,17 @@ import 'package:file_picker/file_picker.dart';
 import 'package:rootcause_qr_inspector/models/inventory_session.dart';
 import 'package:rootcause_qr_inspector/models/scan_record.dart';
 
+/// Qué hacer con los registros de un respaldo frente a los ya existentes.
+///
+/// `replace` es destructivo: sustituye toda la base local. La interfaz lo
+/// ofrece solo después de mostrar la vista previa con válidos, duplicados y
+/// rechazados.
 enum ImportStrategy { merge, skipDuplicates, replace }
 
+/// Lo que un respaldo contiene, calculado **antes** de tocar la base.
+///
+/// La vista previa existe para que la decisión del usuario sea informada: nada
+/// se escribe hasta que elige una [ImportStrategy].
 class HistoryImportPreview {
   const HistoryImportPreview({
     required this.records,
@@ -33,6 +42,7 @@ class HistoryImportPreview {
   }
 }
 
+/// Equivalente de [HistoryImportPreview] para una sesión de inventario.
 class InventoryImportPreview {
   const InventoryImportPreview({required this.session, required this.schemaVersion, required this.legacy, required this.fileName});
   final InventorySession session;
@@ -41,6 +51,24 @@ class InventoryImportPreview {
   final String fileName;
 }
 
+/// Lectura de respaldos JSON tratados como entrada no confiable.
+///
+/// Un archivo importado es un vector de ataque, no un dato del sistema. Los
+/// controles aplicados, en orden:
+///
+/// 1. tamaño máximo de 25 MB, comprobado en el archivo y en los bytes leídos;
+/// 2. forma del JSON acotada por profundidad ([maxJsonDepth]) y número de
+///    nodos ([maxJsonNodes]), para frenar un documento diseñado para agotar
+///    memoria o pila;
+/// 3. identidad del sobre: solo se aceptan respaldos de RootCause QR Inspector
+///    o de Universal Code Scanner, y una `schemaVersion` futura se rechaza;
+/// 4. límite de registros y de productos por sesión;
+/// 5. **recálculo obligatorio de todo campo derivado**: cada registro se
+///    reconstruye con `trustDerivedAnalysis: false`, así que el archivo no
+///    puede imponer un id, un puntaje, unos hallazgos ni una decisión.
+///
+/// Un registro que falle cualquier validación se cuenta como rechazado y no
+/// interrumpe la importación de los demás.
 abstract final class ImportService {
   static const int currentSchemaVersion = 2;
   static const Set<String> compatibleApplications = <String>{

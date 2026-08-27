@@ -3,6 +3,15 @@ import 'package:rootcause_qr_inspector/models/scan_record.dart';
 import 'package:rootcause_qr_inspector/services/history_repository.dart';
 import 'package:rootcause_qr_inspector/services/import_service.dart';
 
+/// Estado observable del historial de casos inspeccionados.
+///
+/// Es la única fuente de verdad de la interfaz para las lecturas guardadas.
+/// Cada mutación persiste primero y notifica después, de modo que la pantalla
+/// nunca muestre como confirmado algo que la base todavía no escribió.
+///
+/// [importPreview] aplica la estrategia elegida por el usuario: `replace`
+/// sustituye la base completa en una transacción; `merge` y `skipDuplicates`
+/// terminan en [addAll], que deduplica por id antes de reordenar.
 class ScanStore extends ChangeNotifier {
   ScanStore(this._repository);
 

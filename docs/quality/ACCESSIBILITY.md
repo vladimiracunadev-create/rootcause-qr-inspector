@@ -1,6 +1,6 @@
 # Accesibilidad e idiomas
 
-## Idiomas en 0.1.0
+## Idiomas en 0.1.1
 
 La interfaz se entrega **solo en español**: idioma del sistema, español de Chile
 (`es_CL`) y español internacional (`es`).
@@ -40,3 +40,10 @@ La barra de estado del escáner se anuncia como región activa (`liveRegion`) co
 el estado y la instrucción en una sola etiqueta, para que un lector de pantalla
 comunique el cambio de «Inspección activa» a «Inspección en pausa» sin que la persona
 tenga que buscarlo.
+
+Desde 0.1.1 una captura tiene su propio anuncio, «Código leído», en vez de
+compartir el de una cámara en pausa. Esto importa especialmente sin sonido ni
+vibración: para quien lee la pantalla con un lector, ese texto era la única
+diferencia entre «se leyó el código» y «la cámara se detuvo», y no existía. El
+aviso de repetición usa el mismo canal, de modo que un código ignorado por ser
+repetido también se anuncia.

@@ -3,6 +3,7 @@ import 'package:rootcause_qr_inspector/core/database/app_database.dart';
 import 'package:rootcause_qr_inspector/core/security/encryption_metadata_repository.dart';
 import 'package:rootcause_qr_inspector/core/security/payload_cipher.dart';
 
+/// Recuento de lo que una rotación de llave reencriptó realmente.
 class EncryptionRotationResult {
   const EncryptionRotationResult({required this.keyId, required this.historyRecords, required this.inventorySessions});
   final String keyId;
@@ -10,6 +11,25 @@ class EncryptionRotationResult {
   final int inventorySessions;
 }
 
+/// Rota la llave de cifrado sin exponer ni perder datos.
+///
+/// El orden importa y es la razón de existir de esta clase:
+///
+/// 1. se descifra y se vuelve a cifrar **todo** en memoria, con una llave
+///    nueva, antes de tocar la base;
+/// 2. una única transacción escribe los registros y el identificador de llave
+///    activa;
+/// 3. si algo falla —un `payload` ausente, un descifrado imposible, la
+///    transacción revertida— la llave recién creada se borra del almacén
+///    seguro para no dejar material huérfano que después parezca activo.
+///
+/// Lanza `StateError('encryption_rotation_in_progress')` si se invoca dos
+/// veces a la vez, y `history_payload_missing:<id>` o
+/// `inventory_payload_missing:<id>` cuando un registro está incompleto.
+///
+/// Riesgo al modificarla: mover el cifrado dentro de la transacción alargaría
+/// el bloqueo de la base sobre operaciones criptográficas y volvería a hacer
+/// posible el estado mixto que este diseño evita.
 class DataMaintenanceService {
   DataMaintenanceService(this._database, this._cipher, this._metadata);
 

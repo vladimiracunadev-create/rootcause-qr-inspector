@@ -13,6 +13,15 @@ import 'package:rootcause_qr_inspector/services/biometric_service.dart';
 import 'package:rootcause_qr_inspector/state/scan_store.dart';
 import 'package:rootcause_qr_inspector/state/settings_store.dart';
 
+/// Ajustes de apariencia, inspección, privacidad, datos y versión.
+///
+/// Dos acciones de esta pantalla tocan datos del usuario y por eso piden
+/// confirmación y bloquean la interfaz mientras se ejecutan: la rotación de la
+/// llave de cifrado —desactivada en modo temporal— y el borrado del historial.
+///
+/// El desplegable de idioma nunca ofrece inglés, y traduce a «Sistema» un valor
+/// `AppLanguage.en` que hubiera quedado guardado por otra compilación: sin esa
+/// conversión, el control quedaría sin opción coincidente.
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({
     required this.settings,
@@ -96,8 +105,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
           title: 'Inspección QR',
           children: <Widget>[
             SwitchListTile(
-              title: const Text('Marco de lectura real'),
-              subtitle: const Text('Limita la detección al rectángulo central en plataformas compatibles.'),
+              title: const Text('Marco de encuadre'),
+              subtitle: const Text('Dibuja la guía central. La lectura analiza toda la imagen, dentro y fuera del marco.'),
               value: value.useScanWindow,
               onChanged: (bool enabled) => _update(value.copyWith(useScanWindow: enabled)),
             ),

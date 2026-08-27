@@ -3,12 +3,22 @@ import 'dart:convert';
 import 'package:cryptography/cryptography.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
+/// Origen de las llaves simétricas, separado del cifrado para poder probarlo.
+///
+/// `read` devuelve `null` cuando la llave no existe: es la señal que impide
+/// que un descifrado fallido recree material nuevo y dé por perdidos los
+/// registros anteriores. `readOrCreate` sí puede crearla, y por eso solo se
+/// usa al cifrar.
 abstract interface class EncryptionKeyProvider {
   Future<SecretKey?> read(String keyId);
   Future<SecretKey> readOrCreate(String keyId, AesGcm algorithm);
   Future<void> forget(String keyId);
 }
 
+/// Implementación de producción: Keychain en iOS y Keystore en Android.
+///
+/// Mantiene una caché en memoria porque cada lectura del almacén seguro es una
+/// llamada a la plataforma, y el historial descifra un sobre por registro.
 class SecureStorageKeyProvider implements EncryptionKeyProvider {
   SecureStorageKeyProvider({FlutterSecureStorage? storage}) : _storage = storage ?? const FlutterSecureStorage();
 
@@ -44,6 +54,10 @@ class SecureStorageKeyProvider implements EncryptionKeyProvider {
   }
 }
 
+/// Implementación volátil para el modo temporal y para las pruebas.
+///
+/// La llave desaparece con el proceso: es lo que hace que el modo temporal no
+/// deje material recuperable en el dispositivo.
 class MemoryEncryptionKeyProvider implements EncryptionKeyProvider {
   final Map<String, SecretKey> _keys = <String, SecretKey>{};
 
@@ -63,6 +77,11 @@ class MemoryEncryptionKeyProvider implements EncryptionKeyProvider {
   Future<void> forget(String keyId) async => _keys.remove(keyId);
 }
 
+/// Metadatos de un sobre cifrado, leídos sin descifrarlo.
+///
+/// [legacy] indica un sobre sin campo `version`, el formato inicial heredado.
+/// Los repositorios lo usan para decidir si reescriben el registro con el
+/// sobre actual la próxima vez que lo leen.
 class CipherEnvelopeInfo {
   const CipherEnvelopeInfo({required this.version, required this.algorithm, required this.keyId, required this.legacy});
   final int version;
@@ -71,6 +90,28 @@ class CipherEnvelopeInfo {
   final bool legacy;
 }
 
+/// Cifrado autenticado AES-256-GCM de cada carga persistida.
+///
+/// Formato del sobre serializado:
+///
+/// ```json
+/// {"version":2,"algorithm":"AES-256-GCM","keyId":"v2","createdAt":"...",
+///  "payload":{"nonce":"...","cipherText":"...","mac":"..."}}
+/// ```
+///
+/// Decisiones que no deben revertirse sin una migración documentada:
+///
+/// - un sobre sin `version` sigue siendo legible como formato 1;
+/// - una versión superior a [currentVersion] se rechaza de forma explícita en
+///   vez de interpretarse a medias;
+/// - si la llave de un sobre no está en el almacén se lanza
+///   `StateError('encryption_key_missing:<keyId>')` y ese identificador queda
+///   marcado: no se recrea una llave nueva, porque cifrar con ella dejaría los
+///   registros anteriores ilegibles para siempre;
+/// - el MAC de GCM hace que una carga manipulada falle al descifrar.
+///
+/// [upgradeEnvelope] reescribe un sobre antiguo con la llave activa y devuelve
+/// la entrada sin tocar cuando ya está al día.
 class PayloadCipher {
   PayloadCipher({EncryptionKeyProvider? keyProvider, String activeKeyId = currentKeyId})
       : _keyProvider = keyProvider ?? SecureStorageKeyProvider(),

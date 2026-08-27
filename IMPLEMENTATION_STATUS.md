@@ -1,15 +1,15 @@
-# Estado de implementación · 0.1.0
+# Estado de implementación · 0.1.1
 
 ## Operativo en el código fuente
 
 | Área | Estado |
 |---|---|
-| Captura | Cámara, imágenes y PDF por lotes; QR, 2D y códigos lineales heredados del lector universal |
+| Captura | Cámara, imágenes y PDF por lotes; QR, 2D y códigos lineales heredados del lector universal. La detección cubre toda la vista previa y la resolución pedida se declara de forma explícita |
 | Interpretación | URL, Wi-Fi, vCard/MeCard, eventos, OTP, GS1, ISBN, pagos, cripto, AAMVA y binario |
 | Investigación | Motor local puro con 26 reglas, ids estables, severidad, puntos, confianza y evidencia mínima |
 | Hipótesis | Seis hipótesis separadas de los hechos, incluido `qr-phishing-suspected` |
 | Decisión | `allow`, `confirm`, `inspectOnly` o `block`; nunca “seguro” |
-| Interfaz | Puntaje, ids técnicos, evidencia, hipótesis, límites y confirmación antes de actuar |
+| Interfaz | Puntaje, ids técnicos, evidencia, hipótesis, límites y confirmación antes de actuar. Cinco estados visibles de cámara, incluida la confirmación explícita `Código leído` |
 | Evidencia | `rootcause.evidence.qr.v1`, SHA-256 de carga, checksum no autenticado del paquete, redacción por defecto y enlace opcional a un hash anterior |
 | Datos | Historial/inventario cifrados con AES-256-GCM, llave en almacenamiento seguro, recuperación y modo temporal |
 | Compatibilidad | Importa respaldos de RootCause QR Inspector y Universal Code Scanner; recalcula campos derivados de entradas no confiables |
@@ -23,10 +23,12 @@
 - redacción verificada para impedir que `effectiveUri` reconstruya la carga;
 - frase obligatoria para resultados normales;
 - YAML, JSON, imports, enlaces, SBOM, versión y lockfile.
-- análisis estático sin hallazgos y 77 casos Dart/Flutter en verde;
-- builds correctos de Android, web/PWA, iOS para simulador y macOS.
+- 88 casos Dart/Flutter declarados (87 los ejecuta `flutter test`; uno es de
+  integración y requiere dispositivo).
 
-La evidencia y los enlaces de las ejecuciones públicas se registran en
+El análisis estático y las pruebas los ejecuta la CI pública; no se ejecutaron
+en el entorno de ensamblado de 0.1.1, que no tiene Flutter instalado. La
+evidencia y los enlaces de las ejecuciones públicas se registran en
 [`VALIDATION.md`](VALIDATION.md).
 
 ## Parcial y declarado
@@ -46,6 +48,9 @@ La evidencia y los enlaces de las ejecuciones públicas se registran en
 
 ## Requiere validación en hardware y distribución
 
+- **la corrección de lectura de 0.1.1**: código lejano y descentrado,
+  confirmación de captura, relectura del mismo código y conteo de unidades
+  repetidas en inventario;
 - cámara, enfoque, poca luz, etiquetas curvas/dañadas y lotes grandes;
 - ciclo de vida, biometría, Keychain/Keystore y recuperación;
 - accesibilidad con TalkBack/VoiceOver;

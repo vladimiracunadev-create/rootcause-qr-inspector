@@ -3,6 +3,10 @@ import 'package:sembast/sembast.dart';
 import 'package:rootcause_qr_inspector/core/database/app_database.dart';
 import 'package:rootcause_qr_inspector/core/recovery/recovery_issue.dart';
 
+/// Almacena las incidencias de recuperación en el almacén `recovery_issues`.
+///
+/// Escribe siempre con un id derivado del propio problema, así que registrar
+/// dos veces la misma incidencia la actualiza en lugar de duplicarla.
 class RecoveryRepository {
   RecoveryRepository(this._database);
 

@@ -11,7 +11,7 @@
 ║  ╚═╝  ╚═╝ ╚═════╝  ╚═════╝    ╚═╝    ╚═════╝ ╚═╝  ╚═╝ ╚═════╝╚══════╝╚══════╝     ║
 ║                                                                                   ║
 ║                         Q R   I N S P E C T O R                                   ║
-║            Sensor de seguridad QR · Flutter · local-first · v0.1.0                ║
+║            Sensor de seguridad QR · Flutter · local-first · v0.1.1                ║
 ╚═══════════════════════════════════════════════════════════════════════════════════╝
 ```
 
@@ -19,14 +19,14 @@
   <img src="assets/launcher/icon-1024.png" width="112" alt="Icono RootCause QR Inspector: escudo con señal QR" />
 </p>
 
-[![Version](https://img.shields.io/badge/version-0.1.0-blue.svg)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-0.1.1-blue.svg)](CHANGELOG.md)
 [![Flutter](https://img.shields.io/badge/Flutter-3.44.7-02569B.svg?logo=flutter)](pubspec.yaml)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Telemetry](https://img.shields.io/badge/telemetry-zero-success.svg)](docs/PRIVACY_POLICY.md)
 [![CI](https://github.com/vladimiracunadev-create/rootcause-qr-inspector/actions/workflows/flutter-ci.yml/badge.svg)](https://github.com/vladimiracunadev-create/rootcause-qr-inspector/actions/workflows/flutter-ci.yml)
 [![Landing](https://img.shields.io/badge/landing-GitHub%20Pages-12847b.svg?logo=github)](https://vladimiracunadev-create.github.io/rootcause-qr-inspector/)
 
-📱 **[Descargar Android →](https://github.com/vladimiracunadev-create/rootcause-qr-inspector/releases/latest/download/rootcause-qr-inspector-v0.1.0-android.apk)** ·
+📱 **[Descargar Android →](https://github.com/vladimiracunadev-create/rootcause-qr-inspector/releases/latest/download/rootcause-qr-inspector-v0.1.1-android.apk)** ·
 🌐 **[Página del producto →](https://vladimiracunadev-create.github.io/rootcause-qr-inspector/)** ·
 📘 **[Manual de usuario →](docs/MANUAL_USUARIO.md)**
 
@@ -43,11 +43,13 @@ No es un lector que abre enlaces con una advertencia añadida. Es un **sensor de
 apoyo a la decisión**: nunca ejecuta la carga al detectarla, explica por qué un
 QR puede ser peligroso y deja que la persona decida después de ver la evidencia.
 
-> **Estado de 0.1.0:** producto publicado como **APK Android** en GitHub
-> Releases, con checksum SHA-256 y verificación técnica del paquete APK. La
-> firma comercial de tienda, Play Store/App Store, iOS y la matriz física móvil
-> completa siguen pendientes. La web es un canal de demostración, no una
-> aplicación objetivo.
+> **Estado de 0.1.1:** producto publicado como **APK Android** en GitHub
+> Releases, con checksum SHA-256 y verificación técnica del paquete APK. Esta
+> entrega corrige tres fallos de lectura reportados en uso real: la
+> confirmación de una captura, los códigos legibles pero lejanos y la relectura
+> del mismo código. La firma comercial de tienda, Play Store/App Store, iOS y
+> la matriz física móvil completa siguen pendientes. La web es un canal de
+> demostración, no una aplicación objetivo.
 
 ## 🔍 Qué problema resuelve
 
@@ -102,7 +104,7 @@ Este repositorio toma el subsistema operativo de
 - historial e inventario cifrados con AES-256-GCM;
 - llave en Keychain/Keystore, bloqueo biométrico y modo temporal;
 - importación, recuperación, generador y exportaciones;
-- base Flutter con entrega publicada solo para Android en 0.1.0.
+- base Flutter con entrega publicada solo para Android en 0.1.1.
 
 RootCause agrega un contrato de investigación, evidencia con SHA-256, reglas
 identificables, puntaje explicable, política de marcas y separación explícita
@@ -142,12 +144,35 @@ segura a otra aplicación: esquema no permitido, host inválido, caracteres de
 control o autoridad ambigua. Una URL crítica pero interpretable queda en
 **confirmación obligatoria**, acompañada de su evidencia.
 
+## 🔎 Cómo se comporta la lectura
+
+Tres reglas de interacción, corregidas en 0.1.1 a partir de uso real:
+
+- **La lectura analiza toda la imagen.** El marco central es una guía de
+  encuadre, no un filtro. Antes descartaba en silencio cualquier código cuyo
+  recuadro cayera fuera del cuadrado, incluso uno perfectamente legible en
+  pantalla.
+- **Una captura se anuncia como captura.** El estado pasa a `Código leído`, con
+  tono, vibración y marco fijo, antes de abrir el análisis. Ya no comparte el
+  texto de una cámara en pausa.
+- **El mismo código puede volver a leerse.** Mientras siga delante del lente se
+  trata como repetición y la app lo dice; apartarlo y volver a apuntar lo lee de
+  nuevo. La cámara pide 1920×1080 en vez del valor por defecto de Android
+  —640×480— para alcanzar códigos lejanos.
+
+Detalle y evidencia: [`docs/quality/SCANNER_UX.md`](docs/quality/SCANNER_UX.md).
+
 ## 📱 APK Android abierto y comprobado
 
 Estas son capturas reales del APK publicado en el
 [`Release v0.1.0`](https://github.com/vladimiracunadev-create/rootcause-qr-inspector/releases/tag/v0.1.0),
 instalado desde GitHub en un emulador Android 36.1 de este equipo. No son
 mockups ni imágenes generadas.
+
+> **Estas capturas son anteriores a 0.1.1.** Documentan el arranque, el
+> generador y los ajustes, que no cambiaron. No muestran el estado `Código
+> leído` ni el aviso de repetición introducidos en 0.1.1: esa evidencia visual
+> está pendiente de una nueva captura en dispositivo.
 
 | Lectura automática | Pausa explícita | Análisis local |
 |---|---|---|
@@ -170,7 +195,7 @@ La cámara virtual del AVD entregó imagen: se verificaron lectura automática,
 `Pausar`, `Reanudar` y retorno efectivo a `Inspección activa`. La jerarquía
 accesible no contiene la antigua instrucción de tocar la pantalla.
 
-## 🛡️ Las señales que observa en 0.1.0
+## 🛡️ Las señales que observa en 0.1.1
 
 | Familia | Hallazgos principales |
 |---|---|
@@ -224,7 +249,7 @@ Incluirlos requiere una decisión explícita porque pueden contener OTP,
 contraseñas Wi-Fi, identidad, datos personales o instrucciones de pago.
 Contrato: [`schemas/rootcause-qr-evidence.schema.json`](schemas/rootcause-qr-evidence.schema.json).
 
-La interfaz 0.1.0 comparte únicamente la variante redactada. La inclusión de
+La interfaz 0.1.1 comparte únicamente la variante redactada. La inclusión de
 carga completa existe para integraciones mediante el parámetro explícito
 `includeRawPayload`; no hay un botón que la active por accidente.
 
@@ -253,7 +278,7 @@ integración puede inyectar sus propios tokens y dominios autorizados mediante
 El ejemplo completo usa únicamente dominios reservados `.example`:
 [`config/rootcause-qr-policy.example.json`](config/rootcause-qr-policy.example.json).
 La carga de ese archivo desde la interfaz todavía no está implementada en
-0.1.0; es un contrato para integradores, no una preferencia activa por defecto.
+0.1.1; es un contrato para integradores, no una preferencia activa por defecto.
 
 ## 📐 Arquitectura
 
@@ -309,15 +334,16 @@ flutter test test/core/qr_evidence_exporter_test.dart
 El estado comprobado y lo pendiente se declara en [`VALIDATION.md`](VALIDATION.md).
 
 La CI conserva artefactos técnicos de verificación —cobertura, SBOM CycloneDX,
-inventario de licencias y checksums— y el APK instalable de release. El tag
-`v0.1.0` publica el APK Android y su SHA-256 en un GitHub Release verificable.
+inventario de licencias y checksums— y el APK instalable de release. Un tag
+`vX.Y.Z` publica el APK Android y su SHA-256 en un GitHub Release verificable;
+el último es [`v0.1.1`](https://github.com/vladimiracunadev-create/rootcause-qr-inspector/releases/tag/v0.1.1).
 Otros targets que compile Flutter no se presentan como producto publicado.
 
 ## 📱 Plataformas móviles y firmas
 
-| Plataforma | Estado 0.1.0 | Limitación principal |
+| Plataforma | Estado 0.1.1 | Limitación principal |
 |---|---|---|
-| Teléfono Android 7+ | **producto publicado** como [APK v0.1.0](https://github.com/vladimiracunadev-create/rootcause-qr-inspector/releases/tag/v0.1.0) | SHA-256 publicado y firma técnica APK v2; prueba física amplia y Play Store pendientes |
+| Teléfono Android 7+ | **producto publicado** como [APK v0.1.1](https://github.com/vladimiracunadev-create/rootcause-qr-inspector/releases/tag/v0.1.1) | SHA-256 publicado por CI; la prueba física de la corrección de lectura, la matriz de dispositivos y Play Store siguen pendientes |
 | iPhone / iOS | objetivo móvil, no publicado | firma, App Store y validación en iPhone pendientes |
 | Tablet Android | layout móvil grande verificado en emulación 1600×2560/320 dpi | falta confirmar cámara, galería y rotación en tablet física |
 | iPad | candidato móvil, no declarado compatible | instalación, cámara, galería, rotación y diseño adaptable pendientes |
@@ -342,7 +368,7 @@ prueba en hardware físico de tablet.
 - motor de 26 reglas, contrato JSON, fixtures y pruebas unitarias/widgets;
 - historial e inventario cifrados, modo temporal y recuperación;
 - CI, SBOM, licencias, checksums y landing;
-- GitHub Release `v0.1.0` con APK Android instalable y SHA-256 publicado;
+- GitHub Release `v0.1.1` con APK Android instalable y SHA-256 publicado;
 - documentación de arquitectura, operación, amenazas, privacidad y límites.
 
 ### ❌ Todavía no incluye
@@ -362,7 +388,7 @@ prueba en hardware físico de tablet.
   sesión y descarga del navegador.
 - un futuro `rootcause-schema` puede consumir directamente
   `rootcause.evidence.qr.v1` sin depender del texto español.
-- no se envían eventos automáticamente entre productos en 0.1.0; la integración
+- no se envían eventos automáticamente entre productos en 0.1.1; la integración
   actual es por export explícito.
 
 Contrato de integración: [`docs/rootcause/INTEGRATION.md`](docs/rootcause/INTEGRATION.md).

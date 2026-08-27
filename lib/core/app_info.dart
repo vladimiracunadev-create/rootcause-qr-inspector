@@ -11,7 +11,7 @@
 library;
 
 /// Version shown in the interface, without the build number.
-const String appVersion = '0.1.0';
+const String appVersion = '0.1.1';
 
 /// Product name shown in the interface.
 const String appName = 'RootCause QR Inspector';

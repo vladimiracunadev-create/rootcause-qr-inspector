@@ -2,6 +2,11 @@ import 'package:flutter/foundation.dart';
 import 'package:rootcause_qr_inspector/models/app_settings.dart';
 import 'package:rootcause_qr_inspector/services/settings_repository.dart';
 
+/// Estado observable de las preferencias.
+///
+/// A diferencia de los demás stores, notifica **antes** de persistir: un cambio
+/// de tema o de contraste debe verse de inmediato, y su escritura en
+/// preferencias no puede corromper datos del usuario si falla.
 class SettingsStore extends ChangeNotifier {
   SettingsStore(this._repository);
 

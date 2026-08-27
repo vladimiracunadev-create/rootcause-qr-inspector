@@ -4,6 +4,11 @@ import 'package:rootcause_qr_inspector/core/diagnostics/app_diagnostics.dart';
 import 'package:rootcause_qr_inspector/core/recovery/recovery_issue.dart';
 import 'package:rootcause_qr_inspector/core/recovery/recovery_service.dart';
 
+/// Centro de recuperación: registros aislados y diagnóstico privado.
+///
+/// Cada acción destructiva pide confirmación y afecta a un solo registro. El
+/// parámetro [retryMigration] es opcional porque la pantalla también se abre
+/// desde contextos sin acceso al historial, como la prueba de accesibilidad.
 class RecoveryScreen extends StatefulWidget {
   const RecoveryScreen({required this.service, this.retryMigration, super.key});
   final RecoveryService service;

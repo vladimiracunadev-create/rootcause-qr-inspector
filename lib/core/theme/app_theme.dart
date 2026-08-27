@@ -1,5 +1,15 @@
 import 'package:flutter/material.dart';
 
+/// Tema Material 3 del producto, con tres ajustes de accesibilidad.
+///
+/// `highContrast` sube el nivel de contraste del `ColorScheme` y además dibuja
+/// bordes de tarjeta más marcados; `largeControls` aumenta la densidad visual
+/// sin tocar la escala tipográfica del sistema, que nunca se limita;
+/// `reduceMotion` sustituye las transiciones de página por ninguna.
+///
+/// Los colores del esquema se fijan explícitamente después de `fromSeed`
+/// porque la identidad RootCause debe mantenerse estable entre versiones de
+/// Flutter, que ajustan periódicamente el algoritmo de derivación.
 abstract final class AppTheme {
   static ThemeData light({bool highContrast = false, bool largeControls = false, bool reduceMotion = false}) =>
       _build(Brightness.light, highContrast: highContrast, largeControls: largeControls, reduceMotion: reduceMotion);

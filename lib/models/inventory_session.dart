@@ -1,3 +1,9 @@
+/// Una línea de conteo dentro de una sesión de inventario.
+///
+/// La clave del producto es [code], la carga cruda del código leído: dos
+/// lecturas del mismo código suman [quantity] en vez de crear otra línea.
+/// [firstScannedAt] no se modifica nunca; [lastScannedAt] sí, y ordena la
+/// lista visible de la pantalla de inventario.
 class InventoryItem {
   const InventoryItem({
     required this.code,
@@ -48,6 +54,15 @@ class InventoryItem {
       );
 }
 
+/// Sesión de conteo continuo, cifrada como una sola carga en la base local.
+///
+/// Una sesión está abierta mientras [closedAt] sea nulo; solo una sesión
+/// abierta acepta lecturas. Cerrarla conserva los datos y su exportación, pero
+/// impide seguir sumando unidades. `InventoryStore.reopenSession` puede
+/// devolverla al estado abierto.
+///
+/// El mapa [items] usa la carga del código como clave, de modo que el
+/// documento serializado no depende del orden de lectura.
 class InventorySession {
   const InventorySession({
     required this.id,

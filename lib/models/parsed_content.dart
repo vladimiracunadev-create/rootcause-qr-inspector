@@ -1,3 +1,9 @@
+/// Familia de contenido que el intérprete reconoció dentro de la carga.
+///
+/// El valor viaja al motor de reglas —`sensitive-secret`, `payment-instruction`
+/// y `opaque-binary-payload` se derivan de él— y también decide qué registros
+/// quedan fuera del historial automático. Añadir un valor obliga a revisar
+/// `ContentInterpreter`, `QrInvestigationEngine` y `ScanResultsSheet`.
 enum ContentKind {
   url,
   wifi,
@@ -18,6 +24,20 @@ enum ContentKind {
   text,
 }
 
+/// Resultado inmutable de interpretar una carga cruda.
+///
+/// Es un dato de presentación y de entrada al motor, nunca un veredicto:
+/// describe qué campos se pudieron leer, no si el contenido es legítimo.
+///
+/// - [kind] decide iconografía, acción sugerida y reglas dependientes del tipo.
+/// - [title] y [summary] son textos en español para la interfaz.
+/// - [fields] conserva pares etiqueta/valor ya legibles por una persona.
+/// - [sensitive] marca material que no debe persistirse automáticamente
+///   (OTP, Wi-Fi con contraseña, pagos, identidad o URL con token). El
+///   escáner consulta esta bandera antes de guardar en el historial.
+///
+/// `toJson`/`fromJson` son simétricos y toleran un respaldo incompleto: cada
+/// campo ausente cae en un valor por defecto en vez de lanzar.
 class ParsedContent {
   const ParsedContent({
     required this.kind,

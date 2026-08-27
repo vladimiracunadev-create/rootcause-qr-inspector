@@ -48,6 +48,17 @@ void main() {
     expect(indicator(tester).value, 1);
   });
 
+  testWidgets('a captured code is announced as a result, not as a pause', (WidgetTester tester) async {
+    await pumpBar(tester, phase: ScanPhase.captured);
+
+    // The reported failure was that a successful read looked like nothing had
+    // happened, because it borrowed the wording of a paused camera.
+    expect(find.text('Código leído'), findsOneWidget);
+    expect(find.text('Inspección en pausa'), findsNothing);
+    // A full, still bar: done, not stopped.
+    expect(indicator(tester).value, 1);
+  });
+
   testWidgets('a paused camera is announced and offers the way back', (WidgetTester tester) async {
     int taps = 0;
     await pumpBar(

@@ -1,5 +1,10 @@
 # Rendimiento y memoria
 
+- La cámara de inspección pide 1920×1080 y la de inventario 1280×720. El valor
+  por defecto de Android —640×480— no alcanza para un código lejano; el
+  inventario pide menos porque analiza de forma continua durante minutos. Ambos
+  valores requieren medición en dispositivos reales de gama baja: memoria,
+  tiempo y temperatura.
 - Galería limitada a 20 imágenes por operación.
 - PDF limitado a 50 páginas.
 - Render PDF ajustado a un máximo aproximado de 2400 px en su lado mayor.

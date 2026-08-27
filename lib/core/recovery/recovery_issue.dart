@@ -1,7 +1,22 @@
+/// Qué parte del sistema produjo la incidencia.
+///
+/// Solo `history` e `inventory` tienen un registro reparable; `migration`,
+/// `database` y `startup` describen un problema de proceso, y por eso
+/// `RecoveryService.retry` los rechaza en vez de fingir una recuperación.
 enum RecoveryEntityType { history, inventory, migration, database, startup }
 
+/// Ciclo de vida de una incidencia. Solo `unresolved` ofrece acciones.
 enum RecoveryIssueState { unresolved, recovered, deleted }
 
+/// Un registro aislado por no poder leerse, con su carga aún cifrada.
+///
+/// Contiene metadatos técnicos y, cuando existe, [encryptedPayload]: el sobre
+/// original tal cual estaba. Nunca contiene texto claro ni la llave, de modo
+/// que el paquete de recuperación pueda compartirse con soporte sin revelar el
+/// contenido escaneado.
+///
+/// [id] es determinista —SHA-256 truncado de `tipo|entidad|código`— para que el
+/// mismo fallo repetido no genere una lista creciente de duplicados.
 class RecoveryIssue {
   const RecoveryIssue({
     required this.id,

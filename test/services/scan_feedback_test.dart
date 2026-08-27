@@ -7,7 +7,14 @@ class _FakeTonePlayer implements ScanTonePlayer {
 
   final bool failing;
   int plays = 0;
+  int warmUps = 0;
   int disposals = 0;
+
+  @override
+  Future<void> warmUp() async {
+    warmUps++;
+    if (failing) throw StateError('no audio device');
+  }
 
   @override
   Future<void> play() async {
@@ -75,6 +82,31 @@ void main() {
     await feedback.success(sound: true, vibration: false);
     // The failing player is not called a second time.
     expect(player.plays, 1);
+  });
+
+  test('warming up builds the player before the first read', () async {
+    final _FakeTonePlayer player = _FakeTonePlayer();
+    final ScanFeedback feedback = ScanFeedback(tonePlayer: player);
+
+    await feedback.warmUp();
+
+    expect(player.warmUps, 1);
+    expect(player.plays, 0);
+    expect(feedback.toneUnavailable, isFalse);
+  });
+
+  test('a warm-up failure is absorbed and does not break the read', () async {
+    final _FakeTonePlayer player = _FakeTonePlayer(failing: true);
+    final ScanFeedback feedback = ScanFeedback(tonePlayer: player);
+
+    await feedback.warmUp();
+
+    expect(feedback.toneUnavailable, isTrue);
+
+    // The read still confirms, through the system sound.
+    await feedback.success(sound: true, vibration: false);
+    expect(player.plays, 0);
+    expect(platformCalls.map((MethodCall call) => call.method), contains('SystemSound.play'));
   });
 
   test('disposal reaches the player', () async {

@@ -10,6 +10,15 @@ import 'package:share_plus/share_plus.dart';
 import 'package:rootcause_qr_inspector/services/clipboard_service.dart';
 import 'package:rootcause_qr_inspector/state/settings_store.dart';
 
+/// Generador local de códigos, sin enviar los datos a ningún servidor.
+///
+/// La carga se compone en el cliente a partir del tipo elegido y se dibuja con
+/// `barcode_widget`. El PNG se obtiene capturando el `RepaintBoundary` de la
+/// vista previa; el SVG se genera desde la misma definición de código, de modo
+/// que ambos archivos representen exactamente la carga mostrada en pantalla.
+///
+/// Los ejemplos precargados usan valores reservados (`example.com`) para que
+/// una captura de esta pantalla no publique datos reales.
 class GeneratorScreen extends StatefulWidget {
   const GeneratorScreen({required this.settings, super.key});
 

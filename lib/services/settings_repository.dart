@@ -5,6 +5,17 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:rootcause_qr_inspector/core/feature_flags/feature_flags.dart';
 import 'package:rootcause_qr_inspector/models/app_settings.dart';
 
+/// Lee y escribe las preferencias en el almacén del sistema.
+///
+/// No usa la base cifrada porque ninguna preferencia contiene carga escaneada.
+/// Cada lectura aplica un valor por defecto conservador, así que una clave
+/// ausente o corrupta nunca deja la aplicación sin configuración.
+///
+/// [resetNonSensitive] es la vía de recuperación ofrecida en el arranque
+/// seguro. Borra apariencia, idioma y opciones de lectura, y deja fuera de la
+/// lista `save_history`, `private_mode` y `biometric_lock`: como sus valores
+/// por defecto son «guardar», «no privado» y «sin bloqueo», restablecerlas
+/// relajaría la postura de privacidad que el usuario había elegido.
 class SettingsRepository {
   final SharedPreferencesAsync _preferences = SharedPreferencesAsync();
 

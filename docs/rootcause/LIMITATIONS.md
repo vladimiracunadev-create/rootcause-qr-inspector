@@ -64,7 +64,7 @@ restricción de Unicode UTS #39. Se denomina heurística y no conformidad UTS #3
 ## Dominio registrable
 
 La familia de host para redirecciones se aproxima mediante relación de sufijo.
-No incorpora la Public Suffix List en 0.1.0. Por eso evita afirmar que calculó
+No incorpora la Public Suffix List en 0.1.1. Por eso evita afirmar que calculó
 un eTLD+1 normativo.
 
 ## Puntaje
@@ -91,7 +91,7 @@ una cadena autenticada.
 
 ## Distribución
 
-La 0.1.0 publica un APK Android directo en GitHub con checksum. No incluye ficha
+La 0.1.1 publica un APK Android directo en GitHub con checksum. No incluye ficha
 de Play Store/App Store ni paquete iOS instalable. El soporte de distribución se
 limita a las aplicaciones móviles Android/iOS.
 

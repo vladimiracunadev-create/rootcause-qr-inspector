@@ -3,9 +3,9 @@
 ## Inspeccionar un QR ahora
 
 Para Android 7 o posterior, descarga el APK público desde
-[`GitHub Release v0.1.0`](https://github.com/vladimiracunadev-create/rootcause-qr-inspector/releases/tag/v0.1.0)
+[`GitHub Release v0.1.1`](https://github.com/vladimiracunadev-create/rootcause-qr-inspector/releases/tag/v0.1.1)
 o usa la
-[`descarga directa`](https://github.com/vladimiracunadev-create/rootcause-qr-inspector/releases/download/v0.1.0/rootcause-qr-inspector-v0.1.0-android.apk).
+[`descarga directa`](https://github.com/vladimiracunadev-create/rootcause-qr-inspector/releases/download/v0.1.1/rootcause-qr-inspector-v0.1.1-android.apk).
 Android puede pedir autorización para instalar desde el navegador o gestor de
 archivos usado. El Release incluye el archivo `.sha256` para comprobar la
 descarga.
@@ -26,8 +26,11 @@ una regla local aplicable.
 ## Flujo recomendado
 
 1. Abre **Escanear** y concede cámara solo si usarás captura en vivo.
-2. Enmarca un código o elige una imagen/PDF iniciado por ti.
-3. Espera el estado visible de lectura; el tono confirma una captura, no la
+2. Apunta al código o elige una imagen/PDF iniciado por ti. El marco central es
+   una guía de encuadre: la lectura analiza toda la imagen, así que un código
+   que se ve completo en pantalla se lee aunque quede fuera del cuadrado.
+3. Cuando el código se lee, el estado cambia a **Código leído**, suena el tono,
+   vibra el teléfono y se abre el análisis. El tono confirma una captura, no la
    seguridad del contenido.
 4. No necesitas tocar el visor para activar la lectura. Usa **Pausar** y
    **Reanudar** cuando quieras detener o recuperar explícitamente la cámara.
@@ -54,6 +57,14 @@ una regla local aplicable.
 Es la superficie principal del producto de seguridad. Captura con cámara o
 importa imágenes y PDF compatibles, mantiene visible el estado, evita acciones
 silenciosas y abre el resultado de seguridad tras interpretar.
+
+Si vuelves a apuntar al código que acabas de inspeccionar, la barra avisa de que
+ya se inspeccionó en vez de quedarse callada. Aparta la cámara un momento y
+vuelve a apuntar para leerlo de nuevo. Un código distinto se lee al instante.
+
+Si un código no se lee, acércate o usa el deslizador de zoom: la cámara pide la
+mayor resolución disponible, pero un código muy pequeño o muy lejano sigue
+teniendo un límite físico.
 
 ### Inventario
 

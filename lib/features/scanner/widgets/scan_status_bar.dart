@@ -8,6 +8,11 @@ enum ScanPhase {
   /// Frames are being analysed: any code in front of the lens will be read.
   scanning,
 
+  /// A code was just read. It is a short, explicit confirmation state: without
+  /// it a successful scan was announced with the same wording as a camera the
+  /// user had paused, which read as "nothing happened".
+  captured,
+
   /// The user stopped the reading, or a result is being shown.
   paused,
 
@@ -46,6 +51,7 @@ class ScanStatusBar extends StatelessWidget {
   String get _title => switch (phase) {
         ScanPhase.starting => 'Preparando inspección…',
         ScanPhase.scanning => 'Inspección activa',
+        ScanPhase.captured => 'Código leído',
         ScanPhase.paused => 'Inspección en pausa',
         ScanPhase.unavailable => 'Sensor no disponible',
       };
@@ -53,6 +59,7 @@ class ScanStatusBar extends StatelessWidget {
   IconData get _icon => switch (phase) {
         ScanPhase.starting => Icons.hourglass_top_outlined,
         ScanPhase.scanning => Icons.qr_code_scanner,
+        ScanPhase.captured => Icons.check_circle,
         ScanPhase.paused => Icons.pause_circle_outline,
         ScanPhase.unavailable => Icons.videocam_off_outlined,
       };
@@ -61,7 +68,7 @@ class ScanStatusBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final ColorScheme colors = Theme.of(context).colorScheme;
     final Color accent = switch (phase) {
-      ScanPhase.starting || ScanPhase.scanning => colors.primary,
+      ScanPhase.starting || ScanPhase.scanning || ScanPhase.captured => colors.primary,
       ScanPhase.paused => Colors.white,
       ScanPhase.unavailable => colors.error,
     };
@@ -146,13 +153,18 @@ class _ScanProgressBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bool busy = phase == ScanPhase.starting || phase == ScanPhase.scanning;
+    // A null value is the moving, indeterminate bar; a fixed value draws a
+    // still bar, which is what a paused camera or reduced motion needs. A
+    // capture fills the bar: «done» must not look like «stopped».
+    final double? value = switch (phase) {
+      ScanPhase.starting || ScanPhase.scanning => animate ? null : 1,
+      ScanPhase.captured => 1,
+      ScanPhase.paused || ScanPhase.unavailable => 0,
+    };
     return ClipRRect(
       borderRadius: BorderRadius.circular(4),
       child: LinearProgressIndicator(
-        // A null value is the moving, indeterminate bar; a fixed value draws a
-        // still bar, which is what a paused camera or reduced motion needs.
-        value: busy && animate ? null : (busy ? 1 : 0),
+        value: value,
         minHeight: 4,
         backgroundColor: Colors.white24,
         valueColor: AlwaysStoppedAnimation<Color>(accent),

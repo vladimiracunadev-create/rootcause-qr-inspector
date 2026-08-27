@@ -3,6 +3,15 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:rootcause_qr_inspector/core/database/app_database.dart';
 import 'package:rootcause_qr_inspector/core/security/payload_cipher.dart';
 
+/// Guarda qué llave está activa, dentro de la misma base que los datos.
+///
+/// Vivía en preferencias, donde podía desincronizarse de los registros ya
+/// reencriptados si la aplicación moría a mitad de una rotación. Ahora se
+/// escribe en el almacén `_security_meta` y puede confirmarse en la misma
+/// transacción que los datos: o cambian los dos, o no cambia ninguno.
+///
+/// [loadActiveKeyId] traslada una sola vez el valor heredado de preferencias y
+/// después lo elimina de allí.
 class EncryptionMetadataRepository {
   EncryptionMetadataRepository(this._database);
 

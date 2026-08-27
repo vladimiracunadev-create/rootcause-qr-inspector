@@ -20,6 +20,12 @@ import 'package:rootcause_qr_inspector/state/settings_store.dart';
 NavigationDestinationLabelBehavior navigationLabelBehaviorForWidth(double width) =>
     width < 360 ? NavigationDestinationLabelBehavior.alwaysHide : NavigationDestinationLabelBehavior.alwaysShow;
 
+/// Raíz de la interfaz una vez que los servicios están listos.
+///
+/// Reconstruye el `MaterialApp` cuando cambian las preferencias, porque tema,
+/// contraste, tamaño de control, movimiento reducido e idioma se derivan de
+/// ellas. El árbol fijo es siempre el mismo: marco de teléfono, puerta
+/// biométrica y cascarón de navegación.
 class RootCauseQrInspectorApp extends StatelessWidget {
   const RootCauseQrInspectorApp({
     required this.scanStore,
@@ -121,6 +127,15 @@ class HandheldFrame extends StatelessWidget {
   }
 }
 
+/// Puerta de bloqueo local delante de toda la aplicación.
+///
+/// Cuando la opción está activa, la pantalla se vuelve a bloquear en cuanto la
+/// aplicación deja de estar en primer plano —`inactive`, `paused`, `hidden` o
+/// `detached`—, no solo al cerrarla. Esto cubre el conmutador de aplicaciones
+/// y la vista previa del sistema.
+///
+/// No hay salida alternativa: si la autenticación falla, la única acción
+/// disponible es volver a intentarlo.
 class BiometricLockGate extends StatefulWidget {
   const BiometricLockGate({required this.settings, required this.child, super.key});
   final SettingsStore settings;
@@ -207,6 +222,15 @@ class _BiometricLockGateState extends State<BiometricLockGate> with WidgetsBindi
   }
 }
 
+/// Cascarón de navegación con las cinco secciones del producto.
+///
+/// El orden expresa la jerarquía declarada del producto: la inspección de
+/// seguridad va primero, y el inventario, el generador y el historial no
+/// compiten con ella. Solo se monta la sección seleccionada, así que la
+/// pantalla que se abandona libera su cámara.
+///
+/// En modo temporal muestra un banner permanente: el usuario debe saber que
+/// nada de lo que haga en esa sesión sobrevivirá al cierre.
 class HomeShell extends StatefulWidget {
   const HomeShell({
     required this.scanStore,

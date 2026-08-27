@@ -92,6 +92,41 @@ abstract final class QrInvestigationEngine {
     'no-destination-safety-guarantee',
   ];
 
+  /// Analiza una carga y devuelve hechos, hipótesis, decisión y límites.
+  ///
+  /// Función pura: sin red, sin base de datos, sin Flutter. Las mismas entradas
+  /// producen siempre la misma salida, y por eso puede probarse con fixtures
+  /// sintéticos y compararse entre versiones.
+  ///
+  /// Parámetros:
+  /// - `rawValue`: la carga tal cual se decodificó. Se hashea sin recortar.
+  /// - `parsed`: interpretación previa; aporta el tipo de contenido del que
+  ///   dependen `sensitive-secret`, `payment-instruction` y
+  ///   `opaque-binary-payload`.
+  /// - `policy`: umbrales y marcas de la organización.
+  /// - `analyzedAt`: instante fijable para que las pruebas sean deterministas.
+  ///
+  /// Orden interno del análisis:
+  ///
+  /// 1. se detecta el esquema declarado y se intenta construir una URI web;
+  /// 2. se evalúan las reglas independientes del host (controles invisibles,
+  ///    OTP, pago, binario, esquema no permitido);
+  /// 3. si hay URI web, se evalúan las reglas de transporte, identidad,
+  ///    ofuscación, destino, descarga, credenciales y redirección;
+  /// 4. se agregan severidad —máximo— y puntaje —suma acotada a 100—;
+  /// 5. se decide la acción y se derivan las hipótesis.
+  ///
+  /// `forceBlock` se activa solo con condiciones donde la URI no puede
+  /// entregarse sin ambigüedad: host vacío, esquema no permitido, caracteres de
+  /// control o autoridad ofuscada. Una URL crítica pero interpretable queda en
+  /// `confirm`, con su evidencia a la vista.
+  ///
+  /// Riesgos al modificarla: mover una regla fuera de su bloque cambia qué ids
+  /// aparecen en `evaluatedRuleIds`; añadir o cambiar el peso de una sin subir
+  /// `engineVersion` rompe la comparabilidad de las evidencias ya exportadas; y
+  /// `tool/verify_rootcause_contract.py` falla si el número de reglas deja de
+  /// ser 26 o si un id no existe en el esquema, en los textos y en
+  /// `docs/rootcause/HEURISTICS.md`.
   static QrInvestigation analyze(
     String rawValue, {
     ParsedContent? parsed,

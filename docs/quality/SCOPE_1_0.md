@@ -2,7 +2,7 @@
 
 > Registro histórico de Universal Code Scanner 1.0.0 conservado para
 > trazabilidad del sustrato. No describe la validación de RootCause QR
-> Inspector 0.1.0; consultar [`../../VALIDATION.md`](../../VALIDATION.md).
+> Inspector 0.1.1; consultar [`../../VALIDATION.md`](../../VALIDATION.md).
 
 Matriz de lo que la primera versión pública incorpora, cómo se verificó y qué
 queda fuera de este entorno. La columna «verificación» distingue lo comprobado
