@@ -44,6 +44,40 @@ No se ejecutó un validador de metaschema Draft 2020-12 independiente; el
 verificador offline sí comprueba el dialecto, los 26 ids, las referencias de
 fixtures y las restricciones de redacción específicas del contrato.
 
+## Validación pública de la aplicación (0.1.1)
+
+Ejecución de GitHub Actions
+[`33029927460`](https://github.com/vladimiracunadev-create/rootcause-qr-inspector/actions/runs/33029927460)
+sobre el commit `a7ebf2c`:
+
+| Gate | Resultado |
+|---|---|
+| Estructura y contrato offline | Correctos |
+| `flutter analyze --fatal-infos` | Sin hallazgos |
+| `flutter test --coverage` | Verde |
+| `flutter build web --release` | Correcto |
+| `flutter build apk --release` | Correcto |
+| `flutter build ios --debug --simulator` | Correcto |
+
+La ejecución anterior sobre el mismo cambio,
+[`33029682079`](https://github.com/vladimiracunadev-create/rootcause-qr-inspector/actions/runs/33029682079),
+falló con un único `undefined_class` y bloqueó la publicación. Se conserva el
+dato porque demuestra que el gate hace su trabajo.
+
+El workflow de publicación
+[`33041878441`](https://github.com/vladimiracunadev-create/rootcause-qr-inspector/actions/runs/33041878441)
+verificó la versión del tag, repitió análisis y pruebas, compiló el APK,
+comprobó su firma con `apksigner`, atestó su procedencia y publicó el Release.
+
+Comprobación del artefacto **después** de publicarlo, en este equipo:
+
+| Comprobación | Resultado |
+|---|---|
+| Tamaño del APK | 92 792 108 bytes |
+| SHA-256 recalculado en local | `dbe881d6…d7d7`, coincide con el publicado |
+| Contenido del paquete | 529 entradas, con `classes.dex`, los assets de Flutter y las bibliotecas nativas |
+| `sha256sum -c` | Correcto tras corregir el fichero de checksums, que llevaba la ruta interna de CI |
+
 ## Validación pública de la aplicación (0.1.0)
 
 > Registro de la entrega anterior. La ejecución equivalente para 0.1.1 es la que

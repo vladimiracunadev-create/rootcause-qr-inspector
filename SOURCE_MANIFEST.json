@@ -393,8 +393,8 @@
     },
     {
       "path": "docs/releases/v0.1.1.md",
-      "size": 4508,
-      "sha256": "8710feeeff11cb04582caa35ebb0238ef1bd27c2b8edfc54bd5583b103a552d8"
+      "size": 5110,
+      "sha256": "050e836a2af04e0d3944f4c0b3c84cf8d6869393bdcc5ac654adf60802406973"
     },
     {
       "path": "docs/ROADMAP.md",
@@ -1488,8 +1488,8 @@
     },
     {
       "path": "VALIDATION.md",
-      "size": 6702,
-      "sha256": "df63eb2015b1a04684547942344f1c3fb5e4bfe30ec019be76d9836120cf50a7"
+      "size": 8262,
+      "sha256": "f94ad37a373519f80d3216007a4087b0638fab00d9a3d34b38e7baf2100fd272"
     }
   ]
 }
