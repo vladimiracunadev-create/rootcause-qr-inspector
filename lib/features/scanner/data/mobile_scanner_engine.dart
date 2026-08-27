@@ -1,4 +1,8 @@
-import 'package:flutter/widgets.dart';
+// `Size` viene de dart:ui y `ValueListenable` de foundation: widgets.dart
+// reexporta la primera pero no la segunda, así que hacen falta las dos.
+import 'dart:ui' show Size;
+
+import 'package:flutter/foundation.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:rootcause_qr_inspector/features/scanner/domain/scanner_engine.dart';
 

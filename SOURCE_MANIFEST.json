@@ -467,6 +467,11 @@
       "sha256": "9fe614baa0114d0a9b4431c01e7ecdcaa7386577fa1120b86e26ea3fe72571dd"
     },
     {
+      "path": "docs/system-documentation/README.md",
+      "size": 7934,
+      "sha256": "24ec7b0dfb044c88e0cf05dc4bd7ce6298d790d995328b544ed5d945c31dab93"
+    },
+    {
       "path": "docs/TROUBLESHOOTING.md",
       "size": 3369,
       "sha256": "d1269f22e67e251459f52066348033c4060396a27d050502400b5ec9c427e9fa"
@@ -703,8 +708,8 @@
     },
     {
       "path": "lib/features/scanner/data/mobile_scanner_engine.dart",
-      "size": 3390,
-      "sha256": "153441c953de28d4856eff2f562c0906eb2c093efefb8392b027da4f431a17b9"
+      "size": 3571,
+      "sha256": "9c15c2e62c5c32f9ecb94ada4217ad48ba71c53223f13a99955c9e2d669bdd1d"
     },
     {
       "path": "lib/features/scanner/domain/scanner_engine.dart",
