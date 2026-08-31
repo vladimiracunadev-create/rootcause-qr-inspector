@@ -133,7 +133,7 @@ Inventario jerárquico de todo lo relevante del repositorio. La columna
 | `result/scan_result_sheet.dart` | `ScanResultsSheet`, `ScanRecordCard` | Hechos, hipótesis, límites, acciones y evidencia | Activo |
 | `history/history_screen.dart` | `HistoryScreen` | Búsqueda, filtros, notas, importación y exportación | Activo |
 | `inventory/inventory_screen.dart` | `InventoryScreen` | Sesiones y conteo continuo | Activo |
-| `generator/generator_screen.dart` | `GeneratorScreen` | Nueve tipos de carga, diez formatos, PNG y SVG | Activo |
+| `generator/generator_screen.dart` | `GeneratorScreen` | Nueve tipos de carga, diez formatos; descarga PNG/SVG en web y hoja nativa en móvil | Activo |
 | `settings/settings_screen.dart` | `SettingsScreen` | Apariencia, inspección, privacidad, datos y versión | Activo |
 | `recovery/recovery_screen.dart` | `RecoveryScreen` | Registros aislados y diagnóstico | Activo |
 | `formats/formats_screen.dart` | `FormatsScreen` | Catálogo informativo de simbologías | Activo |

@@ -184,7 +184,7 @@ Las únicas salidas fuera del proceso las inicia siempre la persona:
 | Compartir historial | JSON, CSV o XLSX **en claro** | **Sí**, diálogo explícito de advertencia |
 | Compartir inventario | JSON, CSV o XLSX | La propia acción |
 | Compartir contacto o evento | `.vcf` o `.ics` con la carga | Sí, si el contenido es sensible |
-| Compartir código generado | PNG o SVG | La propia acción |
+| Descargar/compartir código generado | PNG o SVG; descarga directa en web y hoja nativa en móvil | La propia acción |
 | Copiar al portapapeles | La carga | Sí, si es sensible; con borrado programado |
 | Copiar diagnóstico | Metadatos técnicos, sin cargas | La propia acción |
 | Copiar paquete de recuperación | Sobres cifrados, sin llave | La propia acción |

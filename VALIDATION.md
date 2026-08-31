@@ -1,8 +1,8 @@
 # Estado de validación
 
-**Versión:** 0.1.1+2
+**Versión:** 0.1.2+3
 
-**Fecha:** 26 de agosto de 2026
+**Fecha:** 31 de agosto de 2026
 **Fuente derivada:** Universal Code Scanner 1.1.0+2, commit
 `c1f98781575bf8223b19ad8344fdfddeaccef373`
 
@@ -10,7 +10,7 @@ Este archivo distingue lo ejecutado sobre **RootCause QR Inspector** de lo que
 solo fue validado en la base heredada y de lo que todavía exige hardware o
 credenciales de distribución.
 
-## Ejecutado sobre 0.1.1+2 en este entorno
+## Ejecutado sobre 0.1.2+3 en este entorno
 
 | Comprobación | Comando | Resultado |
 |---|---|---|
@@ -18,12 +18,30 @@ credenciales de distribución.
 | Estructura del repositorio | `python tool/validate_structure.py --require-lock` | Correcta: YAML/JSON, imports locales, enlaces, versión UI, SBOM y lockfile |
 | Sintaxis de herramientas Python | `python -m compileall -q tool` | Correcta |
 | Conteo de casos | recuento sobre `test/` e `integration_test/` | 88 casos declarados; 87 los ejecuta `flutter test` |
+| Análisis Flutter | `flutter analyze --fatal-infos` | Sin hallazgos |
+| Pruebas Flutter | `flutter test` | 87 pruebas aprobadas |
+| Web release | `flutter build web --release` | Compilación correcta |
+| Demo local | navegador sobre `http://127.0.0.1:8080/` | QR visible; PNG y SVG confirman la descarga sin errores de consola |
 
-**No ejecutado en este entorno:** `flutter analyze`, `flutter test` y las
-compilaciones. Flutter y Dart no están instalados en la máquina de ensamblado,
-así que ninguna afirmación de esta entrega sobre análisis estático, pruebas en
-verde o binarios proviene de una ejecución local. La ejecución corresponde a la
-CI pública sobre el commit etiquetado.
+La compilación Android, la firma técnica, el checksum y la atestación se repiten
+en la CI pública desde el tag `v0.1.2`. La validación física de cámara y ciclo
+de vida móvil continúa separada y pendiente.
+
+El intento de compilación Android en este host no se usa como evidencia: su
+gestor instaló API 37 en `platforms/android-37.0`, mientras Gradle resuelve el
+identificador estándar `android-37`. El mismo conjunto de dependencias ya fue
+compilado por la CI pública de 0.1.1; para 0.1.2 el runner limpio del tag es el
+gate autoritativo del APK.
+
+## Mejora del generador de 0.1.2
+
+| Comportamiento | Evidencia | Límite |
+|---|---|---|
+| Copiar/compartir contenido no se presenta como descarga | Etiquetas visibles y texto explicativo en `GeneratorScreen` | El portapapeles conserva solo la carga, no la imagen |
+| Descargar PNG/SVG en web | Exportador web con `Blob` y enlace de descarga; confirmación funcional en localhost | Depende de que el navegador permita descargas iniciadas por la persona |
+| Guardar o compartir en Android/iOS | Exportador nativo conserva `SharePlus` y nombre de archivo | La aplicación receptora la elige el sistema |
+| QR sin caducidad propia | Texto visible y documentación de usuario | Un destino o token codificado sí puede expirar |
+| Tema visual | Reutiliza botones, tarjetas, colores y tipografía existentes | La validación visual se hizo sobre la demo web, no sustituye la matriz móvil |
 
 ## Corrección de lectura de 0.1.1
 
@@ -122,9 +140,9 @@ Seis casos añadidos en 0.1.1 cubren la interacción de la cámara: el estado
 `Código leído`, el precalentado del tono y su degradación, y la configuración
 del motor de captura.
 
-Flutter y Dart no estaban instalados en el entorno local de ensamblado. Por eso
-los resultados de aplicación anteriores se atribuyen a la CI pública y no a una
-ejecución local. Los verificadores Python sí se ejecutaron localmente.
+Los resultados de 0.1.2 indicados al inicio provienen de una ejecución local con
+Flutter 3.44.7. Las validaciones públicas históricas conservan sus propios
+enlaces y alcance.
 
 ## Heredado y verificado en la fuente
 

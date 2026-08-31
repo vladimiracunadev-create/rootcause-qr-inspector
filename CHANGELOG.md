@@ -11,6 +11,26 @@ Todas las versiones notables se documentan aquí. El formato sigue
 - Correlación opcional con otras superficies RootCause.
 - Evidencia en dispositivo físico de la corrección de lectura de 0.1.1.
 
+## [0.1.2] — 2026-08-31
+
+Entrega de mejora del generador. El motor de investigación, las 26 reglas, el
+contrato de evidencia y el tema visual no cambian.
+
+### Añadido
+
+- Descarga directa de los códigos generados como PNG o SVG en la demo web.
+- Exportación adaptada por plataforma: descarga en navegador y hoja nativa de
+  compartir en Android/iOS para guardar, enviar o abrir la imagen.
+- Confirmación visible después de preparar cada archivo.
+
+### Cambiado
+
+- Las acciones distinguen entre **Copiar/Compartir contenido** y
+  **Descargar/Compartir PNG o SVG**, para no confundir el texto codificado con
+  la imagen del código.
+- El generador explica que un código no caduca por sí solo; la disponibilidad
+  depende del contenido o destino codificado.
+
 ## [0.1.1] — 2026-08-26
 
 Corrección de interacción de la cámara a partir de un reporte de uso real: una
@@ -103,5 +123,6 @@ Primera derivación RootCause sobre Universal Code Scanner 1.1.0+2.
 La procedencia exacta y las diferencias están en
 [`docs/rootcause/PROVENANCE.md`](docs/rootcause/PROVENANCE.md).
 
+[0.1.2]: https://github.com/vladimiracunadev-create/rootcause-qr-inspector/releases/tag/v0.1.2
 [0.1.1]: https://github.com/vladimiracunadev-create/rootcause-qr-inspector/releases/tag/v0.1.1
 [0.1.0]: https://github.com/vladimiracunadev-create/rootcause-qr-inspector/releases/tag/v0.1.0

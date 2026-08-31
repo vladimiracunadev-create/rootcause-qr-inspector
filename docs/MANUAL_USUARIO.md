@@ -3,9 +3,9 @@
 ## Inspeccionar un QR ahora
 
 Para Android 7 o posterior, descarga el APK público desde
-[`GitHub Release v0.1.1`](https://github.com/vladimiracunadev-create/rootcause-qr-inspector/releases/tag/v0.1.1)
+[`GitHub Release v0.1.2`](https://github.com/vladimiracunadev-create/rootcause-qr-inspector/releases/tag/v0.1.2)
 o usa la
-[`descarga directa`](https://github.com/vladimiracunadev-create/rootcause-qr-inspector/releases/download/v0.1.1/rootcause-qr-inspector-v0.1.1-android.apk).
+[`descarga directa`](https://github.com/vladimiracunadev-create/rootcause-qr-inspector/releases/download/v0.1.2/rootcause-qr-inspector-v0.1.2-android.apk).
 Android puede pedir autorización para instalar desde el navegador o gestor de
 archivos usado. El Release incluye el archivo `.sha256` para comprobar la
 descarga.
@@ -75,6 +75,17 @@ convierte los códigos en una base remota.
 
 Crea códigos a partir de contenido introducido por la persona. Generar una carga
 no la valida ni la vuelve segura.
+
+- **Copiar contenido** lleva al portapapeles el texto o la URL codificada; no
+  copia la imagen ni abre el destino.
+- **Compartir contenido** entrega ese texto a otra aplicación.
+- En la demo web, **Descargar PNG** y **Descargar SVG** guardan la imagen en el
+  equipo. En Android/iOS, **Compartir PNG/SVG** abre la hoja del sistema para
+  guardarla o enviarla.
+
+El código generado no tiene una fecha de expiración incorporada. Si contiene
+una URL, seguirá funcionando solo mientras esa dirección, redirección o token
+permanezca vigente.
 
 ### Historial
 

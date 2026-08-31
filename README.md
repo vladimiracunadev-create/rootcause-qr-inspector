@@ -11,7 +11,7 @@
 ║  ╚═╝  ╚═╝ ╚═════╝  ╚═════╝    ╚═╝    ╚═════╝ ╚═╝  ╚═╝ ╚═════╝╚══════╝╚══════╝     ║
 ║                                                                                   ║
 ║                         Q R   I N S P E C T O R                                   ║
-║            Sensor de seguridad QR · Flutter · local-first · v0.1.1                ║
+║            Sensor de seguridad QR · Flutter · local-first · v0.1.2                ║
 ╚═══════════════════════════════════════════════════════════════════════════════════╝
 ```
 
@@ -19,14 +19,14 @@
   <img src="assets/launcher/icon-1024.png" width="112" alt="Icono RootCause QR Inspector: escudo con señal QR" />
 </p>
 
-[![Version](https://img.shields.io/badge/version-0.1.1-blue.svg)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-0.1.2-blue.svg)](CHANGELOG.md)
 [![Flutter](https://img.shields.io/badge/Flutter-3.44.7-02569B.svg?logo=flutter)](pubspec.yaml)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Telemetry](https://img.shields.io/badge/telemetry-zero-success.svg)](docs/PRIVACY_POLICY.md)
 [![CI](https://github.com/vladimiracunadev-create/rootcause-qr-inspector/actions/workflows/flutter-ci.yml/badge.svg)](https://github.com/vladimiracunadev-create/rootcause-qr-inspector/actions/workflows/flutter-ci.yml)
 [![Landing](https://img.shields.io/badge/landing-GitHub%20Pages-12847b.svg?logo=github)](https://vladimiracunadev-create.github.io/rootcause-qr-inspector/)
 
-📱 **[Descargar Android →](https://github.com/vladimiracunadev-create/rootcause-qr-inspector/releases/latest/download/rootcause-qr-inspector-v0.1.1-android.apk)** ·
+📱 **[Descargar Android →](https://github.com/vladimiracunadev-create/rootcause-qr-inspector/releases/latest/download/rootcause-qr-inspector-v0.1.2-android.apk)** ·
 🌐 **[Página del producto →](https://vladimiracunadev-create.github.io/rootcause-qr-inspector/)** ·
 📘 **[Manual de usuario →](docs/MANUAL_USUARIO.md)**
 
@@ -43,13 +43,13 @@ No es un lector que abre enlaces con una advertencia añadida. Es un **sensor de
 apoyo a la decisión**: nunca ejecuta la carga al detectarla, explica por qué un
 QR puede ser peligroso y deja que la persona decida después de ver la evidencia.
 
-> **Estado de 0.1.1:** producto publicado como **APK Android** en GitHub
+> **Estado de 0.1.2:** mejora preparada como **APK Android** mediante GitHub
 > Releases, con checksum SHA-256 y verificación técnica del paquete APK. Esta
-> entrega corrige tres fallos de lectura reportados en uso real: la
-> confirmación de una captura, los códigos legibles pero lejanos y la relectura
-> del mismo código. La firma comercial de tienda, Play Store/App Store, iOS y
-> la matriz física móvil completa siguen pendientes. La web es un canal de
-> demostración, no una aplicación objetivo.
+> entrega añade descarga explícita de PNG/SVG al generador web y conserva la
+> hoja nativa para guardar o compartir en móvil. Incluye también las
+> correcciones de lectura de 0.1.1. La firma comercial de tienda, Play
+> Store/App Store, iOS y la matriz física móvil completa siguen pendientes. La
+> web es un canal de demostración, no una aplicación objetivo.
 
 ## 🔍 Qué problema resuelve
 
@@ -139,6 +139,11 @@ principal.
 También incluye generación de códigos, importación desde imagen/PDF,
 recuperación de registros aislados y ajustes de privacidad y accesibilidad.
 
+En **Generar**, copiar o compartir actúa sobre el contenido escrito; PNG y SVG
+actúan sobre la imagen. La demo web los descarga directamente y Android/iOS
+abre la hoja del sistema. El código no incorpora caducidad: seguirá siendo
+legible mientras su contenido o destino continúe vigente.
+
 La acción se bloquea únicamente cuando la carga no puede entregarse de forma
 segura a otra aplicación: esquema no permitido, host inválido, caracteres de
 control o autoridad ambigua. Una URL crítica pero interpretable queda en
@@ -195,7 +200,7 @@ La cámara virtual del AVD entregó imagen: se verificaron lectura automática,
 `Pausar`, `Reanudar` y retorno efectivo a `Inspección activa`. La jerarquía
 accesible no contiene la antigua instrucción de tocar la pantalla.
 
-## 🛡️ Las señales que observa en 0.1.1
+## 🛡️ Las señales que observa en 0.1.2
 
 | Familia | Hallazgos principales |
 |---|---|
@@ -249,7 +254,7 @@ Incluirlos requiere una decisión explícita porque pueden contener OTP,
 contraseñas Wi-Fi, identidad, datos personales o instrucciones de pago.
 Contrato: [`schemas/rootcause-qr-evidence.schema.json`](schemas/rootcause-qr-evidence.schema.json).
 
-La interfaz 0.1.1 comparte únicamente la variante redactada. La inclusión de
+La interfaz 0.1.2 comparte únicamente la variante redactada. La inclusión de
 carga completa existe para integraciones mediante el parámetro explícito
 `includeRawPayload`; no hay un botón que la active por accidente.
 
@@ -336,14 +341,14 @@ El estado comprobado y lo pendiente se declara en [`VALIDATION.md`](VALIDATION.m
 La CI conserva artefactos técnicos de verificación —cobertura, SBOM CycloneDX,
 inventario de licencias y checksums— y el APK instalable de release. Un tag
 `vX.Y.Z` publica el APK Android y su SHA-256 en un GitHub Release verificable;
-el último es [`v0.1.1`](https://github.com/vladimiracunadev-create/rootcause-qr-inspector/releases/tag/v0.1.1).
+el último es [`v0.1.2`](https://github.com/vladimiracunadev-create/rootcause-qr-inspector/releases/tag/v0.1.2).
 Otros targets que compile Flutter no se presentan como producto publicado.
 
 ## 📱 Plataformas móviles y firmas
 
-| Plataforma | Estado 0.1.1 | Limitación principal |
+| Plataforma | Estado 0.1.2 | Limitación principal |
 |---|---|---|
-| Teléfono Android 7+ | **producto publicado** como [APK v0.1.1](https://github.com/vladimiracunadev-create/rootcause-qr-inspector/releases/tag/v0.1.1) | SHA-256 publicado por CI; la prueba física de la corrección de lectura, la matriz de dispositivos y Play Store siguen pendientes |
+| Teléfono Android 7+ | **producto publicado** como [APK v0.1.2](https://github.com/vladimiracunadev-create/rootcause-qr-inspector/releases/tag/v0.1.2) | SHA-256 publicado por CI; la prueba física de la corrección de lectura, la matriz de dispositivos y Play Store siguen pendientes |
 | iPhone / iOS | objetivo móvil, no publicado | firma, App Store y validación en iPhone pendientes |
 | Tablet Android | layout móvil grande verificado en emulación 1600×2560/320 dpi | falta confirmar cámara, galería y rotación en tablet física |
 | iPad | candidato móvil, no declarado compatible | instalación, cámara, galería, rotación y diseño adaptable pendientes |
@@ -368,7 +373,7 @@ prueba en hardware físico de tablet.
 - motor de 26 reglas, contrato JSON, fixtures y pruebas unitarias/widgets;
 - historial e inventario cifrados, modo temporal y recuperación;
 - CI, SBOM, licencias, checksums y landing;
-- GitHub Release `v0.1.1` con APK Android instalable y SHA-256 publicado;
+- GitHub Release `v0.1.2` con APK Android instalable y SHA-256 publicado;
 - documentación de arquitectura, operación, amenazas, privacidad y límites.
 
 ### ❌ Todavía no incluye

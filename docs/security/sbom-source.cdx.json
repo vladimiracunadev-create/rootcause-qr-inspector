@@ -6,7 +6,7 @@
     "component": {
       "type": "application",
       "name": "rootcause_qr_inspector",
-      "version": "0.1.1+2"
+      "version": "0.1.2+3"
     },
     "properties": [
       {
@@ -236,6 +236,18 @@
       "type": "library",
       "name": "url_launcher",
       "version": "6.3.2",
+      "scope": "required",
+      "properties": [
+        {
+          "name": "rcqr:resolution",
+          "value": "declared-only"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "web",
+      "version": "1.1.1",
       "scope": "required",
       "properties": [
         {

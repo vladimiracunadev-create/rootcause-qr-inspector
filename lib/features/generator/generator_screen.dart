@@ -3,11 +3,13 @@ import 'dart:convert';
 import 'dart:ui' as ui;
 
 import 'package:barcode_widget/barcode_widget.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:rootcause_qr_inspector/services/clipboard_service.dart';
+import 'package:rootcause_qr_inspector/services/generated_code_exporter.dart';
 import 'package:rootcause_qr_inspector/state/settings_store.dart';
 
 /// Generador local de códigos, sin enviar los datos a ningún servidor.
@@ -150,6 +152,11 @@ class _GeneratorScreenState extends State<GeneratorScreen> {
                   ),
                 ),
                 const SizedBox(height: 12),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text('Contenido codificado', style: Theme.of(context).textTheme.labelLarge),
+                ),
+                const SizedBox(height: 4),
                 SelectableText(_payload, maxLines: 5),
                 const SizedBox(height: 12),
                 Wrap(
@@ -157,11 +164,33 @@ class _GeneratorScreenState extends State<GeneratorScreen> {
                   runSpacing: 8,
                   alignment: WrapAlignment.center,
                   children: <Widget>[
-                    OutlinedButton.icon(onPressed: _copy, icon: const Icon(Icons.copy_outlined), label: const Text('Copiar datos')),
-                    OutlinedButton.icon(onPressed: () => SharePlus.instance.share(ShareParams(text: _payload)), icon: const Icon(Icons.share_outlined), label: const Text('Compartir datos')),
-                    FilledButton.icon(onPressed: _sharePng, icon: const Icon(Icons.image_outlined), label: const Text('PNG')),
-                    FilledButton.tonalIcon(onPressed: _shareSvg, icon: const Icon(Icons.draw_outlined), label: const Text('SVG')),
+                    OutlinedButton.icon(onPressed: _copy, icon: const Icon(Icons.copy_outlined), label: const Text('Copiar contenido')),
+                    OutlinedButton.icon(onPressed: () => SharePlus.instance.share(ShareParams(text: _payload)), icon: const Icon(Icons.share_outlined), label: const Text('Compartir contenido')),
+                    FilledButton.icon(
+                      onPressed: _exportPng,
+                      icon: Icon(kIsWeb ? Icons.download_outlined : Icons.image_outlined),
+                      label: Text(kIsWeb ? 'Descargar PNG' : 'Compartir PNG'),
+                    ),
+                    FilledButton.tonalIcon(
+                      onPressed: _exportSvg,
+                      icon: Icon(kIsWeb ? Icons.download_outlined : Icons.draw_outlined),
+                      label: Text(kIsWeb ? 'Descargar SVG' : 'Compartir SVG'),
+                    ),
                   ],
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  kIsWeb
+                      ? 'Copiar y compartir usan el contenido escrito. Descargar PNG o SVG guarda la imagen del código en este equipo.'
+                      : 'Copiar y compartir contenido usan el texto escrito. Compartir PNG o SVG permite guardar o enviar la imagen del código.',
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  'El código no caduca por sí solo; su destino debe seguir disponible.',
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w700),
                 ),
               ],
             ),
@@ -201,7 +230,7 @@ class _GeneratorScreenState extends State<GeneratorScreen> {
     if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Datos copiados.')));
   }
 
-  Future<void> _shareSvg() async {
+  Future<void> _exportSvg() async {
     try {
       final bool twoDimensional = <_CodeFormat>{
         _CodeFormat.qr,
@@ -215,18 +244,13 @@ class _GeneratorScreenState extends State<GeneratorScreen> {
         height: twoDimensional ? 900 : 420,
         drawText: !twoDimensional,
       );
-      await SharePlus.instance.share(
-        ShareParams(
-          title: 'Código ${_formatLabel(_format)}',
-          files: <XFile>[
-            XFile.fromData(
-              Uint8List.fromList(utf8.encode(svg)),
-              mimeType: 'image/svg+xml',
-            ),
-          ],
-          fileNameOverrides: <String>['codigo-${_format.name}.svg'],
-        ),
+      await exportGeneratedCode(
+        bytes: Uint8List.fromList(utf8.encode(svg)),
+        mimeType: 'image/svg+xml',
+        fileName: 'codigo-${_format.name}.svg',
+        title: 'Código ${_formatLabel(_format)}',
       );
+      _showExportSuccess('SVG');
     } on Object {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -236,18 +260,34 @@ class _GeneratorScreenState extends State<GeneratorScreen> {
     }
   }
 
-  Future<void> _sharePng() async {
-    final RenderRepaintBoundary? boundary = _previewKey.currentContext?.findRenderObject() as RenderRepaintBoundary?;
-    if (boundary == null) return;
-    final ui.Image image = await boundary.toImage(pixelRatio: 3);
-    final ByteData? data = await image.toByteData(format: ui.ImageByteFormat.png);
-    image.dispose();
-    if (data == null) return;
-    await SharePlus.instance.share(ShareParams(
-      title: 'Código generado',
-      files: <XFile>[XFile.fromData(data.buffer.asUint8List(), mimeType: 'image/png')],
-      fileNameOverrides: <String>['codigo-${_format.name}.png'],
-    ));
+  Future<void> _exportPng() async {
+    try {
+      final RenderRepaintBoundary? boundary = _previewKey.currentContext?.findRenderObject() as RenderRepaintBoundary?;
+      if (boundary == null) return;
+      final ui.Image image = await boundary.toImage(pixelRatio: 3);
+      final ByteData? data = await image.toByteData(format: ui.ImageByteFormat.png);
+      image.dispose();
+      if (data == null) return;
+      await exportGeneratedCode(
+        bytes: data.buffer.asUint8List(),
+        mimeType: 'image/png',
+        fileName: 'codigo-${_format.name}.png',
+        title: 'Código ${_formatLabel(_format)}',
+      );
+      _showExportSuccess('PNG');
+    } on Object {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('No fue posible generar el archivo PNG con estos datos.')),
+        );
+      }
+    }
+  }
+
+  void _showExportSuccess(String extension) {
+    if (!mounted) return;
+    final String action = kIsWeb ? 'descargado' : 'listo para compartir';
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Archivo $extension $action.')));
   }
 
   void _setExamples(_PayloadType value) {

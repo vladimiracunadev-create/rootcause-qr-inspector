@@ -1,4 +1,4 @@
-# Estado de implementación · 0.1.1
+# Estado de implementación · 0.1.2
 
 ## Operativo en el código fuente
 
@@ -9,7 +9,7 @@
 | Investigación | Motor local puro con 26 reglas, ids estables, severidad, puntos, confianza y evidencia mínima |
 | Hipótesis | Seis hipótesis separadas de los hechos, incluido `qr-phishing-suspected` |
 | Decisión | `allow`, `confirm`, `inspectOnly` o `block`; nunca “seguro” |
-| Interfaz | Puntaje, ids técnicos, evidencia, hipótesis, límites y confirmación antes de actuar. Cinco estados visibles de cámara, incluida la confirmación explícita `Código leído` |
+| Interfaz | Puntaje, ids técnicos, evidencia, hipótesis, límites y confirmación antes de actuar. Cinco estados visibles de cámara, incluida la confirmación explícita `Código leído`; el generador diferencia contenido e imagen y descarga PNG/SVG en web |
 | Evidencia | `rootcause.evidence.qr.v1`, SHA-256 de carga, checksum no autenticado del paquete, redacción por defecto y enlace opcional a un hash anterior |
 | Datos | Historial/inventario cifrados con AES-256-GCM, llave en almacenamiento seguro, recuperación y modo temporal |
 | Compatibilidad | Importa respaldos de RootCause QR Inspector y Universal Code Scanner; recalcula campos derivados de entradas no confiables |
@@ -26,10 +26,10 @@
 - 88 casos Dart/Flutter declarados (87 los ejecuta `flutter test`; uno es de
   integración y requiere dispositivo).
 
-El análisis estático y las pruebas los ejecuta la CI pública; no se ejecutaron
-en el entorno de ensamblado de 0.1.1, que no tiene Flutter instalado. La
-evidencia y los enlaces de las ejecuciones públicas se registran en
-[`VALIDATION.md`](VALIDATION.md).
+Para 0.1.2 se ejecutaron localmente análisis estático, las 87 pruebas de
+`test/`, compilación web release y una prueba funcional de descarga PNG/SVG en
+localhost. La CI pública repite los gates y genera el APK desde el tag. La
+evidencia y los límites se registran en [`VALIDATION.md`](VALIDATION.md).
 
 ## Parcial y declarado
 
