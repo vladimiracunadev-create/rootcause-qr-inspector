@@ -14,6 +14,7 @@ Future<void> main() async {
   installGlobalErrorHandlers();
   runZonedGuarded<void>(
     () => runApp(const BootstrapHost()),
-    (Object error, StackTrace stack) => AppDiagnostics.instance.record(error, stack, area: 'root_zone'),
+    (Object error, StackTrace stack) =>
+        AppDiagnostics.instance.record(error, stack, area: 'root_zone'),
   );
 }

@@ -7,28 +7,38 @@ import 'package:rootcause_qr_inspector/core/security/payload_cipher.dart';
 import 'package:rootcause_qr_inspector/features/recovery/recovery_screen.dart';
 
 void main() {
-  testWidgets('recovery center remains accessible with enlarged text', (WidgetTester tester) async {
+  testWidgets('recovery center remains accessible with enlarged text', (
+    WidgetTester tester,
+  ) async {
     // The database and its readers rely on real timers, so they must be driven
     // outside the fake-async clock used by testWidgets.
     late final AppDatabase database;
     late final RecoveryService service;
     await tester.runAsync(() async {
       database = await AppDatabase.openTemporary();
-      final PayloadCipher cipher = PayloadCipher(keyProvider: MemoryEncryptionKeyProvider());
+      final PayloadCipher cipher = PayloadCipher(
+        keyProvider: MemoryEncryptionKeyProvider(),
+      );
       final RecoveryRepository repository = RecoveryRepository(database);
       service = RecoveryService(database, cipher, repository);
     });
     addTearDown(() => tester.runAsync(database.close));
 
-    await tester.pumpWidget(MaterialApp(
-      builder: (BuildContext context, Widget? child) => MediaQuery(
-        data: MediaQuery.of(context).copyWith(textScaler: const TextScaler.linear(2)),
-        child: child!,
+    await tester.pumpWidget(
+      MaterialApp(
+        builder: (BuildContext context, Widget? child) => MediaQuery(
+          data: MediaQuery.of(
+            context,
+          ).copyWith(textScaler: const TextScaler.linear(2)),
+          child: child!,
+        ),
+        home: RecoveryScreen(service: service),
       ),
-      home: RecoveryScreen(service: service),
-    ));
+    );
     // Let the pending read finish in real time before rebuilding and asserting.
-    await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 200)));
+    await tester.runAsync(
+      () => Future<void>.delayed(const Duration(milliseconds: 200)),
+    );
     await tester.pumpAndSettle();
 
     expect(find.text('Centro de recuperación'), findsOneWidget);

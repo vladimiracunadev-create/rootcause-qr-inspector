@@ -24,20 +24,20 @@ class MobileScannerEngine implements ScannerEngine {
     required bool torchEnabled,
     Size cameraResolution = inspectionResolution,
   }) : _controller = MobileScannerController(
-          // `noDuplicates` told the platform to emit a value once and never
-          // again until a *different* code appeared. As the controller
-          // survives stop/start, presenting the same QR after closing its
-          // result produced no event at all: the application looked dead. The
-          // repetition filter now lives in the screen, where it can also
-          // explain itself to the person using it.
-          detectionSpeed: DetectionSpeed.normal,
-          cameraResolution: cameraResolution,
-          formats: const <BarcodeFormat>[],
-          invertImage: true,
-          autoZoom: true,
-          torchEnabled: torchEnabled,
-          returnImage: false,
-        );
+         // `noDuplicates` told the platform to emit a value once and never
+         // again until a *different* code appeared. As the controller
+         // survives stop/start, presenting the same QR after closing its
+         // result produced no event at all: the application looked dead. The
+         // repetition filter now lives in the screen, where it can also
+         // explain itself to the person using it.
+         detectionSpeed: DetectionSpeed.normal,
+         cameraResolution: cameraResolution,
+         formats: const <BarcodeFormat>[],
+         invertImage: true,
+         autoZoom: true,
+         torchEnabled: torchEnabled,
+         returnImage: false,
+       );
 
   /// Resolution requested for the inspection camera.
   ///
@@ -62,7 +62,8 @@ class MobileScannerEngine implements ScannerEngine {
   @override
   ValueListenable<MobileScannerState> get state => _controller;
   @override
-  Future<BarcodeCapture?> analyzeImage(String path) => _controller.analyzeImage(path);
+  Future<BarcodeCapture?> analyzeImage(String path) =>
+      _controller.analyzeImage(path);
   @override
   Future<void> dispose() => _controller.dispose();
   @override

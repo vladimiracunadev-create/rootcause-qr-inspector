@@ -8,18 +8,23 @@ import 'package:flutter/foundation.dart';
 /// arrastrar una ruta de archivo, una consulta o un valor introducido por la
 /// persona usuaria.
 class DiagnosticEntry {
-  const DiagnosticEntry({required this.at, required this.area, required this.errorType, required this.stackFingerprint});
+  const DiagnosticEntry({
+    required this.at,
+    required this.area,
+    required this.errorType,
+    required this.stackFingerprint,
+  });
   final DateTime at;
   final String area;
   final String errorType;
   final String stackFingerprint;
 
   Map<String, Object?> toJson() => <String, Object?>{
-        'at': at.toIso8601String(),
-        'area': area,
-        'errorType': errorType,
-        'stackFingerprint': stackFingerprint,
-      };
+    'at': at.toIso8601String(),
+    'area': area,
+    'errorType': errorType,
+    'stackFingerprint': stackFingerprint,
+  };
 }
 
 /// Stores only technical metadata. Scan payloads and user-entered values are never accepted.
@@ -29,28 +34,44 @@ class AppDiagnostics extends ChangeNotifier {
   static const int maxEntries = 100;
 
   final List<DiagnosticEntry> _entries = <DiagnosticEntry>[];
-  List<DiagnosticEntry> get entries => List<DiagnosticEntry>.unmodifiable(_entries);
+  List<DiagnosticEntry> get entries =>
+      List<DiagnosticEntry>.unmodifiable(_entries);
 
   void record(Object error, StackTrace stack, {required String area}) {
     final String stackText = stack.toString();
-    final int fingerprint = Object.hash(error.runtimeType.toString(), stackText.split('\n').take(4).join('|'));
-    _entries.insert(0, DiagnosticEntry(
-      at: DateTime.now().toUtc(),
-      area: _sanitize(area),
-      errorType: error.runtimeType.toString(),
-      stackFingerprint: fingerprint.toUnsigned(32).toRadixString(16).padLeft(8, '0'),
-    ));
-    if (_entries.length > maxEntries) _entries.removeRange(maxEntries, _entries.length);
+    final int fingerprint = Object.hash(
+      error.runtimeType.toString(),
+      stackText.split('\n').take(4).join('|'),
+    );
+    _entries.insert(
+      0,
+      DiagnosticEntry(
+        at: DateTime.now().toUtc(),
+        area: _sanitize(area),
+        errorType: error.runtimeType.toString(),
+        stackFingerprint: fingerprint
+            .toUnsigned(32)
+            .toRadixString(16)
+            .padLeft(8, '0'),
+      ),
+    );
+    if (_entries.length > maxEntries) {
+      _entries.removeRange(maxEntries, _entries.length);
+    }
     notifyListeners();
   }
 
-  String exportJson() => const JsonEncoder.withIndent('  ').convert(<String, Object?>{
-        'application': 'RootCause QR Inspector',
-        'schemaVersion': 1,
-        'generatedAt': DateTime.now().toUtc().toIso8601String(),
-        'privacy': 'No scan payloads, URLs, passwords, one-time codes, notes or inventory values are included.',
-        'entries': _entries.map((DiagnosticEntry entry) => entry.toJson()).toList(growable: false),
-      });
+  String
+  exportJson() => const JsonEncoder.withIndent('  ').convert(<String, Object?>{
+    'application': 'RootCause QR Inspector',
+    'schemaVersion': 1,
+    'generatedAt': DateTime.now().toUtc().toIso8601String(),
+    'privacy':
+        'No scan payloads, URLs, passwords, one-time codes, notes or inventory values are included.',
+    'entries': _entries
+        .map((DiagnosticEntry entry) => entry.toJson())
+        .toList(growable: false),
+  });
 
   void clear() {
     _entries.clear();
@@ -71,12 +92,15 @@ class AppDiagnostics extends ChangeNotifier {
 /// porque el objetivo es registrar y continuar, no terminar el proceso.
 void installGlobalErrorHandlers() {
   FlutterError.onError = (FlutterErrorDetails details) {
-    AppDiagnostics.instance.record(details.exception, details.stack ?? StackTrace.current, area: 'flutter');
+    AppDiagnostics.instance.record(
+      details.exception,
+      details.stack ?? StackTrace.current,
+      area: 'flutter',
+    );
     FlutterError.presentError(details);
   };
   PlatformDispatcher.instance.onError = (Object error, StackTrace stack) {
     AppDiagnostics.instance.record(error, stack, area: 'platform');
     return true;
   };
-
 }

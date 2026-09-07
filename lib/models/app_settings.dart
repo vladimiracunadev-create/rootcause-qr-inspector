@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rootcause_qr_inspector/core/feature_flags/feature_flags.dart';
 
-enum AppLanguage { system, esCl, es, en }
+enum AppLanguage { system, esCl, es, en, fr, de }
 
 /// Preferencias del usuario, inmutables y sin datos sensibles.
 ///
@@ -62,11 +62,13 @@ class AppSettings {
   final FeatureFlags featureFlags;
 
   Locale? get locale => switch (language) {
-        AppLanguage.system => null,
-        AppLanguage.esCl => const Locale('es', 'CL'),
-        AppLanguage.es => const Locale('es'),
-        AppLanguage.en => const Locale('en'),
-      };
+    AppLanguage.system => null,
+    AppLanguage.esCl => const Locale('es', 'CL'),
+    AppLanguage.es => const Locale('es'),
+    AppLanguage.en => const Locale('en'),
+    AppLanguage.fr => const Locale('fr'),
+    AppLanguage.de => const Locale('de'),
+  };
 
   AppSettings copyWith({
     ThemeMode? themeMode,
@@ -87,22 +89,22 @@ class AppSettings {
     int? historyRetentionDays,
     FeatureFlags? featureFlags,
   }) => AppSettings(
-        themeMode: themeMode ?? this.themeMode,
-        language: language ?? this.language,
-        soundEnabled: soundEnabled ?? this.soundEnabled,
-        vibrationEnabled: vibrationEnabled ?? this.vibrationEnabled,
-        saveHistory: saveHistory ?? this.saveHistory,
-        privateMode: privateMode ?? this.privateMode,
-        autoTorch: autoTorch ?? this.autoTorch,
-        useScanWindow: useScanWindow ?? this.useScanWindow,
-        confirmBeforeOpen: confirmBeforeOpen ?? this.confirmBeforeOpen,
-        hideSensitiveValues: hideSensitiveValues ?? this.hideSensitiveValues,
-        biometricLock: biometricLock ?? this.biometricLock,
-        highContrast: highContrast ?? this.highContrast,
-        largeControls: largeControls ?? this.largeControls,
-        reduceMotion: reduceMotion ?? this.reduceMotion,
-        clearClipboardSeconds: clearClipboardSeconds ?? this.clearClipboardSeconds,
-        historyRetentionDays: historyRetentionDays ?? this.historyRetentionDays,
-        featureFlags: featureFlags ?? this.featureFlags,
-      );
+    themeMode: themeMode ?? this.themeMode,
+    language: language ?? this.language,
+    soundEnabled: soundEnabled ?? this.soundEnabled,
+    vibrationEnabled: vibrationEnabled ?? this.vibrationEnabled,
+    saveHistory: saveHistory ?? this.saveHistory,
+    privateMode: privateMode ?? this.privateMode,
+    autoTorch: autoTorch ?? this.autoTorch,
+    useScanWindow: useScanWindow ?? this.useScanWindow,
+    confirmBeforeOpen: confirmBeforeOpen ?? this.confirmBeforeOpen,
+    hideSensitiveValues: hideSensitiveValues ?? this.hideSensitiveValues,
+    biometricLock: biometricLock ?? this.biometricLock,
+    highContrast: highContrast ?? this.highContrast,
+    largeControls: largeControls ?? this.largeControls,
+    reduceMotion: reduceMotion ?? this.reduceMotion,
+    clearClipboardSeconds: clearClipboardSeconds ?? this.clearClipboardSeconds,
+    historyRetentionDays: historyRetentionDays ?? this.historyRetentionDays,
+    featureFlags: featureFlags ?? this.featureFlags,
+  );
 }

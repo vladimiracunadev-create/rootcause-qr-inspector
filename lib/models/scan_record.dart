@@ -49,21 +49,31 @@ class ScanRecord {
     this.notes = '',
   });
 
-  factory ScanRecord.fromBarcode(Barcode barcode, {required String source, DateTime? scannedAt}) {
+  factory ScanRecord.fromBarcode(
+    Barcode barcode, {
+    required String source,
+    DateTime? scannedAt,
+  }) {
     final DateTime timestamp = scannedAt ?? DateTime.now();
     final String raw = payloadForBarcode(barcode);
     final Uint8List? binaryBytes = _decodedBytes(barcode.rawDecodedBytes);
-    final String readable = (barcode.displayValue ?? barcode.rawValue ?? '').trim();
+    final String readable = (barcode.displayValue ?? barcode.rawValue ?? '')
+        .trim();
     final String display = readable.isNotEmpty
         ? readable
-        : binaryBytes == null ? raw : 'Datos binarios (${binaryBytes.length} bytes)\n$raw';
+        : binaryBytes == null
+        ? raw
+        : 'Datos binarios (${binaryBytes.length} bytes)\n$raw';
     final ParsedContent parsed = ContentParserRegistry.instance.parse(raw);
     final SecurityAssessment assessment = ScanSecurityAnalyzer.analyze(
       raw,
       parsed: parsed,
       analyzedAt: timestamp,
     );
-    final String digest = sha256.convert(utf8.encode('$raw|${timestamp.microsecondsSinceEpoch}')).toString().substring(0, 20);
+    final String digest = sha256
+        .convert(utf8.encode('$raw|${timestamp.microsecondsSinceEpoch}'))
+        .toString()
+        .substring(0, 20);
     return ScanRecord(
       id: digest,
       rawValue: raw,
@@ -80,7 +90,11 @@ class ScanRecord {
     );
   }
 
-  factory ScanRecord.manual({required String rawValue, required String format, required String source}) {
+  factory ScanRecord.manual({
+    required String rawValue,
+    required String format,
+    required String source,
+  }) {
     final DateTime now = DateTime.now();
     final ParsedContent parsed = ContentParserRegistry.instance.parse(rawValue);
     final SecurityAssessment assessment = ScanSecurityAnalyzer.analyze(
@@ -88,7 +102,10 @@ class ScanRecord {
       parsed: parsed,
       analyzedAt: now,
     );
-    final String id = sha256.convert(utf8.encode('$rawValue|${now.microsecondsSinceEpoch}')).toString().substring(0, 20);
+    final String id = sha256
+        .convert(utf8.encode('$rawValue|${now.microsecondsSinceEpoch}'))
+        .toString()
+        .substring(0, 20);
     return ScanRecord(
       id: id,
       rawValue: rawValue,
@@ -121,7 +138,9 @@ class ScanRecord {
 
   static Uint8List? _decodedBytes(BarcodeBytes? value) {
     if (value is DecodedBarcodeBytes) return value.bytes;
-    if (value is DecodedVisionBarcodeBytes) return value.bytes ?? value.rawBytes;
+    if (value is DecodedVisionBarcodeBytes) {
+      return value.bytes ?? value.rawBytes;
+    }
     return null;
   }
 
@@ -133,10 +152,15 @@ class ScanRecord {
     final DateTime scannedAt =
         DateTime.tryParse(json['scannedAt'] as String? ?? '') ?? DateTime.now();
     final ParsedContent parsed = json['parsed'] is Map
-        ? ParsedContent.fromJson(Map<String, dynamic>.from(json['parsed'] as Map))
+        ? ParsedContent.fromJson(
+            Map<String, dynamic>.from(json['parsed'] as Map),
+          )
         : ContentParserRegistry.instance.parse(raw);
-    final QrInvestigation investigation = trustDerivedAnalysis && json['investigation'] is Map
-        ? QrInvestigation.fromJson(Map<String, dynamic>.from(json['investigation'] as Map))
+    final QrInvestigation investigation =
+        trustDerivedAnalysis && json['investigation'] is Map
+        ? QrInvestigation.fromJson(
+            Map<String, dynamic>.from(json['investigation'] as Map),
+          )
         : ScanSecurityAnalyzer.analyze(
             raw,
             parsed: parsed,
@@ -147,15 +171,18 @@ class ScanRecord {
       QrSeverity.warning => RiskLevel.caution,
       QrSeverity.critical => RiskLevel.high,
     };
-    final bool canOpen = investigation.effectiveUri != null &&
+    final bool canOpen =
+        investigation.effectiveUri != null &&
         investigation.action != QrActionDecision.block;
     return ScanRecord(
       id: trustDerivedAnalysis
           ? json['id'] as String
           : sha256
-              .convert(utf8.encode('$raw|${scannedAt.microsecondsSinceEpoch}'))
-              .toString()
-              .substring(0, 20),
+                .convert(
+                  utf8.encode('$raw|${scannedAt.microsecondsSinceEpoch}'),
+                )
+                .toString()
+                .substring(0, 20),
       rawValue: raw,
       displayValue: json['displayValue'] as String? ?? raw,
       format: json['format'] as String? ?? 'Desconocido',
@@ -170,7 +197,8 @@ class ScanRecord {
       parsed: parsed,
       investigation: investigation,
       favorite: json['favorite'] as bool? ?? false,
-      tags: (json['tags'] as List<dynamic>? ?? const <dynamic>[]).cast<String>(),
+      tags: (json['tags'] as List<dynamic>? ?? const <dynamic>[])
+          .cast<String>(),
       notes: json['notes'] as String? ?? '',
     );
   }
@@ -193,7 +221,8 @@ class ScanRecord {
 
   bool get isSensitive => parsed.sensitive;
 
-  ScanRecord copyWith({bool? favorite, List<String>? tags, String? notes}) => ScanRecord(
+  ScanRecord copyWith({bool? favorite, List<String>? tags, String? notes}) =>
+      ScanRecord(
         id: id,
         rawValue: rawValue,
         displayValue: displayValue,
@@ -212,20 +241,20 @@ class ScanRecord {
       );
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'id': id,
-        'rawValue': rawValue,
-        'displayValue': displayValue,
-        'format': format,
-        'contentType': contentType,
-        'scannedAt': scannedAt.toUtc().toIso8601String(),
-        'source': source,
-        'riskLevel': riskLevel.name,
-        'riskReasons': riskReasons,
-        'canOpen': canOpen,
-        'parsed': parsed.toJson(),
-        'investigation': investigation.toJson(),
-        'favorite': favorite,
-        'tags': tags,
-        'notes': notes,
-      };
+    'id': id,
+    'rawValue': rawValue,
+    'displayValue': displayValue,
+    'format': format,
+    'contentType': contentType,
+    'scannedAt': scannedAt.toUtc().toIso8601String(),
+    'source': source,
+    'riskLevel': riskLevel.name,
+    'riskReasons': riskReasons,
+    'canOpen': canOpen,
+    'parsed': parsed.toJson(),
+    'investigation': investigation.toJson(),
+    'favorite': favorite,
+    'tags': tags,
+    'notes': notes,
+  };
 }

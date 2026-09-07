@@ -1,6 +1,6 @@
-# Estado de implementación · 0.1.2
+# Estado de implementación · 0.1.3
 
-## Evolución de inspección de archivos (no publicada)
+## Mejoras incluidas en 0.1.3
 
 | Capacidad | Estado verificable |
 |---|---|
@@ -8,11 +8,14 @@
 | Una o varias imágenes | **IMPLEMENTADA:** coordinador nativo, límite de 20 y 50 MiB por archivo; lógica y build Android verificados, fixture nativo pendiente |
 | PDF multipágina | **IMPLEMENTADA:** límite de 50, total/truncación visibles, cancelación y limpieza probadas; fixture renderizado, decodificación en dispositivo pendiente |
 | Destino semántico y host real | **VERIFICADO:** contratos existentes, pruebas unitarias y widget al 200 %; un resultado bloqueado no expone acción externa |
-| Cámara, historial y acción externa | **SIN REGRESIONES EN SUITE:** se reutilizan motor, persistencia selectiva y política existentes; 102 pruebas aprobadas |
+| Cámara, historial y acción externa | **SIN REGRESIONES EN SUITE:** se reutilizan motor, persistencia selectiva y política existentes; 103 pruebas aprobadas |
 | Decodificación en web | **PLANIFICADO:** `mobile_scanner 7.4.0` no implementa `analyzeImage` web; la UI no afirma soporte |
+| Idiomas | **IMPLEMENTADO:** sistema, español de Chile/internacional, inglés, francés y alemán; datos de usuario y cargas no se traducen |
+| Ayuda de pestañas | **IMPLEMENTADA:** guía de las cinco superficies y tutorial contextual de Inventario, probado a 320 px y texto al 160 % |
 
-La versión permanece en `0.1.2+3`. No se preparará `0.1.3` hasta completar
-la validación funcional de fixtures en un dispositivo Android.
+La versión es `0.1.3+4`. La validación funcional de la matriz completa de
+fixtures en hardware Android continúa pendiente y se declara como límite; no
+impide publicar mejoras que ya pasan los gates automatizados del producto.
 
 ## Operativo en el código fuente
 
@@ -23,7 +26,7 @@ la validación funcional de fixtures en un dispositivo Android.
 | Investigación | Motor local puro con 26 reglas, ids estables, severidad, puntos, confianza y evidencia mínima |
 | Hipótesis | Seis hipótesis separadas de los hechos, incluido `qr-phishing-suspected` |
 | Decisión | `allow`, `confirm`, `inspectOnly` o `block`; nunca “seguro” |
-| Interfaz | Puntaje, ids técnicos, evidencia, hipótesis, límites y confirmación antes de actuar. Cinco estados visibles de cámara, incluida la confirmación explícita `Código leído`; el generador diferencia contenido e imagen y descarga PNG/SVG en web |
+| Interfaz | Puntaje, ids técnicos, evidencia, hipótesis, límites y confirmación antes de actuar. Cinco estados visibles de cámara, incluida la confirmación explícita `Código leído`; selector de cuatro idiomas, guía de pestañas e Inventario explicado; el generador diferencia contenido e imagen y descarga PNG/SVG en web |
 | Evidencia | `rootcause.evidence.qr.v1`, SHA-256 de carga, checksum no autenticado del paquete, redacción por defecto y enlace opcional a un hash anterior |
 | Datos | Historial/inventario cifrados con AES-256-GCM, llave en almacenamiento seguro, recuperación y modo temporal |
 | Compatibilidad | Importa respaldos de RootCause QR Inspector y Universal Code Scanner; recalcula campos derivados de entradas no confiables |
@@ -37,13 +40,11 @@ la validación funcional de fixtures en un dispositivo Android.
 - redacción verificada para impedir que `effectiveUri` reconstruya la carga;
 - frase obligatoria para resultados normales;
 - YAML, JSON, imports, enlaces, SBOM, versión y lockfile.
-- 103 casos Dart/Flutter declarados (102 los ejecuta `flutter test`; uno es de
+- 104 casos Dart/Flutter declarados (103 los ejecuta `flutter test`; uno es de
   integración y requiere dispositivo).
 
-Para la línea base publicada 0.1.2 se ejecutaron análisis estático, 87 pruebas de
-`test/`, compilación web release y una prueba funcional de descarga PNG/SVG en
-localhost. El addendum no publicado eleva la suite local a 102 y también pasa
-web/APK release. La evidencia y los límites se registran en
+Para 0.1.3 se ejecutan análisis estático, 103 pruebas de `test/`, compilación
+web release y APK release. La evidencia y los límites se registran en
 [`VALIDATION.md`](VALIDATION.md).
 
 ## Parcial y declarado
@@ -58,8 +59,6 @@ web/APK release. La evidencia y los límites se registran en
 - **Integridad:** cada export tiene hash propio y puede enlazar manualmente el
   hash anterior; no es firma/MAC y el historial no construye automáticamente
   una cadena forense.
-- **Idioma:** interfaz en español; la infraestructura de localización heredada
-  no cubre todavía todos los textos nuevos.
 
 ## Requiere validación en hardware y distribución
 

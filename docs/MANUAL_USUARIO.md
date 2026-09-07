@@ -21,9 +21,9 @@ Los PDF mayores de 50 páginas muestran el total y dejan claro que solo se
 inspeccionan las primeras 50. En web esta capacidad está **PLANIFICADA**.
 
 Para Android 7 o posterior, descarga el APK público desde
-[`GitHub Release v0.1.2`](https://github.com/vladimiracunadev-create/rootcause-qr-inspector/releases/tag/v0.1.2)
+[`GitHub Release v0.1.3`](https://github.com/vladimiracunadev-create/rootcause-qr-inspector/releases/tag/v0.1.3)
 o usa la
-[`descarga directa`](https://github.com/vladimiracunadev-create/rootcause-qr-inspector/releases/download/v0.1.2/rootcause-qr-inspector-v0.1.2-android.apk).
+[`descarga directa`](https://github.com/vladimiracunadev-create/rootcause-qr-inspector/releases/download/v0.1.3/rootcause-qr-inspector-v0.1.3-android.apk).
 Android puede pedir autorización para instalar desde el navegador o gestor de
 archivos usado. El Release incluye el archivo `.sha256` para comprobar la
 descarga.
@@ -86,8 +86,27 @@ teniendo un límite físico.
 
 ### Inventario
 
-Agrupa conteos en una sesión local. Sirve para operación y trazabilidad; no
-convierte los códigos en una base remota.
+Agrupa conteos en una sesión local. Sirve para contar unidades físicas y
+trazarlas sin convertir los códigos en una base remota. Un **código único** es
+un producto distinto; una **unidad** es cada caja, envase o artículo que
+escaneas, aunque varias unidades compartan exactamente el mismo código.
+
+1. Abre **Inventario** y toca **Cómo usar Inventario** cuando necesites volver
+   a ver la explicación dentro de la aplicación.
+2. Escribe un nombre reconocible, por ejemplo “Bodega central agosto”, y toca
+   **Iniciar inventario**.
+3. Escanea cada unidad física. Diez cajas con el mismo código deben sumar diez
+   unidades y un solo código único.
+4. Revisa la cantidad de cada producto, agrega una nota si hace falta y elimina
+   una entrada incorrecta antes de cerrar.
+5. Toca **Cerrar sesión** al terminar. La sesión queda guardada y puede
+   exportarse como CSV, JSON o Excel XLSX, pero ya no recibe nuevas lecturas a
+   menos que la reabras.
+
+**Importar JSON** muestra una vista previa y crea una copia; no sustituye una
+sesión existente de forma silenciosa. El inventario se cifra localmente cuando
+la persistencia está activa y se elimina al cerrar la aplicación en modo
+temporal.
 
 ### Generar
 
@@ -113,7 +132,17 @@ contraseña y URLs que parecen incluir secretos no se guardan automáticamente.
 ### Ajustes
 
 Controla confirmación, retención, tema, accesibilidad, biometría y mantenimiento
-de datos. El modo temporal evita conservar historial e inventarios al cerrar.
+de datos. En **Idioma** puedes seguir el idioma del sistema o elegir español de
+Chile, español internacional, inglés, francés o alemán. El cambio es inmediato
+y la preferencia permanece en el dispositivo. Las cargas escaneadas, nombres y
+notas escritos por la persona no se traducen ni modifican.
+
+**Guía rápida de la aplicación** abre una pantalla que resume Inspeccionar,
+Inventario, Generar, Historial y Ajustes. La tarjeta de Inventario incluye los
+cuatro pasos operativos y también puede abrirse desde el icono de ayuda de esa
+pestaña.
+
+El modo temporal evita conservar historial e inventarios al cerrar.
 
 ## Evidencia y exportaciones
 

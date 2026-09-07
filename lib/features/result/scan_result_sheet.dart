@@ -4,6 +4,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:rootcause_qr_inspector/core/localization/app_localizations.dart';
 import 'package:rootcause_qr_inspector/core/investigation/qr_evidence_exporter.dart';
 import 'package:rootcause_qr_inspector/core/investigation/qr_finding_text.dart';
 import 'package:rootcause_qr_inspector/core/investigation/qr_investigation.dart';
@@ -74,7 +75,7 @@ class ScanResultsSheet extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        Text(
+                        AppText(
                           'INSPECCIÓN COMPLETADA',
                           style: Theme.of(context).textTheme.labelSmall
                               ?.copyWith(
@@ -83,7 +84,7 @@ class ScanResultsSheet extends StatelessWidget {
                                 letterSpacing: 1.15,
                               ),
                         ),
-                        Text(
+                        AppText(
                           records.length == 1
                               ? 'Resultado de seguridad QR'
                               : '${records.length} resultados de seguridad QR',
@@ -95,7 +96,7 @@ class ScanResultsSheet extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 6),
-              Text(
+              AppText(
                 'RootCause separa lo observado de lo que todavía debes comprobar.',
                 style: TextStyle(
                   color: Theme.of(context).colorScheme.onSurfaceVariant,
@@ -114,7 +115,7 @@ class ScanResultsSheet extends StatelessWidget {
               FilledButton.icon(
                 onPressed: () => Navigator.of(context).pop(),
                 icon: const Icon(Icons.qr_code_scanner),
-                label: const Text('Inspeccionar otro QR'),
+                label: const AppText('Inspeccionar otro QR'),
               ),
             ],
           ),
@@ -210,7 +211,7 @@ class _ScanRecordCardState extends State<ScanRecordCard> {
               _RiskBanner(record: record),
             ],
             const SizedBox(height: 16),
-            Text(
+            AppText(
               'CONTENIDO OBSERVADO',
               style: Theme.of(context).textTheme.labelSmall?.copyWith(
                 color: Theme.of(context).colorScheme.primary,
@@ -254,7 +255,7 @@ class _ScanRecordCardState extends State<ScanRecordCard> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text(
+                    AppText(
                       field.key,
                       style: Theme.of(context).textTheme.labelMedium?.copyWith(
                         fontWeight: FontWeight.w700,
@@ -276,23 +277,23 @@ class _ScanRecordCardState extends State<ScanRecordCard> {
                   OutlinedButton.icon(
                     onPressed: () => _copy(context),
                     icon: const Icon(Icons.copy_outlined),
-                    label: const Text('Copiar'),
+                    label: const AppText('Copiar'),
                   ),
                   OutlinedButton.icon(
                     onPressed: () => unawaited(_shareRecord(context)),
                     icon: const Icon(Icons.share_outlined),
-                    label: const Text('Compartir'),
+                    label: const AppText('Compartir'),
                   ),
                   OutlinedButton.icon(
                     onPressed: () => unawaited(_shareEvidence()),
                     icon: const Icon(Icons.fact_check_outlined),
-                    label: const Text('Evidencia'),
+                    label: const AppText('Evidencia'),
                   ),
                   if (_actionUri(record) != null)
                     FilledButton.icon(
                       onPressed: () => unawaited(_openRecord(context)),
                       icon: const Icon(Icons.open_in_new),
-                      label: Text(
+                      label: AppText(
                         '${_actionLabel(record.parsed.kind)} con confirmación',
                       ),
                     ),
@@ -312,19 +313,19 @@ class _ScanRecordCardState extends State<ScanRecordCard> {
             context: context,
             builder: (BuildContext dialogContext) => AlertDialog(
               icon: const Icon(Icons.content_paste_go_outlined),
-              title: const Text('Copiar carga sensible'),
-              content: const Text(
+              title: const AppText('Copiar carga sensible'),
+              content: const AppText(
                 'El portapapeles puede quedar visible para otras aplicaciones. '
                 'RootCause copiará el valor completo y aplicará el tiempo de borrado configurado.',
               ),
               actions: <Widget>[
                 TextButton(
                   onPressed: () => Navigator.of(dialogContext).pop(false),
-                  child: const Text('Cancelar'),
+                  child: const AppText('Cancelar'),
                 ),
                 FilledButton(
                   onPressed: () => Navigator.of(dialogContext).pop(true),
-                  child: const Text('Copiar'),
+                  child: const AppText('Copiar'),
                 ),
               ],
             ),
@@ -341,7 +342,7 @@ class _ScanRecordCardState extends State<ScanRecordCard> {
       final int seconds = widget.settings.value.clearClipboardSeconds;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(
+          content: AppText(
             seconds <= 0
                 ? 'Contenido copiado.'
                 : 'Contenido copiado; se borrará en $seconds segundos.',
@@ -358,18 +359,18 @@ class _ScanRecordCardState extends State<ScanRecordCard> {
             context: context,
             builder: (BuildContext dialogContext) => AlertDialog(
               icon: const Icon(Icons.privacy_tip_outlined),
-              title: const Text('Compartir información sensible'),
-              content: const Text(
+              title: const AppText('Compartir información sensible'),
+              content: const AppText(
                 'El contenido puede incluir contraseñas, secretos, información de pago o identificación. Revisa el destino antes de compartir.',
               ),
               actions: <Widget>[
                 TextButton(
                   onPressed: () => Navigator.of(dialogContext).pop(false),
-                  child: const Text('Cancelar'),
+                  child: const AppText('Cancelar'),
                 ),
                 FilledButton(
                   onPressed: () => Navigator.of(dialogContext).pop(true),
-                  child: const Text('Compartir'),
+                  child: const AppText('Compartir'),
                 ),
               ],
             ),
@@ -432,8 +433,8 @@ class _ScanRecordCardState extends State<ScanRecordCard> {
                     ? Icons.warning_amber_rounded
                     : Icons.open_in_new,
               ),
-              title: const Text('Confirmar acción'),
-              content: Text(
+              title: const AppText('Confirmar acción'),
+              content: AppText(
                 record.riskLevel == RiskLevel.high
                     ? 'RootCause observó señales críticas (${record.investigation.score}/100). Comprueba el dominio con una fuente independiente antes de continuar.'
                     : 'La aplicación abrirá este contenido mediante una aplicación externa. Revisa los datos antes de continuar.',
@@ -441,11 +442,11 @@ class _ScanRecordCardState extends State<ScanRecordCard> {
               actions: <Widget>[
                 TextButton(
                   onPressed: () => Navigator.of(dialogContext).pop(false),
-                  child: const Text('Cancelar'),
+                  child: const AppText('Cancelar'),
                 ),
                 FilledButton(
                   onPressed: () => Navigator.of(dialogContext).pop(true),
-                  child: const Text('Continuar'),
+                  child: const AppText('Continuar'),
                 ),
               ],
             ),
@@ -461,7 +462,7 @@ class _ScanRecordCardState extends State<ScanRecordCard> {
       if (!opened && context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text(
+            content: AppText(
               'No existe una aplicación compatible para esta acción.',
             ),
           ),
@@ -470,7 +471,9 @@ class _ScanRecordCardState extends State<ScanRecordCard> {
     } on Object {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('No fue posible abrir el contenido.')),
+          const SnackBar(
+            content: AppText('No fue posible abrir el contenido.'),
+          ),
         );
       }
     }
@@ -554,18 +557,20 @@ class _BatchSummary extends StatelessWidget {
           spacing: 16,
           runSpacing: 8,
           children: <Widget>[
-            if (summary != null) Text('Archivos: ${summary!.files}'),
+            if (summary != null) AppText('Archivos: ${summary!.files}'),
             if ((summary?.pagesInspected ?? 0) > 0)
-              Text('Páginas inspeccionadas: ${summary!.pagesInspected}'),
+              AppText('Páginas inspeccionadas: ${summary!.pagesInspected}'),
             if ((summary?.totalPages ?? 0) > (summary?.pagesInspected ?? 0))
-              Text('Páginas totales: ${summary!.totalPages} · límite aplicado'),
-            Text('Códigos: ${records.length}'),
-            Text('Únicos: ${unique.length}'),
+              AppText(
+                'Páginas totales: ${summary!.totalPages} · límite aplicado',
+              ),
+            AppText('Códigos: ${records.length}'),
+            AppText('Únicos: ${unique.length}'),
             if ((summary?.unitsWithoutCodes ?? 0) > 0)
-              Text('Sin código legible: ${summary!.unitsWithoutCodes}'),
-            Text('Sin hallazgos locales: $normal'),
-            Text('Advertencia: $warning'),
-            Text('Críticos: $critical'),
+              AppText('Sin código legible: ${summary!.unitsWithoutCodes}'),
+            AppText('Sin hallazgos locales: $normal'),
+            AppText('Advertencia: $warning'),
+            AppText('Críticos: $critical'),
           ],
         ),
       ),
@@ -605,7 +610,7 @@ class _ResolvedTargetPanel extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            Text(
+            AppText(
               'DESTINO INTERPRETADO',
               style: Theme.of(context).textTheme.labelSmall?.copyWith(
                 color: colors.primary,
@@ -646,7 +651,7 @@ class _ResolvedTargetPanel extends StatelessWidget {
               value: QrFindingText.actionLabel(action),
             ),
             const SizedBox(height: 2),
-            Text(
+            AppText(
               'No se ha navegado ni resuelto una redirección remota.',
               style: Theme.of(
                 context,
@@ -687,7 +692,7 @@ class _TargetValue extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Text(label, style: Theme.of(context).textTheme.labelSmall),
+          AppText(label, style: Theme.of(context).textTheme.labelSmall),
           if (selectable)
             SelectableText(value, style: valueStyle)
           else
@@ -731,12 +736,12 @@ class _SecurityResultHeader extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Text(
+              AppText(
                 record.parsed.title,
                 style: Theme.of(context).textTheme.titleMedium,
               ),
               const SizedBox(height: 2),
-              Text(
+              AppText(
                 '${record.format} · ${record.source}',
                 style: Theme.of(context).textTheme.labelMedium?.copyWith(
                   color: colors.onSurfaceVariant,
@@ -744,7 +749,7 @@ class _SecurityResultHeader extends StatelessWidget {
               ),
               if (record.parsed.summary?.isNotEmpty == true) ...<Widget>[
                 const SizedBox(height: 5),
-                Text(
+                AppText(
                   record.parsed.summary!,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
@@ -827,7 +832,7 @@ class _RiskBanner extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text(
+                    AppText(
                       title,
                       style: TextStyle(
                         color: style.$2,
@@ -835,7 +840,7 @@ class _RiskBanner extends StatelessWidget {
                         fontSize: 16,
                       ),
                     ),
-                    Text(
+                    AppText(
                       'Decisión: ${QrFindingText.actionLabel(investigation.action)}',
                       style: TextStyle(
                         color: style.$2.withValues(alpha: 0.82),
@@ -856,7 +861,7 @@ class _RiskBanner extends StatelessWidget {
                 ),
                 child: Column(
                   children: <Widget>[
-                    Text(
+                    AppText(
                       '${investigation.score}',
                       style: TextStyle(
                         color: style.$1,
@@ -865,7 +870,7 @@ class _RiskBanner extends StatelessWidget {
                         height: 1,
                       ),
                     ),
-                    Text(
+                    AppText(
                       '/ 100',
                       style: TextStyle(
                         color: style.$1.withValues(alpha: 0.85),
@@ -879,7 +884,7 @@ class _RiskBanner extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 12),
-          Text(
+          AppText(
             investigation.findings.isEmpty
                 ? 'No se observaron señales locales. Esto no demuestra que el destino sea seguro.'
                 : '${investigation.findings.length} ${investigation.findings.length == 1 ? 'señal requiere' : 'señales requieren'} revisión antes de actuar.',
@@ -898,7 +903,7 @@ class _RiskBanner extends StatelessWidget {
                   childrenPadding: EdgeInsets.zero,
                   iconColor: style.$2,
                   collapsedIconColor: style.$2,
-                  title: Text(
+                  title: AppText(
                     'Ver señales, evidencia y recomendaciones',
                     style: TextStyle(
                       color: style.$2,
@@ -918,7 +923,7 @@ class _RiskBanner extends StatelessWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-                            Text(
+                            AppText(
                               QrFindingText.title(finding.id),
                               style: TextStyle(
                                 color: style.$2,
@@ -926,12 +931,12 @@ class _RiskBanner extends StatelessWidget {
                               ),
                             ),
                             const SizedBox(height: 4),
-                            Text(
+                            AppText(
                               QrFindingText.explanation(finding.id),
                               style: TextStyle(color: style.$2),
                             ),
                             const SizedBox(height: 5),
-                            Text(
+                            AppText(
                               'Acción sugerida: ${QrFindingText.recommendation(finding.id)}',
                               style: TextStyle(
                                 color: style.$2,
@@ -939,7 +944,7 @@ class _RiskBanner extends StatelessWidget {
                               ),
                             ),
                             const SizedBox(height: 5),
-                            Text(
+                            AppText(
                               finding.id,
                               style: TextStyle(
                                 color: style.$2.withValues(alpha: 0.72),
@@ -948,7 +953,7 @@ class _RiskBanner extends StatelessWidget {
                               ),
                             ),
                             for (final QrEvidenceFact fact in finding.evidence)
-                              Text(
+                              AppText(
                                 '${QrFindingText.evidenceLabel(fact.id)}: ${fact.value}',
                                 style: TextStyle(
                                   color: style.$2.withValues(alpha: 0.88),
@@ -961,7 +966,7 @@ class _RiskBanner extends StatelessWidget {
                     if (investigation.hypotheses.isNotEmpty)
                       Align(
                         alignment: Alignment.centerLeft,
-                        child: Text(
+                        child: AppText(
                           'Hipótesis: ${investigation.hypotheses.map(_hypothesisLabel).join(' · ')}',
                           style: TextStyle(
                             color: style.$2,
@@ -975,7 +980,7 @@ class _RiskBanner extends StatelessWidget {
             ),
           ],
           const SizedBox(height: 7),
-          Text(
+          AppText(
             'No comprobado: ${investigation.limitations.map(QrFindingText.limitationLabel).join(' · ')}',
             style: TextStyle(
               color: style.$2.withValues(alpha: 0.78),

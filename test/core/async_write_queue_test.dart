@@ -17,7 +17,9 @@ void main() {
 
   test('a failed write does not block later writes', () async {
     final AsyncWriteQueue queue = AsyncWriteQueue();
-    final Future<void> failed = queue.run<void>(() async => throw StateError('expected'));
+    final Future<void> failed = queue.run<void>(
+      () async => throw StateError('expected'),
+    );
     final Future<int> recovered = queue.run<int>(() async => 7);
 
     await expectLater(failed, throwsA(isA<StateError>()));

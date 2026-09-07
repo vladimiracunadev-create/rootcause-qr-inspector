@@ -1,34 +1,86 @@
-import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:rootcause_qr_inspector/core/localization/app_localizations.dart';
+import 'package:rootcause_qr_inspector/models/app_settings.dart';
 
 void main() {
-  test('the interface is offered only in Spanish', () {
-    expect(AppLocalizations.supportedLocales, contains(const Locale('es', 'CL')));
-    expect(AppLocalizations.supportedLocales, contains(const Locale('es')));
-    expect(AppLocalizations.supportedLocales, isNot(contains(const Locale('en'))));
+  test('offers Spanish, English, French and German', () {
+    expect(
+      AppLocalizations.supportedLocales,
+      containsAll(<Locale>[
+        const Locale('es', 'CL'),
+        const Locale('es'),
+        const Locale('en'),
+        const Locale('fr'),
+        const Locale('de'),
+      ]),
+    );
+    for (final String code in <String>['es', 'en', 'fr', 'de']) {
+      expect(AppLocalizations.delegate.isSupported(Locale(code)), isTrue);
+    }
+    expect(
+      AppLocalizations.delegate.isSupported(const Locale('it')),
+      isFalse,
+    );
   });
 
-  test('Spanish navigation labels resolve for every supported locale', () {
-    for (final Locale locale in AppLocalizations.supportedLocales) {
-      final AppLocalizations strings = AppLocalizations(locale);
-      expect(strings.scan, 'Escanear');
-      expect(strings.inventory, 'Inventario');
-      expect(strings.generate, 'Generar');
-      expect(strings.history, 'Historial');
-      expect(strings.settings, 'Ajustes');
+  test('primary navigation and Inventory help resolve in every language', () {
+    final Map<String, List<String>> expected = <String, List<String>>{
+      'es': <String>['Escanear', 'Inventario', 'Cómo usar Inventario'],
+      'en': <String>['Inspect', 'Inventory', 'How to use Inventory'],
+      'fr': <String>['Inspecter', 'Inventaire', 'Comment utiliser Inventaire'],
+      'de': <String>['Prüfen', 'Inventar', 'Inventar verwenden'],
+    };
+
+    for (final MapEntry<String, List<String>> entry in expected.entries) {
+      final AppLocalizations strings = AppLocalizations(Locale(entry.key));
+      expect(strings.scan, entry.value[0]);
+      expect(strings.inventory, entry.value[1]);
+      expect(strings.inventoryGuide, entry.value[2]);
+      expect(strings.tabDescription(1), isNotEmpty);
     }
   });
 
-  test('an unsupported device locale never yields a half-translated interface', () {
-    // The delegate rejects English, so Flutter falls back to the first
-    // supported locale and the whole interface stays in one language.
-    expect(AppLocalizations.delegate.isSupported(const Locale('en')), isFalse);
-    expect(AppLocalizations.delegate.isSupported(const Locale('es')), isTrue);
-    expect(AppLocalizations.delegate.isSupported(const Locale('es', 'CL')), isTrue);
+  test('settings map each explicit language to its locale', () {
+    expect(const AppSettings(language: AppLanguage.system).locale, isNull);
+    expect(
+      const AppSettings(language: AppLanguage.en).locale,
+      const Locale('en'),
+    );
+    expect(
+      const AppSettings(language: AppLanguage.fr).locale,
+      const Locale('fr'),
+    );
+    expect(
+      const AppSettings(language: AppLanguage.de).locale,
+      const Locale('de'),
+    );
   });
 
-  test('English keys remain available for the pending translation', () {
-    expect(const AppLocalizations(Locale('en')).scan, 'Scan');
+  testWidgets('AppText translates registered copy without altering payloads', (
+    WidgetTester tester,
+  ) async {
+    await tester.pumpWidget(
+      const MaterialApp(
+        locale: Locale('de'),
+        supportedLocales: AppLocalizations.supportedLocales,
+        localizationsDelegates: <LocalizationsDelegate<dynamic>>[
+          AppLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        home: Column(
+          children: <Widget>[
+            AppText('Inventario'),
+            AppText('PAYLOAD-123'),
+          ],
+        ),
+      ),
+    );
+
+    expect(find.text('Inventar'), findsOneWidget);
+    expect(find.text('PAYLOAD-123'), findsOneWidget);
   });
 }

@@ -15,10 +15,12 @@ void main() {
     final Map<String, dynamic> bundle = Map<String, dynamic>.from(
       jsonDecode(QrEvidenceExporter.toJson(record)) as Map,
     );
-    final Map<String, dynamic> observation =
-        Map<String, dynamic>.from(bundle['observation'] as Map);
-    final Map<String, dynamic> investigation =
-        Map<String, dynamic>.from(bundle['investigation'] as Map);
+    final Map<String, dynamic> observation = Map<String, dynamic>.from(
+      bundle['observation'] as Map,
+    );
+    final Map<String, dynamic> investigation = Map<String, dynamic>.from(
+      bundle['investigation'] as Map,
+    );
 
     expect(observation.containsKey('rawPayload'), isFalse);
     expect(observation['redaction'], 'payload-omitted');
@@ -46,14 +48,16 @@ void main() {
       record,
       includeRawPayload: true,
     );
-    final Map<String, Object?> observation =
-        Map<String, Object?>.from(bundle['observation']! as Map<String, Object?>);
+    final Map<String, Object?> observation = Map<String, Object?>.from(
+      bundle['observation']! as Map<String, Object?>,
+    );
 
     expect(observation['rawPayload'], record.rawValue);
     expect(observation['redaction'], 'none-user-authorized');
     expect(
-      Map<String, Object?>.from(bundle['investigation']! as Map<String, Object?>)
-          .containsKey('effectiveUri'),
+      Map<String, Object?>.from(
+        bundle['investigation']! as Map<String, Object?>,
+      ).containsKey('effectiveUri'),
       isTrue,
     );
   });
@@ -68,7 +72,8 @@ void main() {
       jsonDecode(QrEvidenceExporter.toJson(record)) as Map,
     );
     final Map<String, dynamic> reordered = <String, dynamic>{
-      for (final String key in original.keys.toList().reversed) key: original[key],
+      for (final String key in original.keys.toList().reversed)
+        key: original[key],
     };
 
     expect(QrEvidenceExporter.verify(reordered), isTrue);

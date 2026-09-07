@@ -47,7 +47,9 @@ void main() {
     });
 
     test('normaliza un enlace que comienza con www', () {
-      final ParsedContent parsed = ContentInterpreter.parse('www.example.com/ruta');
+      final ParsedContent parsed = ContentInterpreter.parse(
+        'www.example.com/ruta',
+      );
 
       expect(parsed.kind, ContentKind.url);
       expect(parsed.fields['Dominio'], 'www.example.com');

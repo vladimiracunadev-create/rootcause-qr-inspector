@@ -31,10 +31,10 @@ class SecurityAssessment {
   final String? normalizedHost;
 
   String get label => switch (level) {
-        RiskLevel.low => 'Sin señales locales observadas',
-        RiskLevel.caution => 'Revisar antes de actuar',
-        RiskLevel.high => 'Señales críticas observadas',
-      };
+    RiskLevel.low => 'Sin señales locales observadas',
+    RiskLevel.caution => 'Revisar antes de actuar',
+    RiskLevel.high => 'Señales críticas observadas',
+  };
 }
 
 abstract final class ScanSecurityAnalyzer {
@@ -72,12 +72,22 @@ abstract final class ScanSecurityAnalyzer {
   static Uri? normalizedActionUri(String rawValue) {
     final String value = rawValue.trim();
     final String lower = value.toLowerCase();
-    if (<String>['mailto:', 'tel:', 'sms:', 'smsto:', 'geo:'].any(lower.startsWith)) {
+    if (<String>[
+      'mailto:',
+      'tel:',
+      'sms:',
+      'smsto:',
+      'geo:',
+    ].any(lower.startsWith)) {
       return Uri.tryParse(value);
     }
-    final String normalized = lower.startsWith('www.') ? 'https://$value' : value;
+    final String normalized = lower.startsWith('www.')
+        ? 'https://$value'
+        : value;
     final Uri? uri = Uri.tryParse(normalized);
-    if (uri == null || !const <String>{'http', 'https'}.contains(uri.scheme)) return null;
+    if (uri == null || !const <String>{'http', 'https'}.contains(uri.scheme)) {
+      return null;
+    }
     return uri;
   }
 }

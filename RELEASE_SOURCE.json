@@ -1,8 +1,8 @@
 {
   "application": "RootCause QR Inspector",
-  "version": "0.1.2+3",
-  "releaseType": "maintenance-improvement",
-  "assembledAt": "2026-08-31",
+  "version": "0.1.3+4",
+  "releaseType": "feature-improvement",
+  "assembledAt": "2026-09-07",
   "toolchainTarget": {
     "flutter": "3.44.7",
     "dart": ">=3.12.0 <4.0.0"
@@ -18,12 +18,12 @@
       "valid": true,
       "rules": 26,
       "fixtures": 12,
-      "declaredDartFlutterCases": 88
+      "declaredDartFlutterCases": 104
     },
     "flutterRuntimeExecuted": true,
     "executed": {
       "analyzeFatalInfos": true,
-      "flutterTestsPassed": 87,
+      "flutterTestsPassed": 103,
       "webReleaseBuild": true,
       "localhostExports": [
         "png",

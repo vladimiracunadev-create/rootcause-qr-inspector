@@ -27,7 +27,8 @@ class ScannerOverlay extends StatefulWidget {
   State<ScannerOverlay> createState() => _ScannerOverlayState();
 }
 
-class _ScannerOverlayState extends State<ScannerOverlay> with SingleTickerProviderStateMixin {
+class _ScannerOverlayState extends State<ScannerOverlay>
+    with SingleTickerProviderStateMixin {
   late final AnimationController _controller = AnimationController(
     vsync: this,
     duration: const Duration(milliseconds: 2200),
@@ -95,9 +96,18 @@ class _ScannerOverlayPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final Path background = Path()..addRect(Offset.zero & size);
     final Path cutout = Path()
-      ..addRRect(RRect.fromRectAndRadius(scanWindow, const Radius.circular(28)));
-    final Path overlay = Path.combine(PathOperation.difference, background, cutout);
-    canvas.drawPath(overlay, Paint()..color = Colors.black.withValues(alpha: 0.58));
+      ..addRRect(
+        RRect.fromRectAndRadius(scanWindow, const Radius.circular(28)),
+      );
+    final Path overlay = Path.combine(
+      PathOperation.difference,
+      background,
+      cutout,
+    );
+    canvas.drawPath(
+      overlay,
+      Paint()..color = Colors.black.withValues(alpha: 0.58),
+    );
 
     final Paint border = Paint()
       ..color = borderColor

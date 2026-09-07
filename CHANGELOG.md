@@ -6,6 +6,17 @@ Todas las versiones notables se documentan aquí. El formato sigue
 
 ## [No publicado]
 
+### Planificado
+
+- Carga de políticas organizacionales desde la interfaz.
+- Skeleton Unicode UTS #39 y Public Suffix List.
+- Correlación opcional con otras superficies RootCause.
+- Evidencia en dispositivo físico de la corrección de lectura de 0.1.1.
+
+## [0.1.3] — 2026-09-07
+
+### Añadido
+
 - Evolución de la importación existente a **Analizar archivo**, visible junto
   a la cámara y adaptable a pantallas estrechas y texto ampliado.
 - Coordinación testeable de imágenes y páginas PDF mediante
@@ -21,17 +32,24 @@ Todas las versiones notables se documentan aquí. El formato sigue
 - Pruebas unitarias y widget para múltiples códigos, duplicados, unidades sin
   código, cancelación, procedencia, limpieza PDF, destino semántico, texto al
   200 % y ausencia de acción externa cuando el motor bloquea.
-- Verificación local con Flutter 3.44.7: análisis estricto limpio, 102 pruebas,
-  compilación web release y APK release correctos.
-- Estado: **PARCIAL** solo hasta completar la decodificación funcional de los
-  fixtures en un dispositivo Android; la versión publicada no cambia.
+- Selector persistente de español (Chile e internacional), inglés, francés y
+  alemán; navegación, acciones y ayuda principal cambian de idioma al instante.
+- Guía rápida para las cinco pestañas desde Ajustes y ayuda contextual en
+  Inventario, con un flujo de cuatro pasos que distingue códigos únicos de
+  unidades físicas repetidas.
+- Pruebas de localización y de la guía en pantalla de 320 px con texto al 160 %.
 
-### Planificado
+### Documentación
 
-- Carga de políticas organizacionales desde la interfaz.
-- Skeleton Unicode UTS #39 y Public Suffix List.
-- Correlación opcional con otras superficies RootCause.
-- Evidencia en dispositivo físico de la corrección de lectura de 0.1.1.
+- Manual de Inventario ampliado, idiomas y nuevas pantallas documentados.
+- Landing de GitHub Pages, metadatos del repositorio y enlaces de descarga
+  actualizados para 0.1.3.
+
+### Verificado
+
+- Contrato y estructura offline, análisis estricto, suite Flutter completa,
+  compilaciones web/APK y CI pública deben permanecer verdes para publicar el
+  tag; la validación física de cámara sigue declarada como pendiente.
 
 ## [0.1.2] — 2026-08-31
 
@@ -146,5 +164,6 @@ La procedencia exacta y las diferencias están en
 [`docs/rootcause/PROVENANCE.md`](docs/rootcause/PROVENANCE.md).
 
 [0.1.2]: https://github.com/vladimiracunadev-create/rootcause-qr-inspector/releases/tag/v0.1.2
+[0.1.3]: https://github.com/vladimiracunadev-create/rootcause-qr-inspector/releases/tag/v0.1.3
 [0.1.1]: https://github.com/vladimiracunadev-create/rootcause-qr-inspector/releases/tag/v0.1.1
 [0.1.0]: https://github.com/vladimiracunadev-create/rootcause-qr-inspector/releases/tag/v0.1.0

@@ -105,6 +105,8 @@ Lo que sí puede afirmarse leyendo el código y las pruebas:
 | `GeneratorScreen` | **Ninguna** | — |
 | `SettingsScreen` | **Ninguna** | — |
 | `ScanResultsSheet` | Media | Texto al 200 %, host real y bloqueo sin acción externa |
+| `AppLocalizations` | Alta | Locales, navegación, mapeo de preferencias y conservación literal de cargas |
+| `TabGuideScreen` | Media | Inventario completo, desplazamiento, 320×568 y texto al 160 % |
 | `PdfPageRenderer` | Media | Limpieza y metadatos; render nativo funcional pendiente |
 | `ExportService` | **Ninguna** | Requiere la hoja de compartir |
 | `BiometricService` | **Ninguna** | Requiere plataforma |
@@ -307,6 +309,6 @@ También se generaron:
 - `fixture_document.pdf` con QR en páginas 1, 3 y 5.
 
 El PDF fue renderizado y revisado visualmente. Con Flutter 3.44.7 pasaron el
-análisis estricto, las 102 pruebas y las compilaciones web/APK release. Solo la
+análisis estricto, las 103 pruebas y las compilaciones web/APK release. Solo la
 decodificación con `mobile_scanner` en un dispositivo Android figura
 **PENDIENTE**.

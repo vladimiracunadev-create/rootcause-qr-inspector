@@ -24,17 +24,25 @@ void main() {
     );
   });
 
-  test('the engine hands that resolution and a repeatable detector to the controller', () {
-    final MobileScannerEngine engine = MobileScannerEngine(torchEnabled: false);
-    addTearDown(MobileScannerController.resetPlatformSessionOwner);
+  test(
+    'the engine hands that resolution and a repeatable detector to the controller',
+    () {
+      final MobileScannerEngine engine = MobileScannerEngine(
+        torchEnabled: false,
+      );
+      addTearDown(MobileScannerController.resetPlatformSessionOwner);
 
-    expect(engine.controller.cameraResolution, MobileScannerEngine.inspectionResolution);
-    // `noDuplicates` never emits the same payload twice, so a code presented
-    // again after closing its result produced no event at all.
-    expect(engine.controller.detectionSpeed, DetectionSpeed.normal);
-    expect(engine.controller.autoZoom, isTrue);
-    expect(engine.controller.returnImage, isFalse);
-  });
+      expect(
+        engine.controller.cameraResolution,
+        MobileScannerEngine.inspectionResolution,
+      );
+      // `noDuplicates` never emits the same payload twice, so a code presented
+      // again after closing its result produced no event at all.
+      expect(engine.controller.detectionSpeed, DetectionSpeed.normal);
+      expect(engine.controller.autoZoom, isTrue);
+      expect(engine.controller.returnImage, isFalse);
+    },
+  );
 
   test('an explicit resolution overrides the inspection default', () {
     final MobileScannerEngine engine = MobileScannerEngine(

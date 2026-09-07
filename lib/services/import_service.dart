@@ -36,7 +36,9 @@ class HistoryImportPreview {
 
   List<ScanRecord> apply(Set<String> existingIds, ImportStrategy strategy) {
     if (strategy == ImportStrategy.skipDuplicates) {
-      return records.where((ScanRecord item) => !existingIds.contains(item.id)).toList(growable: false);
+      return records
+          .where((ScanRecord item) => !existingIds.contains(item.id))
+          .toList(growable: false);
     }
     return records;
   }
@@ -44,7 +46,12 @@ class HistoryImportPreview {
 
 /// Equivalente de [HistoryImportPreview] para una sesión de inventario.
 class InventoryImportPreview {
-  const InventoryImportPreview({required this.session, required this.schemaVersion, required this.legacy, required this.fileName});
+  const InventoryImportPreview({
+    required this.session,
+    required this.schemaVersion,
+    required this.legacy,
+    required this.fileName,
+  });
   final InventorySession session;
   final int schemaVersion;
   final bool legacy;
@@ -81,10 +88,16 @@ abstract final class ImportService {
   static const int maxJsonNodes = 100000;
   static const int maxInventoryItems = 10000;
 
-  static Future<HistoryImportPreview?> pickHistoryJson({required Set<String> existingIds}) async {
+  static Future<HistoryImportPreview?> pickHistoryJson({
+    required Set<String> existingIds,
+  }) async {
     final _PickedJson? picked = await _pickJson();
     if (picked == null) return null;
-    return parseHistoryBytes(picked.bytes, existingIds: existingIds, fileName: picked.fileName);
+    return parseHistoryBytes(
+      picked.bytes,
+      existingIds: existingIds,
+      fileName: picked.fileName,
+    );
   }
 
   static HistoryImportPreview parseHistoryBytes(
@@ -92,7 +105,9 @@ abstract final class ImportService {
     required Set<String> existingIds,
     String fileName = 'respaldo.json',
   }) {
-    if (bytes.length > maxImportBytes) throw const FormatException('El archivo supera el límite de 25 MB.');
+    if (bytes.length > maxImportBytes) {
+      throw const FormatException('El archivo supera el límite de 25 MB.');
+    }
     final dynamic decoded = jsonDecode(utf8.decode(bytes));
     _validateJsonShape(decoded);
     final bool legacy = decoded is List;
@@ -103,18 +118,31 @@ abstract final class ImportService {
       source = decoded;
     } else if (decoded is Map) {
       final Map<String, dynamic> envelope = Map<String, dynamic>.from(decoded);
-      if (!compatibleApplications.contains(envelope['application']) || envelope['type'] != 'history') {
-        throw const FormatException('El respaldo no pertenece a RootCause QR Inspector ni a Universal Code Scanner.');
+      if (!compatibleApplications.contains(envelope['application']) ||
+          envelope['type'] != 'history') {
+        throw const FormatException(
+          'El respaldo no pertenece a RootCause QR Inspector ni a Universal Code Scanner.',
+        );
       }
       schemaVersion = envelope['schemaVersion'] as int? ?? 1;
-      if (schemaVersion > currentSchemaVersion) throw const FormatException('El respaldo fue creado por una versión más reciente.');
+      if (schemaVersion > currentSchemaVersion) {
+        throw const FormatException(
+          'El respaldo fue creado por una versión más reciente.',
+        );
+      }
       final dynamic values = envelope['records'];
-      if (values is! List) throw const FormatException('El respaldo no contiene registros.');
+      if (values is! List) {
+        throw const FormatException('El respaldo no contiene registros.');
+      }
       source = values;
     } else {
-      throw const FormatException('El archivo no contiene un respaldo compatible.');
+      throw const FormatException(
+        'El archivo no contiene un respaldo compatible.',
+      );
     }
-    if (source.length > maxHistoryRecords) throw const FormatException('El respaldo supera el límite de registros.');
+    if (source.length > maxHistoryRecords) {
+      throw const FormatException('El respaldo supera el límite de registros.');
+    }
 
     final Map<String, ScanRecord> unique = <String, ScanRecord>{};
     int rejected = 0;
@@ -128,7 +156,9 @@ abstract final class ImportService {
           Map<String, dynamic>.from(value),
           trustDerivedAnalysis: false,
         );
-        if (existingIds.contains(record.id) || unique.containsKey(record.id)) duplicates++;
+        if (existingIds.contains(record.id) || unique.containsKey(record.id)) {
+          duplicates++;
+        }
         unique[record.id] = record;
       } on Object {
         rejected++;
@@ -151,11 +181,20 @@ abstract final class ImportService {
     return parseInventoryBytes(picked.bytes, fileName: picked.fileName);
   }
 
-  static InventoryImportPreview parseInventoryBytes(List<int> bytes, {String fileName = 'inventario.json'}) {
-    if (bytes.length > maxImportBytes) throw const FormatException('El archivo supera el límite de 25 MB.');
+  static InventoryImportPreview parseInventoryBytes(
+    List<int> bytes, {
+    String fileName = 'inventario.json',
+  }) {
+    if (bytes.length > maxImportBytes) {
+      throw const FormatException('El archivo supera el límite de 25 MB.');
+    }
     final dynamic decoded = jsonDecode(utf8.decode(bytes));
     _validateJsonShape(decoded);
-    if (decoded is! Map) throw const FormatException('El archivo no contiene una sesión de inventario.');
+    if (decoded is! Map) {
+      throw const FormatException(
+        'El archivo no contiene una sesión de inventario.',
+      );
+    }
     final Map<String, dynamic> map = Map<String, dynamic>.from(decoded);
     final bool legacy = !map.containsKey('application');
     if (legacy) {
@@ -166,13 +205,22 @@ abstract final class ImportService {
         fileName: fileName,
       );
     }
-    if (!compatibleApplications.contains(map['application']) || map['type'] != 'inventory') {
-      throw const FormatException('El respaldo no pertenece a RootCause QR Inspector ni a Universal Code Scanner.');
+    if (!compatibleApplications.contains(map['application']) ||
+        map['type'] != 'inventory') {
+      throw const FormatException(
+        'El respaldo no pertenece a RootCause QR Inspector ni a Universal Code Scanner.',
+      );
     }
     final int version = map['schemaVersion'] as int? ?? 1;
-    if (version > currentSchemaVersion) throw const FormatException('El respaldo fue creado por una versión más reciente.');
+    if (version > currentSchemaVersion) {
+      throw const FormatException(
+        'El respaldo fue creado por una versión más reciente.',
+      );
+    }
     final dynamic session = map['session'];
-    if (session is! Map) throw const FormatException('El respaldo no contiene una sesión.');
+    if (session is! Map) {
+      throw const FormatException('El respaldo no contiene una sesión.');
+    }
     return InventoryImportPreview(
       session: _validatedInventorySession(Map<String, dynamic>.from(session)),
       schemaVersion: version,
@@ -181,7 +229,9 @@ abstract final class ImportService {
     );
   }
 
-  static InventorySession _validatedInventorySession(Map<String, dynamic> value) {
+  static InventorySession _validatedInventorySession(
+    Map<String, dynamic> value,
+  ) {
     final InventorySession session = InventorySession.fromJson(value);
     if (session.items.length > maxInventoryItems) {
       throw const FormatException('La sesión supera el límite de productos.');
@@ -190,13 +240,23 @@ abstract final class ImportService {
   }
 
   static void _validateJsonShape(dynamic root) {
-    final List<(dynamic value, int depth)> pending = <(dynamic, int)>[(root, 0)];
+    final List<(dynamic value, int depth)> pending = <(dynamic, int)>[
+      (root, 0),
+    ];
     int nodes = 0;
     while (pending.isNotEmpty) {
       final (dynamic value, int depth) = pending.removeLast();
       nodes++;
-      if (nodes > maxJsonNodes) throw const FormatException('El archivo contiene demasiados elementos.');
-      if (depth > maxJsonDepth) throw const FormatException('El archivo contiene una estructura demasiado profunda.');
+      if (nodes > maxJsonNodes) {
+        throw const FormatException(
+          'El archivo contiene demasiados elementos.',
+        );
+      }
+      if (depth > maxJsonDepth) {
+        throw const FormatException(
+          'El archivo contiene una estructura demasiado profunda.',
+        );
+      }
       if (value is Map) {
         for (final dynamic child in value.values) {
           pending.add((child, depth + 1));
@@ -215,9 +275,13 @@ abstract final class ImportService {
       allowedExtensions: const <String>['json'],
     );
     if (file == null) return null;
-    if (await file.length() > maxImportBytes) throw const FormatException('El archivo supera el límite de 25 MB.');
+    if (await file.length() > maxImportBytes) {
+      throw const FormatException('El archivo supera el límite de 25 MB.');
+    }
     final List<int> bytes = await file.readAsBytes();
-    if (bytes.length > maxImportBytes) throw const FormatException('El archivo supera el límite de 25 MB.');
+    if (bytes.length > maxImportBytes) {
+      throw const FormatException('El archivo supera el límite de 25 MB.');
+    }
     return _PickedJson(fileName: file.name, bytes: bytes);
   }
 }

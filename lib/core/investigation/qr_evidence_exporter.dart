@@ -21,8 +21,9 @@ abstract final class QrEvidenceExporter {
         'Debe ser un SHA-256 hexadecimal en minúsculas.',
       );
     }
-    final Map<String, Object?> investigation =
-        Map<String, Object?>.from(record.investigation.toJson());
+    final Map<String, Object?> investigation = Map<String, Object?>.from(
+      record.investigation.toJson(),
+    );
     if (!includeRawPayload) {
       // `effectiveUri` puede contener la misma consulta, credencial o token que
       // la carga original. Un paquete redactado no debe recuperarla por una
@@ -31,10 +32,7 @@ abstract final class QrEvidenceExporter {
     }
     final Map<String, Object?> content = <String, Object?>{
       'schema': schema,
-      'product': <String, Object?>{
-        'name': appName,
-        'version': appVersion,
-      },
+      'product': <String, Object?>{'name': appName, 'version': appVersion},
       'bundleId': _bundleId(record),
       'observedAt': record.scannedAt.toUtc().toIso8601String(),
       'observation': <String, Object?>{
@@ -44,7 +42,9 @@ abstract final class QrEvidenceExporter {
         'sensitive': record.isSensitive,
         'payloadBytes': utf8.encode(record.rawValue).length,
         'payloadSha256': record.investigation.payloadSha256,
-        'redaction': includeRawPayload ? 'none-user-authorized' : 'payload-omitted',
+        'redaction': includeRawPayload
+            ? 'none-user-authorized'
+            : 'payload-omitted',
         if (includeRawPayload) 'rawPayload': record.rawValue,
         if (includeRawPayload) 'parsed': record.parsed.toJson(),
       },
@@ -55,11 +55,12 @@ abstract final class QrEvidenceExporter {
         'previousEvidenceHash': ?previousEvidenceHash,
       },
     };
-    final String bundleHash =
-        sha256.convert(utf8.encode(_canonicalJson(content))).toString();
-    final Map<String, Object?> integrity =
-        Map<String, Object?>.from(content['integrity']! as Map<String, Object?>)
-          ..['bundleHash'] = bundleHash;
+    final String bundleHash = sha256
+        .convert(utf8.encode(_canonicalJson(content)))
+        .toString();
+    final Map<String, Object?> integrity = Map<String, Object?>.from(
+      content['integrity']! as Map<String, Object?>,
+    )..['bundleHash'] = bundleHash;
     return <String, Object?>{...content, 'integrity': integrity};
   }
 
@@ -67,16 +68,18 @@ abstract final class QrEvidenceExporter {
     ScanRecord record, {
     bool includeRawPayload = false,
     String? previousEvidenceHash,
-  }) =>
-      const JsonEncoder.withIndent('  ').convert(toMap(
-        record,
-        includeRawPayload: includeRawPayload,
-        previousEvidenceHash: previousEvidenceHash,
-      ));
+  }) => const JsonEncoder.withIndent('  ').convert(
+    toMap(
+      record,
+      includeRawPayload: includeRawPayload,
+      previousEvidenceHash: previousEvidenceHash,
+    ),
+  );
 
   static bool verify(Map<String, dynamic> bundle) {
-    final Map<String, dynamic> integrity =
-        Map<String, dynamic>.from(bundle['integrity'] as Map? ?? const <String, dynamic>{});
+    final Map<String, dynamic> integrity = Map<String, dynamic>.from(
+      bundle['integrity'] as Map? ?? const <String, dynamic>{},
+    );
     if (integrity['algorithm'] != 'SHA-256' ||
         integrity['assurance'] != 'checksum-only-not-authenticated') {
       return false;
@@ -85,8 +88,9 @@ abstract final class QrEvidenceExporter {
     if (rawExpected is! String || rawExpected.isEmpty) return false;
     final Map<String, Object?> unsigned = Map<String, Object?>.from(bundle)
       ..['integrity'] = integrity;
-    final String actual =
-        sha256.convert(utf8.encode(_canonicalJson(unsigned))).toString();
+    final String actual = sha256
+        .convert(utf8.encode(_canonicalJson(unsigned)))
+        .toString();
     return actual == rawExpected;
   }
 
@@ -105,7 +109,11 @@ abstract final class QrEvidenceExporter {
   }
 
   static String _bundleId(ScanRecord record) => sha256
-      .convert(utf8.encode('${record.id}|${record.investigation.payloadSha256}|${record.scannedAt.toUtc().toIso8601String()}'))
+      .convert(
+        utf8.encode(
+          '${record.id}|${record.investigation.payloadSha256}|${record.scannedAt.toUtc().toIso8601String()}',
+        ),
+      )
       .toString()
       .substring(0, 24);
 }

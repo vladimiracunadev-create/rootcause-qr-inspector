@@ -7,6 +7,7 @@ import 'package:rootcause_qr_inspector/core/recovery/recovery_repository.dart';
 import 'package:rootcause_qr_inspector/core/recovery/recovery_service.dart';
 import 'package:rootcause_qr_inspector/core/security/data_maintenance_service.dart';
 import 'package:rootcause_qr_inspector/features/formats/formats_screen.dart';
+import 'package:rootcause_qr_inspector/features/help/tab_guide_screen.dart';
 import 'package:rootcause_qr_inspector/features/recovery/recovery_screen.dart';
 import 'package:rootcause_qr_inspector/models/app_settings.dart';
 import 'package:rootcause_qr_inspector/services/biometric_service.dart';
@@ -19,9 +20,8 @@ import 'package:rootcause_qr_inspector/state/settings_store.dart';
 /// confirmación y bloquean la interfaz mientras se ejecutan: la rotación de la
 /// llave de cifrado —desactivada en modo temporal— y el borrado del historial.
 ///
-/// El desplegable de idioma nunca ofrece inglés, y traduce a «Sistema» un valor
-/// `AppLanguage.en` que hubiera quedado guardado por otra compilación: sin esa
-/// conversión, el control quedaría sin opción coincidente.
+/// El idioma se conserva como preferencia no sensible y se aplica de inmediato
+/// a la navegación y a todas las superficies migradas a `AppText`.
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({
     required this.settings,
@@ -55,49 +55,93 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return ListView(
       padding: const EdgeInsets.fromLTRB(16, 14, 16, 28),
       children: <Widget>[
-        Text(context.strings.settings, style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800)),
+        AppText(
+          context.strings.settings,
+          style: Theme.of(
+            context,
+          ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800),
+        ),
         const SizedBox(height: 12),
         _Section(
           title: 'Apariencia',
           children: <Widget>[
             SegmentedButton<ThemeMode>(
               segments: const <ButtonSegment<ThemeMode>>[
-                ButtonSegment(value: ThemeMode.system, label: Text('Sistema'), icon: Icon(Icons.settings_brightness)),
-                ButtonSegment(value: ThemeMode.light, label: Text('Claro'), icon: Icon(Icons.light_mode_outlined)),
-                ButtonSegment(value: ThemeMode.dark, label: Text('Oscuro'), icon: Icon(Icons.dark_mode_outlined)),
+                ButtonSegment(
+                  value: ThemeMode.system,
+                  label: AppText('Sistema'),
+                  icon: Icon(Icons.settings_brightness),
+                ),
+                ButtonSegment(
+                  value: ThemeMode.light,
+                  label: AppText('Claro'),
+                  icon: Icon(Icons.light_mode_outlined),
+                ),
+                ButtonSegment(
+                  value: ThemeMode.dark,
+                  label: AppText('Oscuro'),
+                  icon: Icon(Icons.dark_mode_outlined),
+                ),
               ],
               selected: <ThemeMode>{value.themeMode},
-              onSelectionChanged: (Set<ThemeMode> selection) => _update(value.copyWith(themeMode: selection.first)),
+              onSelectionChanged: (Set<ThemeMode> selection) =>
+                  _update(value.copyWith(themeMode: selection.first)),
             ),
             ListTile(
-              title: const Text('Idioma'),
+              title: const AppText('Idioma'),
               trailing: DropdownButton<AppLanguage>(
-                // English is not offered yet. A preference stored by a future
-                // build must not leave the dropdown without a match.
-                value: value.language == AppLanguage.en ? AppLanguage.system : value.language,
+                value: value.language,
                 items: const <DropdownMenuItem<AppLanguage>>[
-                  DropdownMenuItem(value: AppLanguage.system, child: Text('Sistema')),
-                  DropdownMenuItem(value: AppLanguage.esCl, child: Text('Español (Chile)')),
-                  DropdownMenuItem(value: AppLanguage.es, child: Text('Español internacional')),
+                  DropdownMenuItem(
+                    value: AppLanguage.system,
+                    child: AppText('Sistema'),
+                  ),
+                  DropdownMenuItem(
+                    value: AppLanguage.esCl,
+                    child: AppText('Español (Chile)'),
+                  ),
+                  DropdownMenuItem(
+                    value: AppLanguage.es,
+                    child: AppText('Español internacional'),
+                  ),
+                  DropdownMenuItem(
+                    value: AppLanguage.en,
+                    child: AppText('English'),
+                  ),
+                  DropdownMenuItem(
+                    value: AppLanguage.fr,
+                    child: AppText('Français'),
+                  ),
+                  DropdownMenuItem(
+                    value: AppLanguage.de,
+                    child: AppText('Deutsch'),
+                  ),
                 ],
-                onChanged: (AppLanguage? language) => language == null ? null : _update(value.copyWith(language: language)),
+                onChanged: (AppLanguage? language) => language == null
+                    ? null
+                    : _update(value.copyWith(language: language)),
               ),
             ),
             SwitchListTile(
-              title: const Text('Alto contraste'),
+              title: const AppText('Alto contraste'),
               value: value.highContrast,
-              onChanged: (bool enabled) => _update(value.copyWith(highContrast: enabled)),
+              onChanged: (bool enabled) =>
+                  _update(value.copyWith(highContrast: enabled)),
             ),
             SwitchListTile(
-              title: const Text('Controles más grandes'),
-              subtitle: const Text('Aumenta las superficies táctiles sin reducir el tamaño del texto del sistema.'),
+              title: const AppText('Controles más grandes'),
+              subtitle: const AppText(
+                'Aumenta las superficies táctiles sin reducir el tamaño del texto del sistema.',
+              ),
               value: value.largeControls,
-              onChanged: (bool enabled) => _update(value.copyWith(largeControls: enabled)),
+              onChanged: (bool enabled) =>
+                  _update(value.copyWith(largeControls: enabled)),
             ),
             SwitchListTile(
-              title: const Text('Reducir movimiento'),
+              title: const AppText('Reducir movimiento'),
               value: value.reduceMotion,
-              onChanged: (bool enabled) => _update(value.copyWith(reduceMotion: enabled)),
+              onChanged: (bool enabled) =>
+                  _update(value.copyWith(reduceMotion: enabled)),
             ),
           ],
         ),
@@ -105,25 +149,31 @@ class _SettingsScreenState extends State<SettingsScreen> {
           title: 'Inspección QR',
           children: <Widget>[
             SwitchListTile(
-              title: const Text('Marco de encuadre'),
-              subtitle: const Text('Dibuja la guía central. La lectura analiza toda la imagen, dentro y fuera del marco.'),
+              title: const AppText('Marco de encuadre'),
+              subtitle: const AppText(
+                'Dibuja la guía central. La lectura analiza toda la imagen, dentro y fuera del marco.',
+              ),
               value: value.useScanWindow,
-              onChanged: (bool enabled) => _update(value.copyWith(useScanWindow: enabled)),
+              onChanged: (bool enabled) =>
+                  _update(value.copyWith(useScanWindow: enabled)),
             ),
             SwitchListTile(
-              title: const Text('Linterna al iniciar'),
+              title: const AppText('Linterna al iniciar'),
               value: value.autoTorch,
-              onChanged: (bool enabled) => _update(value.copyWith(autoTorch: enabled)),
+              onChanged: (bool enabled) =>
+                  _update(value.copyWith(autoTorch: enabled)),
             ),
             SwitchListTile(
-              title: const Text('Sonido de confirmación'),
+              title: const AppText('Sonido de confirmación'),
               value: value.soundEnabled,
-              onChanged: (bool enabled) => _update(value.copyWith(soundEnabled: enabled)),
+              onChanged: (bool enabled) =>
+                  _update(value.copyWith(soundEnabled: enabled)),
             ),
             SwitchListTile(
-              title: const Text('Vibración'),
+              title: const AppText('Vibración'),
               value: value.vibrationEnabled,
-              onChanged: (bool enabled) => _update(value.copyWith(vibrationEnabled: enabled)),
+              onChanged: (bool enabled) =>
+                  _update(value.copyWith(vibrationEnabled: enabled)),
             ),
           ],
         ),
@@ -131,61 +181,80 @@ class _SettingsScreenState extends State<SettingsScreen> {
           title: 'Privacidad y seguridad',
           children: <Widget>[
             SwitchListTile(
-              title: const Text('Guardar historial'),
-              subtitle: const Text('Los registros se cifran antes de guardarse en la base local.'),
+              title: const AppText('Guardar historial'),
+              subtitle: const AppText(
+                'Los registros se cifran antes de guardarse en la base local.',
+              ),
               value: value.saveHistory,
-              onChanged: (bool enabled) => _update(value.copyWith(saveHistory: enabled)),
+              onChanged: (bool enabled) =>
+                  _update(value.copyWith(saveHistory: enabled)),
             ),
             SwitchListTile(
-              title: const Text('Sesión privada'),
-              subtitle: const Text('Mientras esté activa, ninguna lectura se guarda.'),
+              title: const AppText('Sesión privada'),
+              subtitle: const AppText(
+                'Mientras esté activa, ninguna lectura se guarda.',
+              ),
               value: value.privateMode,
-              onChanged: (bool enabled) => _update(value.copyWith(privateMode: enabled)),
+              onChanged: (bool enabled) =>
+                  _update(value.copyWith(privateMode: enabled)),
             ),
             SwitchListTile(
-              title: const Text('Ocultar valores sensibles'),
-              subtitle: const Text('Protege contraseñas Wi-Fi, secretos OTP, pagos e identificaciones.'),
+              title: const AppText('Ocultar valores sensibles'),
+              subtitle: const AppText(
+                'Protege contraseñas Wi-Fi, secretos OTP, pagos e identificaciones.',
+              ),
               value: value.hideSensitiveValues,
-              onChanged: (bool enabled) => _update(value.copyWith(hideSensitiveValues: enabled)),
+              onChanged: (bool enabled) =>
+                  _update(value.copyWith(hideSensitiveValues: enabled)),
             ),
             SwitchListTile(
-              title: const Text('Confirmar antes de abrir'),
+              title: const AppText('Confirmar antes de abrir'),
               value: value.confirmBeforeOpen,
-              onChanged: (bool enabled) => _update(value.copyWith(confirmBeforeOpen: enabled)),
+              onChanged: (bool enabled) =>
+                  _update(value.copyWith(confirmBeforeOpen: enabled)),
             ),
             SwitchListTile(
-              title: const Text('Bloqueo de la aplicación'),
-              subtitle: const Text('Usa huella, rostro, PIN, patrón o código cuando la plataforma lo permite.'),
+              title: const AppText('Bloqueo de la aplicación'),
+              subtitle: const AppText(
+                'Usa huella, rostro, PIN, patrón o código cuando la plataforma lo permite.',
+              ),
               value: value.biometricLock,
               onChanged: _changeBiometricLock,
             ),
             ListTile(
-              title: const Text('Borrar portapapeles'),
-              subtitle: const Text('El contenido copiado se elimina automáticamente si no cambió.'),
+              title: const AppText('Borrar portapapeles'),
+              subtitle: const AppText(
+                'El contenido copiado se elimina automáticamente si no cambió.',
+              ),
               trailing: DropdownButton<int>(
                 value: value.clearClipboardSeconds,
                 items: const <DropdownMenuItem<int>>[
-                  DropdownMenuItem(value: 0, child: Text('Nunca')),
-                  DropdownMenuItem(value: 15, child: Text('15 s')),
-                  DropdownMenuItem(value: 30, child: Text('30 s')),
-                  DropdownMenuItem(value: 60, child: Text('1 min')),
-                  DropdownMenuItem(value: 300, child: Text('5 min')),
+                  DropdownMenuItem(value: 0, child: AppText('Nunca')),
+                  DropdownMenuItem(value: 15, child: AppText('15 s')),
+                  DropdownMenuItem(value: 30, child: AppText('30 s')),
+                  DropdownMenuItem(value: 60, child: AppText('1 min')),
+                  DropdownMenuItem(value: 300, child: AppText('5 min')),
                 ],
-                onChanged: (int? seconds) => seconds == null ? null : _update(value.copyWith(clearClipboardSeconds: seconds)),
+                onChanged: (int? seconds) => seconds == null
+                    ? null
+                    : _update(value.copyWith(clearClipboardSeconds: seconds)),
               ),
             ),
             ListTile(
-              title: const Text('Retención del historial'),
-              subtitle: const Text('Elimina automáticamente las lecturas más antiguas al iniciar o cambiar esta opción.'),
+              title: const AppText('Retención del historial'),
+              subtitle: const AppText(
+                'Elimina automáticamente las lecturas más antiguas al iniciar o cambiar esta opción.',
+              ),
               trailing: DropdownButton<int>(
                 value: value.historyRetentionDays,
                 items: const <DropdownMenuItem<int>>[
-                  DropdownMenuItem(value: 0, child: Text('Sin límite')),
-                  DropdownMenuItem(value: 30, child: Text('30 días')),
-                  DropdownMenuItem(value: 90, child: Text('90 días')),
-                  DropdownMenuItem(value: 365, child: Text('1 año')),
+                  DropdownMenuItem(value: 0, child: AppText('Sin límite')),
+                  DropdownMenuItem(value: 30, child: AppText('30 días')),
+                  DropdownMenuItem(value: 90, child: AppText('90 días')),
+                  DropdownMenuItem(value: 365, child: AppText('1 año')),
                 ],
-                onChanged: (int? days) => days == null ? null : unawaited(_updateRetention(days)),
+                onChanged: (int? days) =>
+                    days == null ? null : unawaited(_updateRetention(days)),
               ),
             ),
           ],
@@ -194,43 +263,75 @@ class _SettingsScreenState extends State<SettingsScreen> {
           title: 'Datos y compatibilidad',
           children: <Widget>[
             ListTile(
-              leading: const Icon(Icons.grid_view_outlined),
-              title: const Text('Formatos compatibles'),
+              leading: const Icon(Icons.help_outline),
+              title: const AppText('Guía rápida de la aplicación'),
+              subtitle: const AppText(
+                'Consulta qué hace cada pestaña y cuándo usarla.',
+              ),
               trailing: const Icon(Icons.chevron_right),
-              onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => const Scaffold(body: SafeArea(child: FormatsScreen())))),
+              onTap: () => Navigator.of(context).push(
+                MaterialPageRoute<void>(builder: (_) => const TabGuideScreen()),
+              ),
+            ),
+            ListTile(
+              leading: const Icon(Icons.grid_view_outlined),
+              title: const AppText('Formatos compatibles'),
+              trailing: const Icon(Icons.chevron_right),
+              onTap: () => Navigator.of(context).push(
+                MaterialPageRoute<void>(
+                  builder: (_) =>
+                      const Scaffold(body: SafeArea(child: FormatsScreen())),
+                ),
+              ),
             ),
             ListTile(
               leading: const Icon(Icons.health_and_safety_outlined),
-              title: const Text('Centro de recuperación'),
-              subtitle: const Text('Revisa migraciones, registros dañados y diagnóstico privado.'),
+              title: const AppText('Centro de recuperación'),
+              subtitle: const AppText(
+                'Revisa migraciones, registros dañados y diagnóstico privado.',
+              ),
               trailing: const Icon(Icons.chevron_right),
-              onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
-                builder: (_) => RecoveryScreen(
-                  service: widget.recoveryService,
-                  retryMigration: _retryMigration,
+              onTap: () => Navigator.of(context).push(
+                MaterialPageRoute<void>(
+                  builder: (_) => RecoveryScreen(
+                    service: widget.recoveryService,
+                    retryMigration: _retryMigration,
+                  ),
                 ),
-              )),
+              ),
             ),
             if (widget.scanStore.migrationStatus?.completed == false)
               ListTile(
                 leading: const Icon(Icons.sync_problem_outlined),
-                title: const Text('Reintentar migración del historial'),
-                subtitle: Text(widget.scanStore.migrationStatus?.errorCode ?? 'La fuente anterior se conserva intacta.'),
+                title: const AppText('Reintentar migración del historial'),
+                subtitle: AppText(
+                  widget.scanStore.migrationStatus?.errorCode ??
+                      'La fuente anterior se conserva intacta.',
+                ),
                 onTap: _retryMigrationFromSettings,
               ),
             ListTile(
               enabled: !widget.temporaryMode && !_rotatingKey,
               leading: _rotatingKey
-                  ? const SizedBox.square(dimension: 24, child: CircularProgressIndicator(strokeWidth: 2))
+                  ? const SizedBox.square(
+                      dimension: 24,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
                   : const Icon(Icons.key_outlined),
-              title: const Text('Rotar llave de cifrado'),
-              subtitle: const Text('Reencripta historial e inventarios dentro de una transacción, sin cambiar su contenido.'),
-              onTap: widget.temporaryMode || _rotatingKey ? null : _rotateEncryptionKey,
+              title: const AppText('Rotar llave de cifrado'),
+              subtitle: const AppText(
+                'Reencripta historial e inventarios dentro de una transacción, sin cambiar su contenido.',
+              ),
+              onTap: widget.temporaryMode || _rotatingKey
+                  ? null
+                  : _rotateEncryptionKey,
             ),
             ListTile(
               leading: const Icon(Icons.delete_sweep_outlined),
-              title: const Text('Borrar todo el historial'),
-              subtitle: Text('${widget.scanStore.history.length} registros guardados'),
+              title: const AppText('Borrar todo el historial'),
+              subtitle: AppText(
+                '${widget.scanStore.history.length} registros guardados',
+              ),
               onTap: _clearHistory,
             ),
           ],
@@ -241,13 +342,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
             if (widget.temporaryMode)
               const ListTile(
                 leading: Icon(Icons.visibility_off_outlined),
-                title: Text('Modo temporal activo'),
-                subtitle: Text('Los datos persistentes no se están utilizando.'),
+                title: AppText('Modo temporal activo'),
+                subtitle: AppText(
+                  'Los datos persistentes no se están utilizando.',
+                ),
               ),
             ListTile(
               leading: const Icon(Icons.verified_user_outlined),
-              title: Text('$appName $appVersion'),
-              subtitle: const Text('Sensor local con historial cifrado, inventario, generador y centro de recuperación. Licencia MIT.'),
+              title: AppText('$appName $appVersion'),
+              subtitle: const AppText(
+                'Sensor local con historial cifrado, inventario, generador y centro de recuperación. Licencia MIT.',
+              ),
             ),
           ],
         ),
@@ -255,7 +360,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-  Future<void> _update(AppSettings settings) => widget.settings.update(settings);
+  Future<void> _update(AppSettings settings) =>
+      widget.settings.update(settings);
 
   Future<void> _updateRetention(int days) async {
     await _update(value.copyWith(historyRetentionDays: days));
@@ -273,7 +379,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
     if (authenticated) {
       await _update(value.copyWith(biometricLock: true));
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('No se pudo activar el bloqueo en este dispositivo.')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: AppText(
+            'No se pudo activar el bloqueo en este dispositivo.',
+          ),
+        ),
+      );
     }
   }
 
@@ -285,23 +397,36 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Future<void> _retryMigrationFromSettings() async {
     final bool completed = await _retryMigration();
     if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text(completed
-          ? 'Migración completada y verificada.'
-          : 'La migración sigue pendiente; el origen y el respaldo cifrado se conservaron.'),
-    ));
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: AppText(
+          completed
+              ? 'Migración completada y verificada.'
+              : 'La migración sigue pendiente; el origen y el respaldo cifrado se conservaron.',
+        ),
+      ),
+    );
   }
 
   Future<void> _rotateEncryptionKey() async {
     if (_rotatingKey) return;
-    final bool confirmed = await showDialog<bool>(
+    final bool confirmed =
+        await showDialog<bool>(
           context: context,
           builder: (BuildContext context) => AlertDialog(
-            title: const Text('Rotar llave de cifrado'),
-            content: const Text('La operación valida y reencripta todos los registros antes de activar la nueva llave. No cierres la aplicación durante el proceso.'),
+            title: const AppText('Rotar llave de cifrado'),
+            content: const AppText(
+              'La operación valida y reencripta todos los registros antes de activar la nueva llave. No cierres la aplicación durante el proceso.',
+            ),
             actions: <Widget>[
-              TextButton(onPressed: () => Navigator.of(context).pop(false), child: const Text('Cancelar')),
-              FilledButton(onPressed: () => Navigator.of(context).pop(true), child: const Text('Continuar')),
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: const AppText('Cancelar'),
+              ),
+              FilledButton(
+                onPressed: () => Navigator.of(context).pop(true),
+                child: const AppText('Continuar'),
+              ),
             ],
           ),
         ) ??
@@ -315,7 +440,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
       context: context,
       barrierDismissible: false,
       builder: (_) => const AlertDialog(
-        content: Row(children: <Widget>[CircularProgressIndicator(), SizedBox(width: 16), Expanded(child: Text('Reencriptando datos localmente…'))]),
+        content: Row(
+          children: <Widget>[
+            CircularProgressIndicator(),
+            SizedBox(width: 16),
+            Expanded(child: AppText('Reencriptando datos localmente…')),
+          ],
+        ),
       ),
     ).whenComplete(() => dialogOpen = false);
     await Future<void>.delayed(Duration.zero);
@@ -333,23 +464,42 @@ class _SettingsScreenState extends State<SettingsScreen> {
     }
     if (!mounted) return;
     if (failure != null || result == null) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('No se modificaron los datos porque la rotación no pudo completarse.')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: AppText(
+            'No se modificaron los datos porque la rotación no pudo completarse.',
+          ),
+        ),
+      );
       return;
     }
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text('Llave rotada: ${result.historyRecords} lecturas y ${result.inventorySessions} inventarios.'),
-    ));
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: AppText(
+          'Llave rotada: ${result.historyRecords} lecturas y ${result.inventorySessions} inventarios.',
+        ),
+      ),
+    );
   }
 
   Future<void> _clearHistory() async {
-    final bool confirmed = await showDialog<bool>(
+    final bool confirmed =
+        await showDialog<bool>(
           context: context,
           builder: (BuildContext context) => AlertDialog(
-            title: const Text('Borrar historial'),
-            content: const Text('La base local de lecturas quedará vacía. Las sesiones de inventario no se eliminarán.'),
+            title: const AppText('Borrar historial'),
+            content: const AppText(
+              'La base local de lecturas quedará vacía. Las sesiones de inventario no se eliminarán.',
+            ),
             actions: <Widget>[
-              TextButton(onPressed: () => Navigator.of(context).pop(false), child: const Text('Cancelar')),
-              FilledButton(onPressed: () => Navigator.of(context).pop(true), child: const Text('Borrar')),
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: const AppText('Cancelar'),
+              ),
+              FilledButton(
+                onPressed: () => Navigator.of(context).pop(true),
+                child: const AppText('Borrar'),
+              ),
             ],
           ),
         ) ??
@@ -375,7 +525,12 @@ class _Section extends StatelessWidget {
           children: <Widget>[
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12),
-              child: Text(title, style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w800)),
+              child: AppText(
+                title,
+                style: Theme.of(
+                  context,
+                ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w800),
+              ),
             ),
             const SizedBox(height: 6),
             ...children,

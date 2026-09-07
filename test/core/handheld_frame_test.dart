@@ -6,10 +6,13 @@ void main() {
   const Key content = Key('content');
 
   Widget frame() => const MaterialApp(
-        home: HandheldFrame(
-          child: SizedBox.expand(key: content, child: ColoredBox(color: Color(0xFF006B66))),
-        ),
-      );
+    home: HandheldFrame(
+      child: SizedBox.expand(
+        key: content,
+        child: ColoredBox(color: Color(0xFF006B66)),
+      ),
+    ),
+  );
 
   Future<Rect> layout(WidgetTester tester, Size viewport) async {
     tester.view.physicalSize = viewport;
@@ -19,21 +22,30 @@ void main() {
     return tester.getRect(find.byKey(content));
   }
 
-  testWidgets('a phone-sized viewport is filled edge to edge', (WidgetTester tester) async {
+  testWidgets('a phone-sized viewport is filled edge to edge', (
+    WidgetTester tester,
+  ) async {
     final Rect box = await layout(tester, const Size(400, 900));
 
     expect(box.left, 0);
     expect(box.width, 400);
   });
 
-  testWidgets('exactly at the threshold the viewport is still filled', (WidgetTester tester) async {
-    final Rect box = await layout(tester, const Size(HandheldFrame.maxWidth, 900));
+  testWidgets('exactly at the threshold the viewport is still filled', (
+    WidgetTester tester,
+  ) async {
+    final Rect box = await layout(
+      tester,
+      const Size(HandheldFrame.maxWidth, 900),
+    );
 
     expect(box.left, 0);
     expect(box.width, HandheldFrame.maxWidth);
   });
 
-  testWidgets('a wide viewport is centred at handheld width', (WidgetTester tester) async {
+  testWidgets('a wide viewport is centred at handheld width', (
+    WidgetTester tester,
+  ) async {
     const double viewport = 1600;
     final Rect box = await layout(tester, const Size(viewport, 900));
 
@@ -43,10 +55,25 @@ void main() {
     expect(box.left, (viewport - HandheldFrame.maxWidth) / 2);
   });
 
-  test('navigation hides visual labels only on phones narrower than 360 dp', () {
-    expect(navigationLabelBehaviorForWidth(320), NavigationDestinationLabelBehavior.alwaysHide);
-    expect(navigationLabelBehaviorForWidth(359), NavigationDestinationLabelBehavior.alwaysHide);
-    expect(navigationLabelBehaviorForWidth(360), NavigationDestinationLabelBehavior.alwaysShow);
-    expect(navigationLabelBehaviorForWidth(430), NavigationDestinationLabelBehavior.alwaysShow);
-  });
+  test(
+    'navigation hides visual labels only on phones narrower than 360 dp',
+    () {
+      expect(
+        navigationLabelBehaviorForWidth(320),
+        NavigationDestinationLabelBehavior.alwaysHide,
+      );
+      expect(
+        navigationLabelBehaviorForWidth(359),
+        NavigationDestinationLabelBehavior.alwaysHide,
+      );
+      expect(
+        navigationLabelBehaviorForWidth(360),
+        NavigationDestinationLabelBehavior.alwaysShow,
+      );
+      expect(
+        navigationLabelBehaviorForWidth(430),
+        NavigationDestinationLabelBehavior.alwaysShow,
+      );
+    },
+  );
 }

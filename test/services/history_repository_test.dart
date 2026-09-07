@@ -10,7 +10,8 @@ import 'package:rootcause_qr_inspector/services/history_repository.dart';
 void main() {
   setUp(() {
     TestWidgetsFlutterBinding.ensureInitialized();
-    SharedPreferencesAsyncPlatform.instance = InMemorySharedPreferencesAsync.empty();
+    SharedPreferencesAsyncPlatform.instance =
+        InMemorySharedPreferencesAsync.empty();
   });
 
   test('replaceAll atomically replaces the stored history', () async {
@@ -21,8 +22,14 @@ void main() {
       PayloadCipher(keyProvider: MemoryEncryptionKeyProvider()),
       recovery: RecoveryRepository(database),
     );
-    await repository.upsert(ScanRecord.manual(rawValue: 'old', format: 'QR', source: 'Test'));
-    final ScanRecord replacement = ScanRecord.manual(rawValue: 'new', format: 'QR', source: 'Test');
+    await repository.upsert(
+      ScanRecord.manual(rawValue: 'old', format: 'QR', source: 'Test'),
+    );
+    final ScanRecord replacement = ScanRecord.manual(
+      rawValue: 'new',
+      format: 'QR',
+      source: 'Test',
+    );
 
     await repository.replaceAll(<ScanRecord>[replacement]);
     final List<ScanRecord> loaded = await repository.load();

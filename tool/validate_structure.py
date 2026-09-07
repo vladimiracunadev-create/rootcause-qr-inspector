@@ -234,6 +234,8 @@ def check_mobile_product_scope() -> None:
         fail("El bootstrap debe declarar Android/iOS como únicas plataformas del producto.")
     if 'GENERATABLE_TARGETS = (*PRODUCT_PLATFORMS, "web")' not in bootstrap:
         fail("El target web debe estar separado como canal técnico de demostración.")
+    if 'compileSdk = 37' not in bootstrap or 'compileSdkVersion 37' not in bootstrap:
+        fail("El bootstrap debe fijar compileSdk 37 para las dependencias Android actuales.")
 
     workflow = "\n".join(
         path.read_text(encoding="utf-8")

@@ -215,7 +215,7 @@ class _ScannerScreenState extends State<ScannerScreen>
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-                            Text(
+                            AppText(
                               'ROOTCAUSE · SEGURIDAD QR',
                               style: Theme.of(context).textTheme.labelSmall
                                   ?.copyWith(
@@ -227,7 +227,7 @@ class _ScannerScreenState extends State<ScannerScreen>
                                   ),
                             ),
                             const SizedBox(height: 3),
-                            Text(
+                            AppText(
                               context.strings.scannerTitle,
                               style: compactHeader
                                   ? Theme.of(context).textTheme.titleMedium
@@ -236,7 +236,7 @@ class _ScannerScreenState extends State<ScannerScreen>
                             ),
                             if (!compactHeader) ...<Widget>[
                               const SizedBox(height: 3),
-                              Text(
+                              AppText(
                                 context.strings.scannerSubtitle,
                                 style: TextStyle(
                                   color: Theme.of(
@@ -261,7 +261,7 @@ class _ScannerScreenState extends State<ScannerScreen>
                             padding: const EdgeInsets.symmetric(horizontal: 10),
                           ),
                           icon: const Icon(Icons.add_photo_alternate_outlined),
-                          label: Text(
+                          label: AppText(
                             compactFileAction ? 'Archivo' : 'Analizar archivo',
                           ),
                         ),
@@ -496,7 +496,7 @@ class _ScannerScreenState extends State<ScannerScreen>
                                                 ScanPhase.starting =>
                                                   Icons.hourglass_top,
                                               }),
-                                              label: Text(switch (phase) {
+                                              label: AppText(switch (phase) {
                                                 ScanPhase.scanning => 'Pausar',
                                                 ScanPhase.captured => 'Leído',
                                                 ScanPhase.paused => 'Reanudar',
@@ -602,27 +602,27 @@ class _ScannerScreenState extends State<ScannerScreen>
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              Text(
+              AppText(
                 'Elegir fuente',
                 style: Theme.of(context).textTheme.titleLarge,
               ),
               const SizedBox(height: 8),
               ListTile(
                 leading: const Icon(Icons.image_outlined),
-                title: const Text('Elegir imagen'),
-                subtitle: const Text('Fotografía o captura almacenada'),
+                title: const AppText('Elegir imagen'),
+                subtitle: const AppText('Fotografía o captura almacenada'),
                 onTap: () => Navigator.of(context).pop('image'),
               ),
               ListTile(
                 leading: const Icon(Icons.collections_outlined),
-                title: const Text('Elegir varias imágenes'),
-                subtitle: const Text('Hasta 20 imágenes'),
+                title: const AppText('Elegir varias imágenes'),
+                subtitle: const AppText('Hasta 20 imágenes'),
                 onTap: () => Navigator.of(context).pop('images'),
               ),
               ListTile(
                 leading: const Icon(Icons.picture_as_pdf_outlined),
-                title: const Text('Elegir PDF'),
-                subtitle: const Text('Hasta 50 páginas y 50 MiB'),
+                title: const AppText('Elegir PDF'),
+                subtitle: const AppText('Hasta 50 páginas y 50 MiB'),
                 onTap: () => Navigator.of(context).pop('pdf'),
               ),
             ],
@@ -729,7 +729,7 @@ class _ScannerScreenState extends State<ScannerScreen>
       if (result.records.isEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(
+            content: AppText(
               images.length == 1
                   ? 'No encontramos códigos legibles en esta imagen. Prueba una imagen de mayor resolución y comprueba que el código completo sea visible.'
                   : 'No encontramos códigos compatibles en las ${images.length} imágenes. Prueba archivos de mayor resolución y comprueba que cada código completo sea visible.',
@@ -750,7 +750,7 @@ class _ScannerScreenState extends State<ScannerScreen>
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(
+            content: AppText(
               'Análisis cancelado: se inspeccionaron $imagesInspected de ${images.length} imágenes. No se modificó el historial.',
             ),
           ),
@@ -760,13 +760,13 @@ class _ScannerScreenState extends State<ScannerScreen>
       if (mounted) {
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(SnackBar(content: Text(error.message)));
+        ).showSnackBar(SnackBar(content: AppText(error.message)));
       }
     } on Object {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('No fue posible analizar una o más imágenes.'),
+            content: AppText('No fue posible analizar una o más imágenes.'),
           ),
         );
       }
@@ -846,7 +846,7 @@ class _ScannerScreenState extends State<ScannerScreen>
       if (result.records.isEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(
+            content: AppText(
               (renderedBatch?.truncated ?? false)
                   ? 'No se encontraron códigos compatibles en las ${result.unitsInspected} páginas inspeccionadas. El documento tiene ${renderedBatch!.totalPages} páginas y se aplicó el límite de ${renderedBatch!.inspectedPages}.'
                   : 'No se encontraron códigos compatibles en las ${result.unitsInspected} páginas inspeccionadas.',
@@ -871,7 +871,7 @@ class _ScannerScreenState extends State<ScannerScreen>
             : '';
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(
+            content: AppText(
               'Análisis de PDF cancelado.$inspected No se modificó el historial.',
             ),
           ),
@@ -881,13 +881,13 @@ class _ScannerScreenState extends State<ScannerScreen>
       if (mounted) {
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(SnackBar(content: Text(error.message)));
+        ).showSnackBar(SnackBar(content: AppText(error.message)));
       }
     } on Object {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('No fue posible analizar el documento PDF.'),
+            content: AppText('No fue posible analizar el documento PDF.'),
           ),
         );
       }
@@ -1058,7 +1058,7 @@ class _SecurityCapability extends StatelessWidget {
         children: <Widget>[
           Icon(icon, size: 15, color: colors.primary),
           const SizedBox(width: 6),
-          Text(
+          AppText(
             label,
             style: Theme.of(
               context,
@@ -1103,7 +1103,7 @@ class _BatchProgressDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Procesando localmente'),
+      title: const AppText('Procesando localmente'),
       content: AnimatedBuilder(
         animation: Listenable.merge(<Listenable>[progress, token]),
         builder: (BuildContext context, Widget? child) => Column(
@@ -1112,9 +1112,9 @@ class _BatchProgressDialog extends StatelessWidget {
           children: <Widget>[
             LinearProgressIndicator(value: progress.fraction),
             const SizedBox(height: 12),
-            Text(progress.label, textAlign: TextAlign.center),
+            AppText(progress.label, textAlign: TextAlign.center),
             if (progress.total > 0)
-              Text(
+              AppText(
                 '${progress.current}/${progress.total}',
                 textAlign: TextAlign.center,
               ),
@@ -1125,7 +1125,7 @@ class _BatchProgressDialog extends StatelessWidget {
         TextButton.icon(
           onPressed: token.isCancelled ? null : token.cancel,
           icon: const Icon(Icons.cancel_outlined),
-          label: const Text('Cancelar'),
+          label: const AppText('Cancelar'),
         ),
       ],
     );
@@ -1149,13 +1149,13 @@ class _ScannerError extends StatelessWidget {
             children: <Widget>[
               const Icon(Icons.no_photography_outlined, size: 54),
               const SizedBox(height: 14),
-              Text(
+              AppText(
                 'No se pudo iniciar la cámara',
                 style: Theme.of(context).textTheme.titleLarge,
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 8),
-              Text(
+              AppText(
                 error.errorCode == MobileScannerErrorCode.permissionDenied
                     ? 'Concede el permiso de cámara en los ajustes del sistema y vuelve a intentarlo.'
                     : 'Cierra otras aplicaciones que estén usando la cámara y reinicia la lectura.',
@@ -1165,7 +1165,7 @@ class _ScannerError extends StatelessWidget {
               FilledButton.icon(
                 onPressed: () => unawaited(onRetry()),
                 icon: const Icon(Icons.refresh),
-                label: const Text('Reintentar'),
+                label: const AppText('Reintentar'),
               ),
             ],
           ),

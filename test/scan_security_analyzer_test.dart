@@ -4,8 +4,9 @@ import 'package:rootcause_qr_inspector/core/security/scan_security_analyzer.dart
 void main() {
   group('ScanSecurityAnalyzer', () {
     test('acepta un enlace HTTPS común', () {
-      final SecurityAssessment result =
-          ScanSecurityAnalyzer.analyze('https://example.com/documento');
+      final SecurityAssessment result = ScanSecurityAnalyzer.analyze(
+        'https://example.com/documento',
+      );
 
       expect(result.level, RiskLevel.low);
       expect(result.canOpen, isTrue);
@@ -13,8 +14,9 @@ void main() {
     });
 
     test('advierte cuando el enlace usa HTTP', () {
-      final SecurityAssessment result =
-          ScanSecurityAnalyzer.analyze('http://example.com');
+      final SecurityAssessment result = ScanSecurityAnalyzer.analyze(
+        'http://example.com',
+      );
 
       expect(result.level, RiskLevel.caution);
       expect(result.canOpen, isTrue);
@@ -39,24 +41,27 @@ void main() {
     });
 
     test('marca Punycode como riesgo elevado', () {
-      final SecurityAssessment result =
-          ScanSecurityAnalyzer.analyze('https://xn--pple-43d.com');
+      final SecurityAssessment result = ScanSecurityAnalyzer.analyze(
+        'https://xn--pple-43d.com',
+      );
 
       expect(result.level, RiskLevel.high);
       expect(result.reasons, isNotEmpty);
     });
 
     test('bloquea esquemas desconocidos', () {
-      final SecurityAssessment result =
-          ScanSecurityAnalyzer.analyze('javascript:alert(1)');
+      final SecurityAssessment result = ScanSecurityAnalyzer.analyze(
+        'javascript:alert(1)',
+      );
 
       expect(result.level, RiskLevel.high);
       expect(result.canOpen, isFalse);
     });
 
     test('permite acciones telefónicas explícitas', () {
-      final SecurityAssessment result =
-          ScanSecurityAnalyzer.analyze('tel:+56912345678');
+      final SecurityAssessment result = ScanSecurityAnalyzer.analyze(
+        'tel:+56912345678',
+      );
 
       expect(result.level, RiskLevel.low);
       expect(result.canOpen, isTrue);

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rootcause_qr_inspector/core/localization/app_localizations.dart';
 
 /// What the camera is doing right now, from the user's point of view.
 enum ScanPhase {
@@ -49,26 +50,28 @@ class ScanStatusBar extends StatelessWidget {
   final bool animate;
 
   String get _title => switch (phase) {
-        ScanPhase.starting => 'Preparando inspección…',
-        ScanPhase.scanning => 'Inspección activa',
-        ScanPhase.captured => 'Código leído',
-        ScanPhase.paused => 'Inspección en pausa',
-        ScanPhase.unavailable => 'Sensor no disponible',
-      };
+    ScanPhase.starting => 'Preparando inspección…',
+    ScanPhase.scanning => 'Inspección activa',
+    ScanPhase.captured => 'Código leído',
+    ScanPhase.paused => 'Inspección en pausa',
+    ScanPhase.unavailable => 'Sensor no disponible',
+  };
 
   IconData get _icon => switch (phase) {
-        ScanPhase.starting => Icons.hourglass_top_outlined,
-        ScanPhase.scanning => Icons.qr_code_scanner,
-        ScanPhase.captured => Icons.check_circle,
-        ScanPhase.paused => Icons.pause_circle_outline,
-        ScanPhase.unavailable => Icons.videocam_off_outlined,
-      };
+    ScanPhase.starting => Icons.hourglass_top_outlined,
+    ScanPhase.scanning => Icons.qr_code_scanner,
+    ScanPhase.captured => Icons.check_circle,
+    ScanPhase.paused => Icons.pause_circle_outline,
+    ScanPhase.unavailable => Icons.videocam_off_outlined,
+  };
 
   @override
   Widget build(BuildContext context) {
     final ColorScheme colors = Theme.of(context).colorScheme;
     final Color accent = switch (phase) {
-      ScanPhase.starting || ScanPhase.scanning || ScanPhase.captured => colors.primary,
+      ScanPhase.starting ||
+      ScanPhase.scanning ||
+      ScanPhase.captured => colors.primary,
       ScanPhase.paused => Colors.white,
       ScanPhase.unavailable => colors.error,
     };
@@ -83,7 +86,11 @@ class ScanStatusBar extends StatelessWidget {
           border: Border.all(color: Colors.white.withValues(alpha: 0.12)),
           borderRadius: BorderRadius.circular(16),
           boxShadow: <BoxShadow>[
-            BoxShadow(color: Colors.black.withValues(alpha: 0.25), blurRadius: 18, offset: const Offset(0, 8)),
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.25),
+              blurRadius: 18,
+              offset: const Offset(0, 8),
+            ),
           ],
         ),
         child: Column(
@@ -95,7 +102,10 @@ class ScanStatusBar extends StatelessWidget {
                 Container(
                   width: 30,
                   height: 30,
-                  decoration: BoxDecoration(color: accent.withValues(alpha: 0.16), borderRadius: BorderRadius.circular(10)),
+                  decoration: BoxDecoration(
+                    color: accent.withValues(alpha: 0.16),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
                   child: Icon(_icon, color: accent, size: 18),
                 ),
                 const SizedBox(width: 9),
@@ -103,17 +113,24 @@ class ScanStatusBar extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Text(
+                      AppText(
                         _title,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 13),
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w800,
+                          fontSize: 13,
+                        ),
                       ),
-                      Text(
+                      AppText(
                         message,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(color: Colors.white70, fontSize: 11),
+                        style: const TextStyle(
+                          color: Colors.white70,
+                          fontSize: 11,
+                        ),
                       ),
                     ],
                   ),
@@ -125,10 +142,18 @@ class ScanStatusBar extends StatelessWidget {
                     style: TextButton.styleFrom(
                       foregroundColor: accent,
                       visualDensity: VisualDensity.compact,
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 6,
+                      ),
                     ),
-                    icon: Icon(phase == ScanPhase.paused ? Icons.play_arrow : Icons.refresh, size: 18),
-                    label: Text(actionLabel!, maxLines: 1),
+                    icon: Icon(
+                      phase == ScanPhase.paused
+                          ? Icons.play_arrow
+                          : Icons.refresh,
+                      size: 18,
+                    ),
+                    label: AppText(actionLabel!, maxLines: 1),
                   ),
                 ],
               ],
@@ -145,7 +170,11 @@ class ScanStatusBar extends StatelessWidget {
 /// The horizontal bar itself: it moves only while the camera is really
 /// analysing frames.
 class _ScanProgressBar extends StatelessWidget {
-  const _ScanProgressBar({required this.phase, required this.accent, required this.animate});
+  const _ScanProgressBar({
+    required this.phase,
+    required this.accent,
+    required this.animate,
+  });
 
   final ScanPhase phase;
   final Color accent;

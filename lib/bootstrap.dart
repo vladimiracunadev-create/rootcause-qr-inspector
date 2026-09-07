@@ -61,17 +61,26 @@ abstract final class AppBootstrapper {
   static Future<AppServices> initialize({bool temporary = false}) async {
     AppDatabase? database;
     try {
-      database = temporary ? await AppDatabase.openTemporary() : await AppDatabase.open();
+      database = temporary
+          ? await AppDatabase.openTemporary()
+          : await AppDatabase.open();
       final RecoveryRepository recovery = RecoveryRepository(database);
-      final EncryptionMetadataRepository encryptionMetadata = EncryptionMetadataRepository(database);
-      final String activeKeyId = temporary ? PayloadCipher.currentKeyId : await encryptionMetadata.loadActiveKeyId();
+      final EncryptionMetadataRepository encryptionMetadata =
+          EncryptionMetadataRepository(database);
+      final String activeKeyId = temporary
+          ? PayloadCipher.currentKeyId
+          : await encryptionMetadata.loadActiveKeyId();
       final PayloadCipher cipher = PayloadCipher(
         keyProvider: temporary ? MemoryEncryptionKeyProvider() : null,
         activeKeyId: activeKeyId,
       );
       final SettingsStore settings = SettingsStore(SettingsRepository());
-      final ScanStore scans = ScanStore(HistoryRepository(database, cipher, recovery: recovery));
-      final InventoryStore inventory = InventoryStore(InventoryRepository(database, cipher, recovery: recovery));
+      final ScanStore scans = ScanStore(
+        HistoryRepository(database, cipher, recovery: recovery),
+      );
+      final InventoryStore inventory = InventoryStore(
+        InventoryRepository(database, cipher, recovery: recovery),
+      );
 
       if (temporary) {
         try {
@@ -82,7 +91,10 @@ abstract final class AppBootstrapper {
       } else {
         await settings.initialize();
       }
-      await Future.wait(<Future<void>>[scans.initialize(), inventory.initialize()]);
+      await Future.wait(<Future<void>>[
+        scans.initialize(),
+        inventory.initialize(),
+      ]);
       await scans.pruneOlderThan(settings.value.historyRetentionDays);
       return AppServices(
         database: database,
@@ -91,7 +103,11 @@ abstract final class AppBootstrapper {
         settingsStore: settings,
         recoveryRepository: recovery,
         recoveryService: RecoveryService(database, cipher, recovery),
-        dataMaintenanceService: DataMaintenanceService(database, cipher, encryptionMetadata),
+        dataMaintenanceService: DataMaintenanceService(
+          database,
+          cipher,
+          encryptionMetadata,
+        ),
       );
     } on Object {
       await database?.close();

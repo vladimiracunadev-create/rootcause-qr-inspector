@@ -20,7 +20,9 @@ void main() {
       },
     );
 
-    final InventorySession restored = InventorySession.fromJson(session.toJson());
+    final InventorySession restored = InventorySession.fromJson(
+      session.toJson(),
+    );
 
     expect(session.totalUnits, 3);
     expect(restored.name, 'Bodega principal');

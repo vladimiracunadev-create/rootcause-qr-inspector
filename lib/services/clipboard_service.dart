@@ -15,8 +15,12 @@ abstract final class ClipboardService {
     await Clipboard.setData(ClipboardData(text: value));
     if (clearAfterSeconds <= 0) return;
     Timer(Duration(seconds: clearAfterSeconds), () async {
-      final ClipboardData? current = await Clipboard.getData(Clipboard.kTextPlain);
-      if (current?.text == value) await Clipboard.setData(const ClipboardData(text: ''));
+      final ClipboardData? current = await Clipboard.getData(
+        Clipboard.kTextPlain,
+      );
+      if (current?.text == value) {
+        await Clipboard.setData(const ClipboardData(text: ''));
+      }
     });
   }
 }

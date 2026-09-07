@@ -25,7 +25,7 @@ clave ausente o corrupta nunca deja la aplicación sin configuración.
 | Clave | Tipo | Por defecto | Efecto | Consecuencia de un valor incorrecto |
 |---|---|---|---|---|
 | `theme_mode` | `system`/`light`/`dark` | `system` | Tema claro u oscuro | Un valor desconocido cae a `system` |
-| `language` | `system`/`esCl`/`es`/`en` | `system` | Idioma de la interfaz | `en` existe pero **no se ofrece**; el desplegable lo muestra como «Sistema» |
+| `language` | `system`/`esCl`/`es`/`en`/`fr`/`de` | `system` | Idioma de la interfaz | El desplegable ofrece sistema, dos variantes de español, inglés, francés y alemán |
 | `high_contrast` | bool | `false` | Sube el contraste y marca los bordes de tarjeta | Ninguna: es visual |
 | `large_controls` | bool | `false` | Aumenta la densidad táctil **sin** tocar la escala tipográfica | Ninguna |
 | `reduce_motion` | bool | `false` | Elimina transiciones; la barra de estado se dibuja llena y quieta y el marco no barre | Ninguna |

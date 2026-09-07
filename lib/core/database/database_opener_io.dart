@@ -10,6 +10,7 @@ import 'package:sembast/sembast_io.dart';
 Future<Database> openScannerDatabase() async {
   final Directory directory = await getApplicationSupportDirectory();
   await directory.create(recursive: true);
-  final String path = '${directory.path}${Platform.pathSeparator}rootcause_qr_inspector_v2.db';
+  final String path =
+      '${directory.path}${Platform.pathSeparator}rootcause_qr_inspector_v2.db';
   return databaseFactoryIo.openDatabase(path, version: 2);
 }

@@ -20,7 +20,8 @@ abstract interface class EncryptionKeyProvider {
 /// Mantiene una caché en memoria porque cada lectura del almacén seguro es una
 /// llamada a la plataforma, y el historial descifra un sobre por registro.
 class SecureStorageKeyProvider implements EncryptionKeyProvider {
-  SecureStorageKeyProvider({FlutterSecureStorage? storage}) : _storage = storage ?? const FlutterSecureStorage();
+  SecureStorageKeyProvider({FlutterSecureStorage? storage})
+    : _storage = storage ?? const FlutterSecureStorage();
 
   static const String _prefix = 'rcqr_database_key_';
   final FlutterSecureStorage _storage;
@@ -42,7 +43,10 @@ class SecureStorageKeyProvider implements EncryptionKeyProvider {
     final SecretKey? existing = await read(keyId);
     if (existing != null) return existing;
     final SecretKey key = await algorithm.newSecretKey();
-    await _storage.write(key: '$_prefix$keyId', value: base64Encode(await key.extractBytes()));
+    await _storage.write(
+      key: '$_prefix$keyId',
+      value: base64Encode(await key.extractBytes()),
+    );
     _cache[keyId] = key;
     return key;
   }
@@ -83,7 +87,12 @@ class MemoryEncryptionKeyProvider implements EncryptionKeyProvider {
 /// Los repositorios lo usan para decidir si reescriben el registro con el
 /// sobre actual la próxima vez que lo leen.
 class CipherEnvelopeInfo {
-  const CipherEnvelopeInfo({required this.version, required this.algorithm, required this.keyId, required this.legacy});
+  const CipherEnvelopeInfo({
+    required this.version,
+    required this.algorithm,
+    required this.keyId,
+    required this.legacy,
+  });
   final int version;
   final String algorithm;
   final String keyId;
@@ -113,10 +122,12 @@ class CipherEnvelopeInfo {
 /// [upgradeEnvelope] reescribe un sobre antiguo con la llave activa y devuelve
 /// la entrada sin tocar cuando ya está al día.
 class PayloadCipher {
-  PayloadCipher({EncryptionKeyProvider? keyProvider, String activeKeyId = currentKeyId})
-      : _keyProvider = keyProvider ?? SecureStorageKeyProvider(),
-        // ignore: prefer_initializing_formals
-        _activeKeyId = activeKeyId;
+  PayloadCipher({
+    EncryptionKeyProvider? keyProvider,
+    String activeKeyId = currentKeyId,
+  }) : _keyProvider = keyProvider ?? SecureStorageKeyProvider(),
+       // ignore: prefer_initializing_formals
+       _activeKeyId = activeKeyId;
 
   static const int currentVersion = 2;
   static const String currentAlgorithm = 'AES-256-GCM';
@@ -140,7 +151,10 @@ class PayloadCipher {
     await _keyProvider.forget(keyId);
   }
 
-  Future<String> encryptJson(Map<String, dynamic> value, {String? keyId}) async {
+  Future<String> encryptJson(
+    Map<String, dynamic> value, {
+    String? keyId,
+  }) async {
     final String selectedKeyId = keyId ?? _activeKeyId;
     if (_missingKeyIds.contains(selectedKeyId)) {
       throw StateError('encryption_key_missing:$selectedKeyId');
@@ -163,29 +177,45 @@ class PayloadCipher {
   }
 
   CipherEnvelopeInfo inspect(String encoded) {
-    final Map<String, dynamic> envelope = Map<String, dynamic>.from(jsonDecode(encoded) as Map);
+    final Map<String, dynamic> envelope = Map<String, dynamic>.from(
+      jsonDecode(encoded) as Map,
+    );
     final bool legacy = !envelope.containsKey('version');
     return CipherEnvelopeInfo(
       version: legacy ? 1 : envelope['version'] as int? ?? 1,
-      algorithm: legacy ? currentAlgorithm : envelope['algorithm'] as String? ?? currentAlgorithm,
-      keyId: legacy ? legacyKeyId : envelope['keyId'] as String? ?? currentKeyId,
+      algorithm: legacy
+          ? currentAlgorithm
+          : envelope['algorithm'] as String? ?? currentAlgorithm,
+      keyId: legacy
+          ? legacyKeyId
+          : envelope['keyId'] as String? ?? currentKeyId,
       legacy: legacy,
     );
   }
 
   Future<Map<String, dynamic>> decryptJson(String encoded) async {
-    final Map<String, dynamic> envelope = Map<String, dynamic>.from(jsonDecode(encoded) as Map);
+    final Map<String, dynamic> envelope = Map<String, dynamic>.from(
+      jsonDecode(encoded) as Map,
+    );
     final bool legacy = !envelope.containsKey('version');
     final int version = legacy ? 1 : envelope['version'] as int? ?? 1;
     if (version < 1 || version > currentVersion) {
       throw FormatException('Versión de cifrado no compatible: $version');
     }
-    final String algorithm = legacy ? currentAlgorithm : envelope['algorithm'] as String? ?? currentAlgorithm;
-    if (algorithm != currentAlgorithm) throw FormatException('Algoritmo no compatible: $algorithm');
-    final String keyId = legacy ? legacyKeyId : envelope['keyId'] as String? ?? currentKeyId;
+    final String algorithm = legacy
+        ? currentAlgorithm
+        : envelope['algorithm'] as String? ?? currentAlgorithm;
+    if (algorithm != currentAlgorithm) {
+      throw FormatException('Algoritmo no compatible: $algorithm');
+    }
+    final String keyId = legacy
+        ? legacyKeyId
+        : envelope['keyId'] as String? ?? currentKeyId;
     final Map<String, dynamic> payload = legacy
         ? envelope
-        : Map<String, dynamic>.from(envelope['payload'] as Map? ?? const <String, dynamic>{});
+        : Map<String, dynamic>.from(
+            envelope['payload'] as Map? ?? const <String, dynamic>{},
+          );
     final SecretBox box = SecretBox(
       base64Decode(payload['cipherText'] as String),
       nonce: base64Decode(payload['nonce'] as String),
@@ -203,7 +233,11 @@ class PayloadCipher {
 
   Future<String> upgradeEnvelope(String encoded) async {
     final CipherEnvelopeInfo info = inspect(encoded);
-    if (!info.legacy && info.version == currentVersion && info.keyId == _activeKeyId) return encoded;
+    if (!info.legacy &&
+        info.version == currentVersion &&
+        info.keyId == _activeKeyId) {
+      return encoded;
+    }
     return encryptJson(await decryptJson(encoded));
   }
 }

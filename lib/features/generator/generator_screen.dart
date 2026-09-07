@@ -5,6 +5,7 @@ import 'dart:ui' as ui;
 import 'package:barcode_widget/barcode_widget.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:rootcause_qr_inspector/core/localization/app_localizations.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:share_plus/share_plus.dart';
@@ -31,11 +32,25 @@ class GeneratorScreen extends StatefulWidget {
 }
 
 enum _PayloadType { text, url, wifi, contact, event, email, phone, sms, geo }
-enum _CodeFormat { qr, dataMatrix, aztec, pdf417, code128, code39, ean13, ean8, upcA, gs128 }
+
+enum _CodeFormat {
+  qr,
+  dataMatrix,
+  aztec,
+  pdf417,
+  code128,
+  code39,
+  ean13,
+  ean8,
+  upcA,
+  gs128,
+}
 
 class _GeneratorScreenState extends State<GeneratorScreen> {
   final GlobalKey _previewKey = GlobalKey();
-  final TextEditingController _primary = TextEditingController(text: 'https://example.com');
+  final TextEditingController _primary = TextEditingController(
+    text: 'https://example.com',
+  );
   final TextEditingController _secondary = TextEditingController();
   final TextEditingController _tertiary = TextEditingController();
   final TextEditingController _quaternary = TextEditingController();
@@ -53,25 +68,48 @@ class _GeneratorScreenState extends State<GeneratorScreen> {
   }
 
   String get _payload => switch (_payloadType) {
-        _PayloadType.text => _primary.text,
-        _PayloadType.url => _normalizeUrl(_primary.text),
-        _PayloadType.wifi => 'WIFI:T:${_secondary.text.isEmpty ? 'WPA' : _secondary.text};S:${_escape(_primary.text)};P:${_escape(_tertiary.text)};H:${_quaternary.text.toLowerCase() == 'true'};;',
-        _PayloadType.contact => 'BEGIN:VCARD\nVERSION:3.0\nFN:${_primary.text}\nTEL:${_secondary.text}\nEMAIL:${_tertiary.text}\nORG:${_quaternary.text}\nEND:VCARD',
-        _PayloadType.event => 'BEGIN:VEVENT\nSUMMARY:${_primary.text}\nDTSTART:${_secondary.text}\nDTEND:${_tertiary.text}\nLOCATION:${_quaternary.text}\nEND:VEVENT',
-        _PayloadType.email => Uri(scheme: 'mailto', path: _primary.text, queryParameters: <String, String>{'subject': _secondary.text, 'body': _tertiary.text}).toString(),
-        _PayloadType.phone => 'tel:${_primary.text}',
-        _PayloadType.sms => 'SMSTO:${_primary.text}:${_secondary.text}',
-        _PayloadType.geo => 'geo:${_primary.text},${_secondary.text}${_tertiary.text.isEmpty ? '' : '?q=${Uri.encodeComponent(_tertiary.text)}'}',
-      };
+    _PayloadType.text => _primary.text,
+    _PayloadType.url => _normalizeUrl(_primary.text),
+    _PayloadType.wifi =>
+      'WIFI:T:${_secondary.text.isEmpty ? 'WPA' : _secondary.text};S:${_escape(_primary.text)};P:${_escape(_tertiary.text)};H:${_quaternary.text.toLowerCase() == 'true'};;',
+    _PayloadType.contact =>
+      'BEGIN:VCARD\nVERSION:3.0\nFN:${_primary.text}\nTEL:${_secondary.text}\nEMAIL:${_tertiary.text}\nORG:${_quaternary.text}\nEND:VCARD',
+    _PayloadType.event =>
+      'BEGIN:VEVENT\nSUMMARY:${_primary.text}\nDTSTART:${_secondary.text}\nDTEND:${_tertiary.text}\nLOCATION:${_quaternary.text}\nEND:VEVENT',
+    _PayloadType.email => Uri(
+      scheme: 'mailto',
+      path: _primary.text,
+      queryParameters: <String, String>{
+        'subject': _secondary.text,
+        'body': _tertiary.text,
+      },
+    ).toString(),
+    _PayloadType.phone => 'tel:${_primary.text}',
+    _PayloadType.sms => 'SMSTO:${_primary.text}:${_secondary.text}',
+    _PayloadType.geo =>
+      'geo:${_primary.text},${_secondary.text}${_tertiary.text.isEmpty ? '' : '?q=${Uri.encodeComponent(_tertiary.text)}'}',
+  };
 
   @override
   Widget build(BuildContext context) {
-    final bool twoDimensional = <_CodeFormat>{_CodeFormat.qr, _CodeFormat.dataMatrix, _CodeFormat.aztec, _CodeFormat.pdf417}.contains(_format);
+    final bool twoDimensional = <_CodeFormat>{
+      _CodeFormat.qr,
+      _CodeFormat.dataMatrix,
+      _CodeFormat.aztec,
+      _CodeFormat.pdf417,
+    }.contains(_format);
     return ListView(
       padding: const EdgeInsets.fromLTRB(16, 14, 16, 28),
       children: <Widget>[
-        Text('Generador', style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800)),
-        const Text('Crea códigos verificables sin enviar los datos a un servidor.'),
+        AppText(
+          'Generador',
+          style: Theme.of(
+            context,
+          ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800),
+        ),
+        const AppText(
+          'Crea códigos verificables sin enviar los datos a un servidor.',
+        ),
         const SizedBox(height: 14),
         Card(
           child: Padding(
@@ -80,8 +118,17 @@ class _GeneratorScreenState extends State<GeneratorScreen> {
               children: <Widget>[
                 DropdownButtonFormField<_PayloadType>(
                   initialValue: _payloadType,
-                  decoration: const InputDecoration(labelText: 'Tipo de contenido'),
-                  items: _PayloadType.values.map((value) => DropdownMenuItem(value: value, child: Text(_payloadLabel(value)))).toList(),
+                  decoration: const InputDecoration(
+                    labelText: 'Tipo de contenido',
+                  ),
+                  items: _PayloadType.values
+                      .map(
+                        (value) => DropdownMenuItem(
+                          value: value,
+                          child: AppText(_payloadLabel(value)),
+                        ),
+                      )
+                      .toList(),
                   onChanged: (value) {
                     if (value == null) return;
                     setState(() {
@@ -93,31 +140,61 @@ class _GeneratorScreenState extends State<GeneratorScreen> {
                 const SizedBox(height: 12),
                 DropdownButtonFormField<_CodeFormat>(
                   initialValue: _format,
-                  decoration: const InputDecoration(labelText: 'Formato visual'),
-                  items: _CodeFormat.values.map((value) => DropdownMenuItem(value: value, child: Text(_formatLabel(value)))).toList(),
-                  onChanged: (value) => value == null ? null : setState(() => _format = value),
+                  decoration: const InputDecoration(
+                    labelText: 'Formato visual',
+                  ),
+                  items: _CodeFormat.values
+                      .map(
+                        (value) => DropdownMenuItem(
+                          value: value,
+                          child: AppText(_formatLabel(value)),
+                        ),
+                      )
+                      .toList(),
+                  onChanged: (value) =>
+                      value == null ? null : setState(() => _format = value),
                 ),
                 const SizedBox(height: 12),
-                TextField(controller: _primary, onChanged: (_) => setState(() {}), decoration: InputDecoration(labelText: _labels.$1)),
+                TextField(
+                  controller: _primary,
+                  onChanged: (_) => setState(() {}),
+                  decoration: InputDecoration(labelText: _labels.$1),
+                ),
                 if (_labels.$2 != null) ...<Widget>[
                   const SizedBox(height: 10),
-                  TextField(controller: _secondary, onChanged: (_) => setState(() {}), decoration: InputDecoration(labelText: _labels.$2)),
+                  TextField(
+                    controller: _secondary,
+                    onChanged: (_) => setState(() {}),
+                    decoration: InputDecoration(labelText: _labels.$2),
+                  ),
                 ],
                 if (_labels.$3 != null) ...<Widget>[
                   const SizedBox(height: 10),
-                  TextField(controller: _tertiary, onChanged: (_) => setState(() {}), obscureText: _payloadType == _PayloadType.wifi, decoration: InputDecoration(labelText: _labels.$3)),
+                  TextField(
+                    controller: _tertiary,
+                    onChanged: (_) => setState(() {}),
+                    obscureText: _payloadType == _PayloadType.wifi,
+                    decoration: InputDecoration(labelText: _labels.$3),
+                  ),
                 ],
                 if (_labels.$4 != null) ...<Widget>[
                   const SizedBox(height: 10),
-                  TextField(controller: _quaternary, onChanged: (_) => setState(() {}), decoration: InputDecoration(labelText: _labels.$4)),
+                  TextField(
+                    controller: _quaternary,
+                    onChanged: (_) => setState(() {}),
+                    decoration: InputDecoration(labelText: _labels.$4),
+                  ),
                 ],
                 if (_format == _CodeFormat.qr)
                   SwitchListTile(
                     contentPadding: EdgeInsets.zero,
-                    title: const Text('Corrección de errores alta'),
-                    subtitle: const Text('Recomendada cuando el QR incorpora un logotipo o puede ensuciarse.'),
+                    title: const AppText('Corrección de errores alta'),
+                    subtitle: const AppText(
+                      'Recomendada cuando el QR incorpora un logotipo o puede ensuciarse.',
+                    ),
                     value: _highCorrection,
-                    onChanged: (bool value) => setState(() => _highCorrection = value),
+                    onChanged: (bool value) =>
+                        setState(() => _highCorrection = value),
                   ),
               ],
             ),
@@ -143,10 +220,16 @@ class _GeneratorScreenState extends State<GeneratorScreen> {
                         drawText: !twoDimensional,
                         backgroundColor: Colors.white,
                         color: Colors.black,
-                        errorBuilder: (BuildContext context, String error) => SizedBox(
-                          height: 180,
-                          child: Center(child: Text('El contenido no es válido para ${_formatLabel(_format)}.\n$error', textAlign: TextAlign.center)),
-                        ),
+                        errorBuilder: (BuildContext context, String error) =>
+                            SizedBox(
+                              height: 180,
+                              child: Center(
+                                child: AppText(
+                                  'El contenido no es válido para ${_formatLabel(_format)}.\n$error',
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                            ),
                       ),
                     ),
                   ),
@@ -154,7 +237,10 @@ class _GeneratorScreenState extends State<GeneratorScreen> {
                 const SizedBox(height: 12),
                 Align(
                   alignment: Alignment.centerLeft,
-                  child: Text('Contenido codificado', style: Theme.of(context).textTheme.labelLarge),
+                  child: AppText(
+                    'Contenido codificado',
+                    style: Theme.of(context).textTheme.labelLarge,
+                  ),
                 ),
                 const SizedBox(height: 4),
                 SelectableText(_payload, maxLines: 5),
@@ -164,22 +250,39 @@ class _GeneratorScreenState extends State<GeneratorScreen> {
                   runSpacing: 8,
                   alignment: WrapAlignment.center,
                   children: <Widget>[
-                    OutlinedButton.icon(onPressed: _copy, icon: const Icon(Icons.copy_outlined), label: const Text('Copiar contenido')),
-                    OutlinedButton.icon(onPressed: () => SharePlus.instance.share(ShareParams(text: _payload)), icon: const Icon(Icons.share_outlined), label: const Text('Compartir contenido')),
+                    OutlinedButton.icon(
+                      onPressed: _copy,
+                      icon: const Icon(Icons.copy_outlined),
+                      label: const AppText('Copiar contenido'),
+                    ),
+                    OutlinedButton.icon(
+                      onPressed: () =>
+                          SharePlus.instance.share(ShareParams(text: _payload)),
+                      icon: const Icon(Icons.share_outlined),
+                      label: const AppText('Compartir contenido'),
+                    ),
                     FilledButton.icon(
                       onPressed: _exportPng,
-                      icon: Icon(kIsWeb ? Icons.download_outlined : Icons.image_outlined),
-                      label: Text(kIsWeb ? 'Descargar PNG' : 'Compartir PNG'),
+                      icon: Icon(
+                        kIsWeb ? Icons.download_outlined : Icons.image_outlined,
+                      ),
+                      label: AppText(
+                        kIsWeb ? 'Descargar PNG' : 'Compartir PNG',
+                      ),
                     ),
                     FilledButton.tonalIcon(
                       onPressed: _exportSvg,
-                      icon: Icon(kIsWeb ? Icons.download_outlined : Icons.draw_outlined),
-                      label: Text(kIsWeb ? 'Descargar SVG' : 'Compartir SVG'),
+                      icon: Icon(
+                        kIsWeb ? Icons.download_outlined : Icons.draw_outlined,
+                      ),
+                      label: AppText(
+                        kIsWeb ? 'Descargar SVG' : 'Compartir SVG',
+                      ),
                     ),
                   ],
                 ),
                 const SizedBox(height: 12),
-                Text(
+                AppText(
                   kIsWeb
                       ? 'Copiar y compartir usan el contenido escrito. Descargar PNG o SVG guarda la imagen del código en este equipo.'
                       : 'Copiar y compartir contenido usan el texto escrito. Compartir PNG o SVG permite guardar o enviar la imagen del código.',
@@ -187,10 +290,12 @@ class _GeneratorScreenState extends State<GeneratorScreen> {
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
                 const SizedBox(height: 6),
-                Text(
+                AppText(
                   'El código no caduca por sí solo; su destino debe seguir disponible.',
                   textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w700),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w700),
                 ),
               ],
             ),
@@ -201,33 +306,54 @@ class _GeneratorScreenState extends State<GeneratorScreen> {
   }
 
   Barcode get _barcode => switch (_format) {
-        _CodeFormat.qr => Barcode.qrCode(errorCorrectLevel: _highCorrection ? BarcodeQRCorrectionLevel.high : BarcodeQRCorrectionLevel.medium),
-        _CodeFormat.dataMatrix => Barcode.dataMatrix(),
-        _CodeFormat.aztec => Barcode.aztec(),
-        _CodeFormat.pdf417 => Barcode.pdf417(),
-        _CodeFormat.code128 => Barcode.code128(),
-        _CodeFormat.code39 => Barcode.code39(),
-        _CodeFormat.ean13 => Barcode.ean13(),
-        _CodeFormat.ean8 => Barcode.ean8(),
-        _CodeFormat.upcA => Barcode.upcA(),
-        _CodeFormat.gs128 => Barcode.gs128(),
-      };
+    _CodeFormat.qr => Barcode.qrCode(
+      errorCorrectLevel: _highCorrection
+          ? BarcodeQRCorrectionLevel.high
+          : BarcodeQRCorrectionLevel.medium,
+    ),
+    _CodeFormat.dataMatrix => Barcode.dataMatrix(),
+    _CodeFormat.aztec => Barcode.aztec(),
+    _CodeFormat.pdf417 => Barcode.pdf417(),
+    _CodeFormat.code128 => Barcode.code128(),
+    _CodeFormat.code39 => Barcode.code39(),
+    _CodeFormat.ean13 => Barcode.ean13(),
+    _CodeFormat.ean8 => Barcode.ean8(),
+    _CodeFormat.upcA => Barcode.upcA(),
+    _CodeFormat.gs128 => Barcode.gs128(),
+  };
 
   (String, String?, String?, String?) get _labels => switch (_payloadType) {
-        _PayloadType.text => ('Texto', null, null, null),
-        _PayloadType.url => ('Dirección web', null, null, null),
-        _PayloadType.wifi => ('Nombre de red', 'Seguridad: WPA, WEP o nopass', 'Contraseña', 'Red oculta: true o false'),
-        _PayloadType.contact => ('Nombre', 'Teléfono', 'Correo', 'Organización'),
-        _PayloadType.event => ('Título', 'Inicio: AAAAMMDDTHHMMSS', 'Término: AAAAMMDDTHHMMSS', 'Ubicación'),
-        _PayloadType.email => ('Destinatario', 'Asunto', 'Mensaje', null),
-        _PayloadType.phone => ('Número telefónico', null, null, null),
-        _PayloadType.sms => ('Número telefónico', 'Mensaje', null, null),
-        _PayloadType.geo => ('Latitud', 'Longitud', 'Nombre o búsqueda', null),
-      };
+    _PayloadType.text => ('Texto', null, null, null),
+    _PayloadType.url => ('Dirección web', null, null, null),
+    _PayloadType.wifi => (
+      'Nombre de red',
+      'Seguridad: WPA, WEP o nopass',
+      'Contraseña',
+      'Red oculta: true o false',
+    ),
+    _PayloadType.contact => ('Nombre', 'Teléfono', 'Correo', 'Organización'),
+    _PayloadType.event => (
+      'Título',
+      'Inicio: AAAAMMDDTHHMMSS',
+      'Término: AAAAMMDDTHHMMSS',
+      'Ubicación',
+    ),
+    _PayloadType.email => ('Destinatario', 'Asunto', 'Mensaje', null),
+    _PayloadType.phone => ('Número telefónico', null, null, null),
+    _PayloadType.sms => ('Número telefónico', 'Mensaje', null, null),
+    _PayloadType.geo => ('Latitud', 'Longitud', 'Nombre o búsqueda', null),
+  };
 
   Future<void> _copy() async {
-    await ClipboardService.copy(_payload, clearAfterSeconds: widget.settings.value.clearClipboardSeconds);
-    if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Datos copiados.')));
+    await ClipboardService.copy(
+      _payload,
+      clearAfterSeconds: widget.settings.value.clearClipboardSeconds,
+    );
+    if (mounted) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: AppText('Datos copiados.')));
+    }
   }
 
   Future<void> _exportSvg() async {
@@ -254,7 +380,11 @@ class _GeneratorScreenState extends State<GeneratorScreen> {
     } on Object {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('No fue posible generar el archivo SVG con estos datos.')),
+          const SnackBar(
+            content: AppText(
+              'No fue posible generar el archivo SVG con estos datos.',
+            ),
+          ),
         );
       }
     }
@@ -262,10 +392,14 @@ class _GeneratorScreenState extends State<GeneratorScreen> {
 
   Future<void> _exportPng() async {
     try {
-      final RenderRepaintBoundary? boundary = _previewKey.currentContext?.findRenderObject() as RenderRepaintBoundary?;
+      final RenderRepaintBoundary? boundary =
+          _previewKey.currentContext?.findRenderObject()
+              as RenderRepaintBoundary?;
       if (boundary == null) return;
       final ui.Image image = await boundary.toImage(pixelRatio: 3);
-      final ByteData? data = await image.toByteData(format: ui.ImageByteFormat.png);
+      final ByteData? data = await image.toByteData(
+        format: ui.ImageByteFormat.png,
+      );
       image.dispose();
       if (data == null) return;
       await exportGeneratedCode(
@@ -278,7 +412,11 @@ class _GeneratorScreenState extends State<GeneratorScreen> {
     } on Object {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('No fue posible generar el archivo PNG con estos datos.')),
+          const SnackBar(
+            content: AppText(
+              'No fue posible generar el archivo PNG con estos datos.',
+            ),
+          ),
         );
       }
     }
@@ -287,7 +425,9 @@ class _GeneratorScreenState extends State<GeneratorScreen> {
   void _showExportSuccess(String extension) {
     if (!mounted) return;
     final String action = kIsWeb ? 'descargado' : 'listo para compartir';
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Archivo $extension $action.')));
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: AppText('Archivo $extension $action.')));
   }
 
   void _setExamples(_PayloadType value) {
@@ -330,30 +470,37 @@ class _GeneratorScreenState extends State<GeneratorScreen> {
   }
 
   static String _payloadLabel(_PayloadType value) => switch (value) {
-        _PayloadType.text => 'Texto',
-        _PayloadType.url => 'Enlace',
-        _PayloadType.wifi => 'Wi-Fi',
-        _PayloadType.contact => 'Contacto vCard',
-        _PayloadType.event => 'Evento',
-        _PayloadType.email => 'Correo',
-        _PayloadType.phone => 'Teléfono',
-        _PayloadType.sms => 'SMS',
-        _PayloadType.geo => 'Ubicación',
-      };
+    _PayloadType.text => 'Texto',
+    _PayloadType.url => 'Enlace',
+    _PayloadType.wifi => 'Wi-Fi',
+    _PayloadType.contact => 'Contacto vCard',
+    _PayloadType.event => 'Evento',
+    _PayloadType.email => 'Correo',
+    _PayloadType.phone => 'Teléfono',
+    _PayloadType.sms => 'SMS',
+    _PayloadType.geo => 'Ubicación',
+  };
 
   static String _formatLabel(_CodeFormat value) => switch (value) {
-        _CodeFormat.qr => 'QR Code',
-        _CodeFormat.dataMatrix => 'Data Matrix',
-        _CodeFormat.aztec => 'Aztec',
-        _CodeFormat.pdf417 => 'PDF417',
-        _CodeFormat.code128 => 'Code 128',
-        _CodeFormat.code39 => 'Code 39',
-        _CodeFormat.ean13 => 'EAN-13',
-        _CodeFormat.ean8 => 'EAN-8',
-        _CodeFormat.upcA => 'UPC-A',
-        _CodeFormat.gs128 => 'GS1-128',
-      };
+    _CodeFormat.qr => 'QR Code',
+    _CodeFormat.dataMatrix => 'Data Matrix',
+    _CodeFormat.aztec => 'Aztec',
+    _CodeFormat.pdf417 => 'PDF417',
+    _CodeFormat.code128 => 'Code 128',
+    _CodeFormat.code39 => 'Code 39',
+    _CodeFormat.ean13 => 'EAN-13',
+    _CodeFormat.ean8 => 'EAN-8',
+    _CodeFormat.upcA => 'UPC-A',
+    _CodeFormat.gs128 => 'GS1-128',
+  };
 
-  static String _escape(String value) => value.replaceAll(r'\', r'\\').replaceAll(';', r'\;').replaceAll(':', r'\:').replaceAll(',', r'\,');
-  static String _normalizeUrl(String value) => RegExp(r'^https?://', caseSensitive: false).hasMatch(value.trim()) ? value.trim() : 'https://${value.trim()}';
+  static String _escape(String value) => value
+      .replaceAll(r'\', r'\\')
+      .replaceAll(';', r'\;')
+      .replaceAll(':', r'\:')
+      .replaceAll(',', r'\,');
+  static String _normalizeUrl(String value) =>
+      RegExp(r'^https?://', caseSensitive: false).hasMatch(value.trim())
+      ? value.trim()
+      : 'https://${value.trim()}';
 }

@@ -53,15 +53,12 @@ class QrEvidenceFact {
   final String id;
   final String value;
 
-  Map<String, Object?> toJson() => <String, Object?>{
-        'id': id,
-        'value': value,
-      };
+  Map<String, Object?> toJson() => <String, Object?>{'id': id, 'value': value};
 
   factory QrEvidenceFact.fromJson(Map<String, dynamic> json) => QrEvidenceFact(
-        id: json['id'] as String? ?? 'unknown',
-        value: json['value'] as String? ?? '',
-      );
+    id: json['id'] as String? ?? 'unknown',
+    value: json['value'] as String? ?? '',
+  );
 }
 
 /// Una propiedad observada en la carga, no una acusación.
@@ -91,33 +88,42 @@ class QrFinding {
   final List<QrEvidenceFact> evidence;
 
   Map<String, Object?> toJson() => <String, Object?>{
-        'id': id,
-        'severity': severity.name,
-        'score': score,
-        'confidence': confidence.name,
-        'category': category.name,
-        'evidence': evidence.map((QrEvidenceFact item) => item.toJson()).toList(growable: false),
-      };
+    'id': id,
+    'severity': severity.name,
+    'score': score,
+    'confidence': confidence.name,
+    'category': category.name,
+    'evidence': evidence
+        .map((QrEvidenceFact item) => item.toJson())
+        .toList(growable: false),
+  };
 
   factory QrFinding.fromJson(Map<String, dynamic> json) => QrFinding(
-        id: json['id'] as String? ?? 'unknown',
-        severity: _enumByName(QrSeverity.values, json['severity'], QrSeverity.warning),
-        score: (json['score'] as num?)?.toInt() ?? 0,
-        confidence: _enumByName(
-          QrFindingConfidence.values,
-          json['confidence'],
-          QrFindingConfidence.low,
-        ),
-        category: _enumByName(
-          QrFindingCategory.values,
-          json['category'],
-          QrFindingCategory.destination,
-        ),
-        evidence: (json['evidence'] as List<dynamic>? ?? const <dynamic>[])
-            .whereType<Map>()
-            .map((Map item) => QrEvidenceFact.fromJson(Map<String, dynamic>.from(item)))
-            .toList(growable: false),
-      );
+    id: json['id'] as String? ?? 'unknown',
+    severity: _enumByName(
+      QrSeverity.values,
+      json['severity'],
+      QrSeverity.warning,
+    ),
+    score: (json['score'] as num?)?.toInt() ?? 0,
+    confidence: _enumByName(
+      QrFindingConfidence.values,
+      json['confidence'],
+      QrFindingConfidence.low,
+    ),
+    category: _enumByName(
+      QrFindingCategory.values,
+      json['category'],
+      QrFindingCategory.destination,
+    ),
+    evidence: (json['evidence'] as List<dynamic>? ?? const <dynamic>[])
+        .whereType<Map>()
+        .map(
+          (Map item) =>
+              QrEvidenceFact.fromJson(Map<String, dynamic>.from(item)),
+        )
+        .toList(growable: false),
+  );
 }
 
 /// Resultado completo y serializable de analizar una carga.
@@ -172,31 +178,40 @@ class QrInvestigation {
   bool get hasSignals => findings.isNotEmpty;
 
   Map<String, Object?> toJson() => <String, Object?>{
-        'schema': schema,
-        'engineVersion': engineVersion,
-        'analyzedAt': analyzedAt.toUtc().toIso8601String(),
-        'payloadSha256': payloadSha256,
-        'verdict': <String, Object?>{
-          'severity': severity.name,
-          'score': score,
-          'action': action.name,
-        },
-        if (normalizedHost != null) 'normalizedHost': normalizedHost,
-        if (effectiveUri != null) 'effectiveUri': effectiveUri,
-        'findings': findings.map((QrFinding item) => item.toJson()).toList(growable: false),
-        'hypotheses': hypotheses,
-        'evaluatedRuleIds': evaluatedRuleIds,
-        'limitations': limitations,
-      };
+    'schema': schema,
+    'engineVersion': engineVersion,
+    'analyzedAt': analyzedAt.toUtc().toIso8601String(),
+    'payloadSha256': payloadSha256,
+    'verdict': <String, Object?>{
+      'severity': severity.name,
+      'score': score,
+      'action': action.name,
+    },
+    if (normalizedHost != null) 'normalizedHost': normalizedHost,
+    if (effectiveUri != null) 'effectiveUri': effectiveUri,
+    'findings': findings
+        .map((QrFinding item) => item.toJson())
+        .toList(growable: false),
+    'hypotheses': hypotheses,
+    'evaluatedRuleIds': evaluatedRuleIds,
+    'limitations': limitations,
+  };
 
   factory QrInvestigation.fromJson(Map<String, dynamic> json) {
-    final Map<String, dynamic> verdict =
-        Map<String, dynamic>.from(json['verdict'] as Map? ?? const <String, dynamic>{});
+    final Map<String, dynamic> verdict = Map<String, dynamic>.from(
+      json['verdict'] as Map? ?? const <String, dynamic>{},
+    );
     return QrInvestigation(
       engineVersion: json['engineVersion'] as String? ?? 'unknown',
-      analyzedAt: DateTime.tryParse(json['analyzedAt'] as String? ?? '') ?? DateTime.now().toUtc(),
+      analyzedAt:
+          DateTime.tryParse(json['analyzedAt'] as String? ?? '') ??
+          DateTime.now().toUtc(),
       payloadSha256: json['payloadSha256'] as String? ?? '',
-      severity: _enumByName(QrSeverity.values, verdict['severity'], QrSeverity.warning),
+      severity: _enumByName(
+        QrSeverity.values,
+        verdict['severity'],
+        QrSeverity.warning,
+      ),
       score: (verdict['score'] as num?)?.toInt() ?? 0,
       action: _enumByName(
         QrActionDecision.values,
@@ -207,12 +222,20 @@ class QrInvestigation {
       effectiveUri: json['effectiveUri'] as String?,
       findings: (json['findings'] as List<dynamic>? ?? const <dynamic>[])
           .whereType<Map>()
-          .map((Map item) => QrFinding.fromJson(Map<String, dynamic>.from(item)))
+          .map(
+            (Map item) => QrFinding.fromJson(Map<String, dynamic>.from(item)),
+          )
           .toList(growable: false),
-      hypotheses: (json['hypotheses'] as List<dynamic>? ?? const <dynamic>[]).whereType<String>().toList(growable: false),
+      hypotheses: (json['hypotheses'] as List<dynamic>? ?? const <dynamic>[])
+          .whereType<String>()
+          .toList(growable: false),
       evaluatedRuleIds:
-          (json['evaluatedRuleIds'] as List<dynamic>? ?? const <dynamic>[]).whereType<String>().toList(growable: false),
-      limitations: (json['limitations'] as List<dynamic>? ?? const <dynamic>[]).whereType<String>().toList(growable: false),
+          (json['evaluatedRuleIds'] as List<dynamic>? ?? const <dynamic>[])
+              .whereType<String>()
+              .toList(growable: false),
+      limitations: (json['limitations'] as List<dynamic>? ?? const <dynamic>[])
+          .whereType<String>()
+          .toList(growable: false),
     );
   }
 }

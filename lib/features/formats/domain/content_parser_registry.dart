@@ -11,7 +11,8 @@ import 'package:rootcause_qr_inspector/services/content_interpreter.dart';
 /// Es un singleton (`instance`) porque `ScanRecord` lo consulta desde sus
 /// constructores, donde no hay contexto de inyección disponible.
 class ContentParserRegistry {
-  ContentParserRegistry._() : _parsers = <ContentParser>[const LegacyContentParser()];
+  ContentParserRegistry._()
+    : _parsers = <ContentParser>[const LegacyContentParser()];
   static final ContentParserRegistry instance = ContentParserRegistry._();
 
   final List<ContentParser> _parsers;
@@ -20,10 +21,14 @@ class ContentParserRegistry {
   void register(ContentParser parser) {
     _parsers.removeWhere((ContentParser item) => item.id == parser.id);
     _parsers.add(parser);
-    _parsers.sort((ContentParser a, ContentParser b) => b.priority.compareTo(a.priority));
+    _parsers.sort(
+      (ContentParser a, ContentParser b) => b.priority.compareTo(a.priority),
+    );
   }
 
-  void unregister(String id) => _parsers.removeWhere((ContentParser item) => item.id == id && id != 'builtin-v2');
+  void unregister(String id) => _parsers.removeWhere(
+    (ContentParser item) => item.id == id && id != 'builtin-v2',
+  );
 
   ParsedContent parse(String rawValue) {
     for (final ContentParser parser in _parsers) {

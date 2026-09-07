@@ -23,35 +23,39 @@ class InventoryItem {
   final DateTime lastScannedAt;
   final String notes;
 
-  InventoryItem copyWith({int? quantity, DateTime? lastScannedAt, String? notes}) => InventoryItem(
-        code: code,
-        format: format,
-        label: label,
-        quantity: quantity ?? this.quantity,
-        firstScannedAt: firstScannedAt,
-        lastScannedAt: lastScannedAt ?? this.lastScannedAt,
-        notes: notes ?? this.notes,
-      );
+  InventoryItem copyWith({
+    int? quantity,
+    DateTime? lastScannedAt,
+    String? notes,
+  }) => InventoryItem(
+    code: code,
+    format: format,
+    label: label,
+    quantity: quantity ?? this.quantity,
+    firstScannedAt: firstScannedAt,
+    lastScannedAt: lastScannedAt ?? this.lastScannedAt,
+    notes: notes ?? this.notes,
+  );
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'code': code,
-        'format': format,
-        'label': label,
-        'quantity': quantity,
-        'firstScannedAt': firstScannedAt.toIso8601String(),
-        'lastScannedAt': lastScannedAt.toIso8601String(),
-        'notes': notes,
-      };
+    'code': code,
+    'format': format,
+    'label': label,
+    'quantity': quantity,
+    'firstScannedAt': firstScannedAt.toIso8601String(),
+    'lastScannedAt': lastScannedAt.toIso8601String(),
+    'notes': notes,
+  };
 
   factory InventoryItem.fromJson(Map<String, dynamic> json) => InventoryItem(
-        code: json['code'] as String,
-        format: json['format'] as String? ?? 'Desconocido',
-        label: json['label'] as String? ?? 'Producto',
-        quantity: json['quantity'] as int? ?? 1,
-        firstScannedAt: DateTime.parse(json['firstScannedAt'] as String),
-        lastScannedAt: DateTime.parse(json['lastScannedAt'] as String),
-        notes: json['notes'] as String? ?? '',
-      );
+    code: json['code'] as String,
+    format: json['format'] as String? ?? 'Desconocido',
+    label: json['label'] as String? ?? 'Producto',
+    quantity: json['quantity'] as int? ?? 1,
+    firstScannedAt: DateTime.parse(json['firstScannedAt'] as String),
+    lastScannedAt: DateTime.parse(json['lastScannedAt'] as String),
+    notes: json['notes'] as String? ?? '',
+  );
 }
 
 /// Sesión de conteo continuo, cifrada como una sola carga en la base local.
@@ -79,31 +83,46 @@ class InventorySession {
   final Map<String, InventoryItem> items;
 
   bool get isOpen => closedAt == null;
-  int get totalUnits => items.values.fold(0, (int sum, InventoryItem item) => sum + item.quantity);
+  int get totalUnits => items.values.fold(
+    0,
+    (int sum, InventoryItem item) => sum + item.quantity,
+  );
 
-  InventorySession copyWith({Map<String, InventoryItem>? items, DateTime? closedAt}) => InventorySession(
-        id: id,
-        name: name,
-        createdAt: createdAt,
-        closedAt: closedAt ?? this.closedAt,
-        items: items ?? this.items,
-      );
+  InventorySession copyWith({
+    Map<String, InventoryItem>? items,
+    DateTime? closedAt,
+  }) => InventorySession(
+    id: id,
+    name: name,
+    createdAt: createdAt,
+    closedAt: closedAt ?? this.closedAt,
+    items: items ?? this.items,
+  );
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'id': id,
-        'name': name,
-        'createdAt': createdAt.toIso8601String(),
-        'closedAt': closedAt?.toIso8601String(),
-        'items': items.map((String key, InventoryItem value) => MapEntry(key, value.toJson())),
-      };
+    'id': id,
+    'name': name,
+    'createdAt': createdAt.toIso8601String(),
+    'closedAt': closedAt?.toIso8601String(),
+    'items': items.map(
+      (String key, InventoryItem value) => MapEntry(key, value.toJson()),
+    ),
+  };
 
-  factory InventorySession.fromJson(Map<String, dynamic> json) => InventorySession(
+  factory InventorySession.fromJson(Map<String, dynamic> json) =>
+      InventorySession(
         id: json['id'] as String,
         name: json['name'] as String,
         createdAt: DateTime.parse(json['createdAt'] as String),
-        closedAt: json['closedAt'] == null ? null : DateTime.parse(json['closedAt'] as String),
-        items: (json['items'] as Map<String, dynamic>? ?? <String, dynamic>{}).map(
-          (String key, dynamic value) => MapEntry(key, InventoryItem.fromJson(Map<String, dynamic>.from(value as Map))),
-        ),
+        closedAt: json['closedAt'] == null
+            ? null
+            : DateTime.parse(json['closedAt'] as String),
+        items: (json['items'] as Map<String, dynamic>? ?? <String, dynamic>{})
+            .map(
+              (String key, dynamic value) => MapEntry(
+                key,
+                InventoryItem.fromJson(Map<String, dynamic>.from(value as Map)),
+              ),
+            ),
       );
 }

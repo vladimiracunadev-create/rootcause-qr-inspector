@@ -13,7 +13,7 @@ contenido codificado en un código gráfico y la forma en que ese contenido
 intenta convertirse en una acción.
 
 **Comprobado:** `pubspec.yaml` declara `name: rootcause_qr_inspector`,
-`version: 0.1.1+2`, y ninguna dependencia de red o analítica. La única
+`version: 0.1.3+4`, y ninguna dependencia de red o analítica. La única
 dependencia que abre algo hacia afuera es `url_launcher`, que entrega una URI a
 otra aplicación del sistema cuando la persona lo confirma.
 

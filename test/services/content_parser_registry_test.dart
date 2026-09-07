@@ -12,10 +12,10 @@ class _TestParser implements ContentParser {
   bool canParse(String rawValue) => rawValue.startsWith('TEST:');
   @override
   ParsedContent parse(String rawValue) => const ParsedContent(
-        kind: ContentKind.text,
-        title: 'Plugin de prueba',
-        fields: <String, String>{'ok': 'true'},
-      );
+    kind: ContentKind.text,
+    title: 'Plugin de prueba',
+    fields: <String, String>{'ok': 'true'},
+  );
 }
 
 void main() {

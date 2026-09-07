@@ -4,11 +4,16 @@ import 'package:rootcause_qr_inspector/features/scanner/widgets/scanner_viewport
 
 void main() {
   void expectClearReadingArea(Size size) {
-    final ScannerViewportGeometry geometry = ScannerViewportGeometry.forSize(size);
+    final ScannerViewportGeometry geometry = ScannerViewportGeometry.forSize(
+      size,
+    );
 
     expect(geometry.scanWindow.left, greaterThanOrEqualTo(0));
     expect(geometry.scanWindow.right, lessThanOrEqualTo(size.width));
-    expect(geometry.scanWindow.top, greaterThanOrEqualTo(geometry.statusReserve));
+    expect(
+      geometry.scanWindow.top,
+      greaterThanOrEqualTo(geometry.statusReserve),
+    );
     expect(
       geometry.scanWindow.bottom,
       lessThanOrEqualTo(size.height - geometry.controlsReserve),
@@ -18,7 +23,9 @@ void main() {
   test('keeps the QR frame clear on a narrow and short phone preview', () {
     const Size preview = Size(288, 320);
 
-    final ScannerViewportGeometry geometry = ScannerViewportGeometry.forSize(preview);
+    final ScannerViewportGeometry geometry = ScannerViewportGeometry.forSize(
+      preview,
+    );
 
     expect(geometry.compact, isTrue);
     expectClearReadingArea(preview);
@@ -27,7 +34,9 @@ void main() {
   test('keeps the QR frame clear on a standard phone preview', () {
     const Size preview = Size(400, 560);
 
-    final ScannerViewportGeometry geometry = ScannerViewportGeometry.forSize(preview);
+    final ScannerViewportGeometry geometry = ScannerViewportGeometry.forSize(
+      preview,
+    );
 
     expect(geometry.compact, isFalse);
     expectClearReadingArea(preview);

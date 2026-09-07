@@ -11,29 +11,33 @@ void main() {
     VoidCallback? onAction,
     String? actionLabel,
   }) async {
-    await tester.pumpWidget(MaterialApp(
-      home: Scaffold(
-        body: Align(
-          alignment: Alignment.topCenter,
-          child: ScanStatusBar(
-            phase: phase,
-            message: 'Mensaje de estado',
-            animate: animate,
-            actionLabel: actionLabel,
-            onAction: onAction,
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: Align(
+            alignment: Alignment.topCenter,
+            child: ScanStatusBar(
+              phase: phase,
+              message: 'Mensaje de estado',
+              animate: animate,
+              actionLabel: actionLabel,
+              onAction: onAction,
+            ),
           ),
         ),
       ),
-    ));
+    );
     // Never pumpAndSettle: while it is scanning the bar animates forever, which
     // is exactly the state under test.
     await tester.pump();
   }
 
-  LinearProgressIndicator indicator(WidgetTester tester) =>
-      tester.widget<LinearProgressIndicator>(find.byType(LinearProgressIndicator));
+  LinearProgressIndicator indicator(WidgetTester tester) => tester
+      .widget<LinearProgressIndicator>(find.byType(LinearProgressIndicator));
 
-  testWidgets('while scanning the bar moves and says so', (WidgetTester tester) async {
+  testWidgets('while scanning the bar moves and says so', (
+    WidgetTester tester,
+  ) async {
     await pumpBar(tester, phase: ScanPhase.scanning);
 
     expect(find.text('Inspección activa'), findsOneWidget);
@@ -41,14 +45,18 @@ void main() {
     expect(indicator(tester).value, isNull);
   });
 
-  testWidgets('reduced motion keeps the bar readable without movement', (WidgetTester tester) async {
+  testWidgets('reduced motion keeps the bar readable without movement', (
+    WidgetTester tester,
+  ) async {
     await pumpBar(tester, phase: ScanPhase.scanning, animate: false);
 
     expect(find.text('Inspección activa'), findsOneWidget);
     expect(indicator(tester).value, 1);
   });
 
-  testWidgets('a captured code is announced as a result, not as a pause', (WidgetTester tester) async {
+  testWidgets('a captured code is announced as a result, not as a pause', (
+    WidgetTester tester,
+  ) async {
     await pumpBar(tester, phase: ScanPhase.captured);
 
     // The reported failure was that a successful read looked like nothing had
@@ -59,7 +67,9 @@ void main() {
     expect(indicator(tester).value, 1);
   });
 
-  testWidgets('a paused camera is announced and offers the way back', (WidgetTester tester) async {
+  testWidgets('a paused camera is announced and offers the way back', (
+    WidgetTester tester,
+  ) async {
     int taps = 0;
     await pumpBar(
       tester,
@@ -75,14 +85,18 @@ void main() {
     expect(taps, 1);
   });
 
-  testWidgets('a camera that could not start is named as such', (WidgetTester tester) async {
+  testWidgets('a camera that could not start is named as such', (
+    WidgetTester tester,
+  ) async {
     await pumpBar(tester, phase: ScanPhase.unavailable);
 
     expect(find.text('Sensor no disponible'), findsOneWidget);
     expect(find.text('Mensaje de estado'), findsOneWidget);
   });
 
-  testWidgets('the status stays compact on a narrow phone with large text', (WidgetTester tester) async {
+  testWidgets('the status stays compact on a narrow phone with large text', (
+    WidgetTester tester,
+  ) async {
     tester.view.physicalSize = const Size(320, 640);
     tester.view.devicePixelRatio = 1;
     tester.platformDispatcher.textScaleFactorTestValue = 1.6;
@@ -100,17 +114,24 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('the frame only sweeps while the camera is analysing frames', (WidgetTester tester) async {
-    Future<void> pumpOverlay({required bool active, required bool animate}) async {
-      await tester.pumpWidget(MaterialApp(
-        home: Scaffold(
-          body: ScannerOverlay(
-            scanWindow: const Rect.fromLTWH(20, 20, 200, 200),
-            active: active,
-            animate: animate,
+  testWidgets('the frame only sweeps while the camera is analysing frames', (
+    WidgetTester tester,
+  ) async {
+    Future<void> pumpOverlay({
+      required bool active,
+      required bool animate,
+    }) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: ScannerOverlay(
+              scanWindow: const Rect.fromLTWH(20, 20, 200, 200),
+              active: active,
+              animate: animate,
+            ),
           ),
         ),
-      ));
+      );
       await tester.pump();
     }
 

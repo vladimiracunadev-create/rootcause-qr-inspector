@@ -23,13 +23,13 @@ class ScannerViewportGeometry {
     final bool compact = size.height < 520 || size.width < 360;
     final double statusReserve = compact ? 68 : 80;
     final double controlsReserve = compact ? 124 : 144;
-    final double usableHeight = math.max(40, size.height - statusReserve - controlsReserve);
+    final double usableHeight = math.max(
+      40,
+      size.height - statusReserve - controlsReserve,
+    );
     final double side = math.max(
       40,
-      math.min(
-        size.width * (compact ? 0.64 : 0.72),
-        usableHeight * 0.92,
-      ),
+      math.min(size.width * (compact ? 0.64 : 0.72), usableHeight * 0.92),
     );
 
     return ScannerViewportGeometry(

@@ -5,5 +5,8 @@ import 'package:sembast_web/sembast_web.dart';
 /// El almacenamiento del navegador no ofrece las mismas garantías que
 /// Keychain/Keystore; la demo web no es una plataforma soportada del producto.
 Future<Database> openScannerDatabase() {
-  return databaseFactoryWeb.openDatabase('rootcause_qr_inspector_v2.db', version: 2);
+  return databaseFactoryWeb.openDatabase(
+    'rootcause_qr_inspector_v2.db',
+    version: 2,
+  );
 }

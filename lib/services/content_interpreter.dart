@@ -35,7 +35,9 @@ abstract final class ContentInterpreter {
     if (lower.startsWith('begin:vcard')) return _vcard(raw);
     if (lower.startsWith('mecard:')) return _mecard(raw);
     if (lower.startsWith('begin:vevent')) return _event(raw);
-    if (lower.startsWith('mailto:') || lower.startsWith('matmsg:')) return _email(raw);
+    if (lower.startsWith('mailto:') || lower.startsWith('matmsg:')) {
+      return _email(raw);
+    }
     if (lower.startsWith('tel:')) {
       return ParsedContent(
         kind: ContentKind.phone,
@@ -43,10 +45,14 @@ abstract final class ContentInterpreter {
         fields: <String, String>{'Número': raw.substring(4)},
       );
     }
-    if (lower.startsWith('sms:') || lower.startsWith('smsto:')) return _sms(raw);
+    if (lower.startsWith('sms:') || lower.startsWith('smsto:')) {
+      return _sms(raw);
+    }
     if (lower.startsWith('geo:')) return _geo(raw);
     if (lower.startsWith('otpauth:')) return _otp(raw);
-    if (lower.startsWith('bitcoin:') || lower.startsWith('lightning:') || lower.startsWith('ethereum:')) {
+    if (lower.startsWith('bitcoin:') ||
+        lower.startsWith('lightning:') ||
+        lower.startsWith('ethereum:')) {
       return _crypto(raw);
     }
     if (raw.startsWith('SPC\n')) return _swissQr(raw);
@@ -58,7 +64,9 @@ abstract final class ContentInterpreter {
       return ParsedContent(
         kind: ContentKind.isbn,
         title: 'ISBN',
-        fields: <String, String>{'ISBN': raw.replaceAll(RegExp(r'[^0-9Xx]'), '')},
+        fields: <String, String>{
+          'ISBN': raw.replaceAll(RegExp(r'[^0-9Xx]'), ''),
+        },
       );
     }
 
@@ -85,9 +93,11 @@ abstract final class ContentInterpreter {
       };
       final String fragment = uri.fragment.toLowerCase();
       final bool sensitiveFragment = sensitiveKeys.any(
-        (String key) => RegExp('(?:^|[?&;])${RegExp.escape(key)}=').hasMatch(fragment),
+        (String key) =>
+            RegExp('(?:^|[?&;])${RegExp.escape(key)}=').hasMatch(fragment),
       );
-      final bool sensitive = uri.userInfo.isNotEmpty ||
+      final bool sensitive =
+          uri.userInfo.isNotEmpty ||
           uri.queryParameters.keys
               .map((String key) => key.toLowerCase())
               .any(sensitiveKeys.contains) ||
@@ -111,7 +121,10 @@ abstract final class ContentInterpreter {
       return ParsedContent(
         kind: ContentKind.product,
         title: 'Código de producto',
-        fields: <String, String>{'Identificador': raw, 'Longitud': '${raw.length} dígitos'},
+        fields: <String, String>{
+          'Identificador': raw,
+          'Longitud': '${raw.length} dígitos',
+        },
       );
     }
 
@@ -150,7 +163,9 @@ abstract final class ContentInterpreter {
       if (key.startsWith('TITLE')) fields['Cargo'] = value;
       if (key.startsWith('TEL')) fields.putIfAbsent('Teléfono', () => value);
       if (key.startsWith('EMAIL')) fields.putIfAbsent('Correo', () => value);
-      if (key.startsWith('ADR')) fields['Dirección'] = value.replaceAll(';', ', ');
+      if (key.startsWith('ADR')) {
+        fields['Dirección'] = value.replaceAll(';', ', ');
+      }
       if (key.startsWith('URL')) fields['Sitio web'] = value;
       if (key.startsWith('NOTE')) fields['Nota'] = value;
     }
@@ -250,7 +265,8 @@ abstract final class ContentInterpreter {
       fields: <String, String>{
         'Latitud': parts.isNotEmpty ? parts.first : '',
         'Longitud': parts.length > 1 ? parts[1] : '',
-        if (payload.contains('?q=')) 'Búsqueda': Uri.decodeComponent(payload.split('?q=').last),
+        if (payload.contains('?q='))
+          'Búsqueda': Uri.decodeComponent(payload.split('?q=').last),
       },
     );
   }
@@ -260,7 +276,9 @@ abstract final class ContentInterpreter {
     return ParsedContent(
       kind: ContentKind.otp,
       title: 'Clave OTP',
-      summary: uri?.pathSegments.isNotEmpty == true ? Uri.decodeComponent(uri!.pathSegments.last) : null,
+      summary: uri?.pathSegments.isNotEmpty == true
+          ? Uri.decodeComponent(uri!.pathSegments.last)
+          : null,
       sensitive: true,
       fields: <String, String>{
         'Tipo': uri?.host ?? '',
@@ -284,8 +302,10 @@ abstract final class ContentInterpreter {
       fields: <String, String>{
         'Red': uri?.scheme ?? '',
         'Dirección': uri?.path ?? raw,
-        if (uri?.queryParameters['amount'] != null) 'Monto': uri!.queryParameters['amount']!,
-        if (uri?.queryParameters['label'] != null) 'Etiqueta': uri!.queryParameters['label']!,
+        if (uri?.queryParameters['amount'] != null)
+          'Monto': uri!.queryParameters['amount']!,
+        if (uri?.queryParameters['label'] != null)
+          'Etiqueta': uri!.queryParameters['label']!,
       },
     );
   }
@@ -356,7 +376,15 @@ abstract final class ContentInterpreter {
 
   static ParsedContent _aamva(String raw) {
     final Map<String, String> fields = <String, String>{};
-    for (final String code in <String>['DAQ', 'DCS', 'DAC', 'DBB', 'DBA', 'DAG', 'DAI']) {
+    for (final String code in <String>[
+      'DAQ',
+      'DCS',
+      'DAC',
+      'DBB',
+      'DBA',
+      'DAG',
+      'DAI',
+    ]) {
       final RegExpMatch? match = RegExp('$code([^\r\n]+)').firstMatch(raw);
       if (match != null) fields[_aamvaLabel(code)] = match.group(1)!.trim();
     }
@@ -390,7 +418,11 @@ abstract final class ContentInterpreter {
     if (current.length > 0) parts.add(current.toString());
     for (final String part in parts) {
       final int index = part.indexOf(':');
-      if (index > 0) result[part.substring(0, index).toUpperCase()] = part.substring(index + 1);
+      if (index > 0) {
+        result[part.substring(0, index).toUpperCase()] = part.substring(
+          index + 1,
+        );
+      }
     }
     return result;
   }
@@ -409,41 +441,51 @@ abstract final class ContentInterpreter {
   }
 
   static Uri? _webUri(String value) {
-    final String normalized = value.toLowerCase().startsWith('www.') ? 'https://$value' : value;
+    final String normalized = value.toLowerCase().startsWith('www.')
+        ? 'https://$value'
+        : value;
     final Uri? uri = Uri.tryParse(normalized);
-    if (uri == null || !<String>{'http', 'https'}.contains(uri.scheme) || uri.host.isEmpty) return null;
+    if (uri == null ||
+        !<String>{'http', 'https'}.contains(uri.scheme) ||
+        uri.host.isEmpty) {
+      return null;
+    }
     return uri;
   }
 
-  static bool _looksLikeGs1(String raw) => RegExp(r'^\(\d{2,4}\)').hasMatch(raw) || raw.contains('<GS>');
+  static bool _looksLikeGs1(String raw) =>
+      RegExp(r'^\(\d{2,4}\)').hasMatch(raw) || raw.contains('<GS>');
 
   static bool _isIsbn(String raw) {
     final String value = raw.replaceAll(RegExp(r'[^0-9Xx]'), '');
-    if (value.length == 13 && (value.startsWith('978') || value.startsWith('979'))) return true;
+    if (value.length == 13 &&
+        (value.startsWith('978') || value.startsWith('979'))) {
+      return true;
+    }
     return value.length == 10;
   }
 
   static String _aiLabel(String ai) => switch (ai) {
-        '00' => 'SSCC',
-        '01' => 'GTIN',
-        '10' => 'Lote',
-        '11' => 'Fecha de producción',
-        '15' => 'Consumo preferente',
-        '17' => 'Vencimiento',
-        '21' => 'Número de serie',
-        '30' => 'Cantidad',
-        '414' => 'GLN',
-        _ => 'AI $ai',
-      };
+    '00' => 'SSCC',
+    '01' => 'GTIN',
+    '10' => 'Lote',
+    '11' => 'Fecha de producción',
+    '15' => 'Consumo preferente',
+    '17' => 'Vencimiento',
+    '21' => 'Número de serie',
+    '30' => 'Cantidad',
+    '414' => 'GLN',
+    _ => 'AI $ai',
+  };
 
   static String _aamvaLabel(String code) => switch (code) {
-        'DAQ' => 'Número de licencia',
-        'DCS' => 'Apellido',
-        'DAC' => 'Nombre',
-        'DBB' => 'Fecha de nacimiento',
-        'DBA' => 'Vencimiento',
-        'DAG' => 'Dirección',
-        'DAI' => 'Ciudad',
-        _ => code,
-      };
+    'DAQ' => 'Número de licencia',
+    'DCS' => 'Apellido',
+    'DAC' => 'Nombre',
+    'DBB' => 'Fecha de nacimiento',
+    'DBA' => 'Vencimiento',
+    'DAG' => 'Dirección',
+    'DAI' => 'Ciudad',
+    _ => code,
+  };
 }

@@ -147,15 +147,15 @@ Resumen: **19 hallazgos** — 0 críticos, 6 altos, 8 medios, 5 bajos.
 | **Impacto** | Cada `ScanRecord` guarda `riskLevel` y `riskReasons` derivados que se recalculan al leer. Datos redundantes en el sobre cifrado |
 | **Recomendación** | Mantener mientras existan filtros e importaciones heredadas. No añadir nuevos consumidores |
 
-### R-13 · Interfaz solo en español, con infraestructura a medias
+### R-13 · Cobertura de traducciones dinámicas
 
 | Aspecto | Detalle |
 |---|---|
-| **Severidad** | Media · **Probabilidad** Alta · **Prioridad P3** |
+| **Severidad** | Baja · **Probabilidad** Media · **Prioridad P3** |
 | **Ubicación** | `lib/core/localization/app_localizations.dart` y todas las pantallas |
-| **Evidencia** | **Comprobado**: la clase tiene 10 cadenas; el resto son literales en el código |
-| **Impacto** | No se puede ofrecer inglés sin dejar la interfaz a medio traducir. Ya hay una prueba que impide exponerlo por accidente |
-| **Recomendación** | Migrar las cadenas a `AppLocalizations` de forma incremental, empezando por las pantallas más pequeñas |
+| **Evidencia** | **Mitigado en 0.1.3**: navegación, acciones y ayuda principal están registradas en español, inglés, francés y alemán; las cargas desconocidas se conservan literalmente |
+| **Impacto** | Un mensaje técnico nuevo que no se registre puede degradar a español, sin alterar datos ni bloquear el flujo |
+| **Recomendación** | Añadir toda nueva cadena visible al catálogo y a las pruebas de localización del mismo cambio |
 
 ### R-14 · Sin umbral de cobertura
 
@@ -272,10 +272,10 @@ propiedades son sólidas y merecen protección explícita:
 
 ### R-20 · Inspección de archivos pendiente de prueba nativa
 
-**Severidad:** media antes de publicar. La lógica, los fixtures, el análisis,
-las 102 pruebas y los builds web/APK están verdes. No debe subirse a 0.1.3 ni
-declararse validación funcional completa hasta decodificar los cuatro fixtures
-con `mobile_scanner` en un dispositivo Android.
+**Severidad:** media. La lógica, los fixtures, el análisis, las 103 pruebas y
+los builds web/APK están verdes. No debe declararse validación funcional
+completa de la matriz hasta decodificar los cuatro fixtures con
+`mobile_scanner` en un dispositivo Android.
 
 ### R-21 · Web sin decodificador de archivos
 

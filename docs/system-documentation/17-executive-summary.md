@@ -67,7 +67,7 @@ versiones y, en el futuro, reutilizarlo desde otro producto. Todo lo demás
 | Aspecto | Estado |
 |---|---|
 | Código fuente | Completo y coherente; verificadores automáticos en verde |
-| Integración continua | Verde: análisis estricto, 87 pruebas y tres compilaciones |
+| Integración continua | Verde: análisis estricto, 103 pruebas y compilaciones web, Android e iOS |
 | Distribución Android | **Publicada**: APK con SHA-256 y atestación de procedencia |
 | Firma de tienda | **Pendiente**: se firma con la clave de depuración de Flutter |
 | iOS | Compila para simulador; sin paquete instalable ni firma |
@@ -160,9 +160,9 @@ tienda.
 
 ## Addendum ejecutivo: Analizar archivo
 
-La evolución no publicada convierte imágenes y PDF en una entrada visible sin
+La evolución publicada en 0.1.3 convierte imágenes y PDF en una entrada visible sin
 alterar el motor de cámara ni las reglas de seguridad. El resultado explicita
 el destino semántico y destaca el host real antes de cualquier acción. Análisis
-estricto, 102 pruebas y builds web/APK están verdes. El estado sigue
-**PARCIAL** únicamente hasta la decodificación de fixtures en un dispositivo
-Android antes de versionar 0.1.3.
+estricto, 103 pruebas y builds web/APK están verdes. La decodificación de la
+matriz de fixtures en un dispositivo Android continúa declarada como validación
+física pendiente.

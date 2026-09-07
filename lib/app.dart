@@ -17,8 +17,11 @@ import 'package:rootcause_qr_inspector/state/inventory_store.dart';
 import 'package:rootcause_qr_inspector/state/scan_store.dart';
 import 'package:rootcause_qr_inspector/state/settings_store.dart';
 
-NavigationDestinationLabelBehavior navigationLabelBehaviorForWidth(double width) =>
-    width < 360 ? NavigationDestinationLabelBehavior.alwaysHide : NavigationDestinationLabelBehavior.alwaysShow;
+NavigationDestinationLabelBehavior navigationLabelBehaviorForWidth(
+  double width,
+) => width < 360
+    ? NavigationDestinationLabelBehavior.alwaysHide
+    : NavigationDestinationLabelBehavior.alwaysShow;
 
 /// Raíz de la interfaz una vez que los servicios están listos.
 ///
@@ -137,7 +140,11 @@ class HandheldFrame extends StatelessWidget {
 /// No hay salida alternativa: si la autenticación falla, la única acción
 /// disponible es volver a intentarlo.
 class BiometricLockGate extends StatefulWidget {
-  const BiometricLockGate({required this.settings, required this.child, super.key});
+  const BiometricLockGate({
+    required this.settings,
+    required this.child,
+    super.key,
+  });
   final SettingsStore settings;
   final Widget child;
 
@@ -145,7 +152,8 @@ class BiometricLockGate extends StatefulWidget {
   State<BiometricLockGate> createState() => _BiometricLockGateState();
 }
 
-class _BiometricLockGateState extends State<BiometricLockGate> with WidgetsBindingObserver {
+class _BiometricLockGateState extends State<BiometricLockGate>
+    with WidgetsBindingObserver {
   final BiometricService _biometric = BiometricService();
   bool _unlocked = false;
   bool _authenticating = false;
@@ -155,7 +163,9 @@ class _BiometricLockGateState extends State<BiometricLockGate> with WidgetsBindi
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     _unlocked = !widget.settings.value.biometricLock;
-    if (!_unlocked) WidgetsBinding.instance.addPostFrameCallback((_) => unawaited(_unlock()));
+    if (!_unlocked) {
+      WidgetsBinding.instance.addPostFrameCallback((_) => unawaited(_unlock()));
+    }
   }
 
   @override
@@ -170,7 +180,9 @@ class _BiometricLockGateState extends State<BiometricLockGate> with WidgetsBindi
         state == AppLifecycleState.paused ||
         state == AppLifecycleState.hidden ||
         state == AppLifecycleState.detached) {
-      if (widget.settings.value.biometricLock && mounted) setState(() => _unlocked = false);
+      if (widget.settings.value.biometricLock && mounted) {
+        setState(() => _unlocked = false);
+      }
     }
   }
 
@@ -190,18 +202,31 @@ class _BiometricLockGateState extends State<BiometricLockGate> with WidgetsBindi
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              const Icon(Icons.lock_outline, size: 72, semanticLabel: 'Aplicación bloqueada'),
+              const Icon(
+                Icons.lock_outline,
+                size: 72,
+                semanticLabel: 'Aplicación bloqueada',
+              ),
               const SizedBox(height: 18),
-              Text('Aplicación protegida', style: Theme.of(context).textTheme.headlineSmall),
+              AppText(
+                'Aplicación protegida',
+                style: Theme.of(context).textTheme.headlineSmall,
+              ),
               const SizedBox(height: 8),
-              const Text('Autentícate con el método de seguridad configurado en el dispositivo.', textAlign: TextAlign.center),
+              const AppText(
+                'Autentícate con el método de seguridad configurado en el dispositivo.',
+                textAlign: TextAlign.center,
+              ),
               const SizedBox(height: 18),
               FilledButton.icon(
                 onPressed: _authenticating ? null : _unlock,
                 icon: _authenticating
-                    ? const SizedBox.square(dimension: 18, child: CircularProgressIndicator(strokeWidth: 2))
+                    ? const SizedBox.square(
+                        dimension: 18,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      )
                     : const Icon(Icons.fingerprint),
-                label: const Text('Desbloquear'),
+                label: const AppText('Desbloquear'),
               ),
             ],
           ),
@@ -262,7 +287,10 @@ class _HomeShellState extends State<HomeShell> {
   Widget build(BuildContext context) {
     final List<Widget> screens = <Widget>[
       ScannerScreen(store: widget.scanStore, settings: widget.settingsStore),
-      InventoryScreen(store: widget.inventoryStore, settings: widget.settingsStore),
+      InventoryScreen(
+        store: widget.inventoryStore,
+        settings: widget.settingsStore,
+      ),
       GeneratorScreen(settings: widget.settingsStore),
       HistoryScreen(store: widget.scanStore, settings: widget.settingsStore),
       SettingsScreen(
@@ -280,7 +308,9 @@ class _HomeShellState extends State<HomeShell> {
           children: <Widget>[
             if (widget.temporaryMode)
               MaterialBanner(
-                content: const Text('Modo temporal: el historial y los inventarios se eliminarán al cerrar la aplicación.'),
+                content: const AppText(
+                  'Modo temporal: el historial y los inventarios se eliminarán al cerrar la aplicación.',
+                ),
                 leading: const Icon(Icons.visibility_off_outlined),
                 actions: const <Widget>[SizedBox.shrink()],
               ),
@@ -290,28 +320,62 @@ class _HomeShellState extends State<HomeShell> {
       ),
       bottomNavigationBar: DecoratedBox(
         decoration: BoxDecoration(
-          border: Border(top: BorderSide(color: Theme.of(context).colorScheme.outlineVariant.withValues(alpha: 0.65))),
+          border: Border(
+            top: BorderSide(
+              color: Theme.of(
+                context,
+              ).colorScheme.outlineVariant.withValues(alpha: 0.65),
+            ),
+          ),
           boxShadow: <BoxShadow>[
             BoxShadow(
-              color: Colors.black.withValues(alpha: Theme.of(context).brightness == Brightness.dark ? 0.24 : 0.06),
+              color: Colors.black.withValues(
+                alpha: Theme.of(context).brightness == Brightness.dark
+                    ? 0.24
+                    : 0.06,
+              ),
               blurRadius: 22,
               offset: const Offset(0, -4),
             ),
           ],
         ),
         child: LayoutBuilder(
-          builder: (BuildContext context, BoxConstraints constraints) => NavigationBar(
-            selectedIndex: _index,
-            labelBehavior: navigationLabelBehaviorForWidth(constraints.maxWidth),
-            onDestinationSelected: (int value) => setState(() => _index = value),
-            destinations: <NavigationDestination>[
-              NavigationDestination(icon: const Icon(Icons.shield_outlined), selectedIcon: const Icon(Icons.shield), label: context.strings.scan),
-              NavigationDestination(icon: const Icon(Icons.inventory_2_outlined), selectedIcon: const Icon(Icons.inventory_2), label: context.strings.inventory),
-              NavigationDestination(icon: const Icon(Icons.qr_code_2_outlined), selectedIcon: const Icon(Icons.qr_code_2), label: context.strings.generate),
-              NavigationDestination(icon: const Icon(Icons.history_outlined), selectedIcon: const Icon(Icons.history), label: context.strings.history),
-              NavigationDestination(icon: const Icon(Icons.settings_outlined), selectedIcon: const Icon(Icons.settings), label: context.strings.settings),
-            ],
-          ),
+          builder: (BuildContext context, BoxConstraints constraints) =>
+              NavigationBar(
+                selectedIndex: _index,
+                labelBehavior: navigationLabelBehaviorForWidth(
+                  constraints.maxWidth,
+                ),
+                onDestinationSelected: (int value) =>
+                    setState(() => _index = value),
+                destinations: <NavigationDestination>[
+                  NavigationDestination(
+                    icon: const Icon(Icons.shield_outlined),
+                    selectedIcon: const Icon(Icons.shield),
+                    label: context.strings.scan,
+                  ),
+                  NavigationDestination(
+                    icon: const Icon(Icons.inventory_2_outlined),
+                    selectedIcon: const Icon(Icons.inventory_2),
+                    label: context.strings.inventory,
+                  ),
+                  NavigationDestination(
+                    icon: const Icon(Icons.qr_code_2_outlined),
+                    selectedIcon: const Icon(Icons.qr_code_2),
+                    label: context.strings.generate,
+                  ),
+                  NavigationDestination(
+                    icon: const Icon(Icons.history_outlined),
+                    selectedIcon: const Icon(Icons.history),
+                    label: context.strings.history,
+                  ),
+                  NavigationDestination(
+                    icon: const Icon(Icons.settings_outlined),
+                    selectedIcon: const Icon(Icons.settings),
+                    label: context.strings.settings,
+                  ),
+                ],
+              ),
         ),
       ),
     );

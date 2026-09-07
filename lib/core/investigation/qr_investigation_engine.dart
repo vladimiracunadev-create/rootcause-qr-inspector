@@ -155,18 +155,21 @@ abstract final class QrInvestigationEngine {
       List<QrEvidenceFact> evidence = const <QrEvidenceFact>[],
     ]) {
       evaluate(id);
-      collector.add(QrFinding(
-        id: id,
-        severity: severity,
-        score: score,
-        confidence: confidence,
-        category: category,
-        evidence: evidence,
-      ));
+      collector.add(
+        QrFinding(
+          id: id,
+          severity: severity,
+          score: score,
+          confidence: confidence,
+          category: category,
+          evidence: evidence,
+        ),
+      );
     }
 
     final String? declaredScheme = _declaredScheme(value);
-    final bool safeAction = declaredScheme != null && _safeActionSchemes.contains(declaredScheme);
+    final bool safeAction =
+        declaredScheme != null && _safeActionSchemes.contains(declaredScheme);
     final Uri? webUri = _toWebUri(value);
     Uri? effectiveUri = webUri;
     bool forceBlock = false;
@@ -202,7 +205,8 @@ abstract final class QrInvestigationEngine {
     }
 
     evaluate('payment-instruction');
-    final bool payment = parsed?.kind == ContentKind.payment ||
+    final bool payment =
+        parsed?.kind == ContentKind.payment ||
         parsed?.kind == ContentKind.crypto ||
         lower.startsWith('bitcoin:') ||
         lower.startsWith('lightning:') ||
@@ -218,13 +222,17 @@ abstract final class QrInvestigationEngine {
         QrFindingConfidence.high,
         QrFindingCategory.sensitiveAction,
         <QrEvidenceFact>[
-          QrEvidenceFact(id: 'contentKind', value: parsed?.kind.name ?? 'payment'),
+          QrEvidenceFact(
+            id: 'contentKind',
+            value: parsed?.kind.name ?? 'payment',
+          ),
         ],
       );
     }
 
     evaluate('opaque-binary-payload');
-    if (parsed?.kind == ContentKind.binary || lower.startsWith('binary-base64:')) {
+    if (parsed?.kind == ContentKind.binary ||
+        lower.startsWith('binary-base64:')) {
       add(
         'opaque-binary-payload',
         QrSeverity.warning,
@@ -301,7 +309,9 @@ abstract final class QrInvestigationEngine {
           20,
           QrFindingConfidence.medium,
           QrFindingCategory.identity,
-          <QrEvidenceFact>[QrEvidenceFact(id: 'normalizedHost', value: webHost)],
+          <QrEvidenceFact>[
+            QrEvidenceFact(id: 'normalizedHost', value: webHost),
+          ],
         );
       }
 
@@ -313,7 +323,9 @@ abstract final class QrInvestigationEngine {
           25,
           QrFindingConfidence.high,
           QrFindingCategory.identity,
-          <QrEvidenceFact>[QrEvidenceFact(id: 'normalizedHost', value: webHost)],
+          <QrEvidenceFact>[
+            QrEvidenceFact(id: 'normalizedHost', value: webHost),
+          ],
         );
       }
 
@@ -325,7 +337,9 @@ abstract final class QrInvestigationEngine {
           5,
           QrFindingConfidence.low,
           QrFindingCategory.identity,
-          <QrEvidenceFact>[QrEvidenceFact(id: 'normalizedHost', value: webHost)],
+          <QrEvidenceFact>[
+            QrEvidenceFact(id: 'normalizedHost', value: webHost),
+          ],
         );
       }
 
@@ -374,7 +388,9 @@ abstract final class QrInvestigationEngine {
           5,
           QrFindingConfidence.medium,
           QrFindingCategory.identity,
-          <QrEvidenceFact>[QrEvidenceFact(id: 'subdomainLabels', value: '$domainLabels')],
+          <QrEvidenceFact>[
+            QrEvidenceFact(id: 'subdomainLabels', value: '$domainLabels'),
+          ],
         );
       }
 
@@ -390,9 +406,14 @@ abstract final class QrInvestigationEngine {
         );
       }
 
-      final int hyphens = webHost.runes.where((int rune) => rune == 0x2D).length;
+      final int hyphens = webHost.runes
+          .where((int rune) => rune == 0x2D)
+          .length;
       evaluate('host-hyphen-density');
-      if (hyphens >= 4 || webHost.split('.').any((String label) => '-'.allMatches(label).length >= 3)) {
+      if (hyphens >= 4 ||
+          webHost
+              .split('.')
+              .any((String label) => '-'.allMatches(label).length >= 3)) {
         add(
           'host-hyphen-density',
           QrSeverity.warning,
@@ -404,7 +425,9 @@ abstract final class QrInvestigationEngine {
       }
 
       evaluate('port-unusual');
-      final int port = webUri.hasPort ? webUri.port : (webUri.scheme == 'https' ? 443 : 80);
+      final int port = webUri.hasPort
+          ? webUri.port
+          : (webUri.scheme == 'https' ? 443 : 80);
       if (webUri.hasPort && !const <int>{80, 443}.contains(port)) {
         add(
           'port-unusual',
@@ -424,7 +447,9 @@ abstract final class QrInvestigationEngine {
           4,
           QrFindingConfidence.medium,
           QrFindingCategory.obfuscation,
-          <QrEvidenceFact>[QrEvidenceFact(id: 'length', value: '${rawValue.length}')],
+          <QrEvidenceFact>[
+            QrEvidenceFact(id: 'length', value: '${rawValue.length}'),
+          ],
         );
       }
 
@@ -444,8 +469,15 @@ abstract final class QrInvestigationEngine {
       }
 
       evaluate('encoded-separator');
-      if (<String>['%2f', '%5c', '%40', '%3a', '%252f', '%255c', '%2540']
-          .any(authorityLower.contains)) {
+      if (<String>[
+        '%2f',
+        '%5c',
+        '%40',
+        '%3a',
+        '%252f',
+        '%255c',
+        '%2540',
+      ].any(authorityLower.contains)) {
         add(
           'encoded-separator',
           QrSeverity.critical,
@@ -488,11 +520,19 @@ abstract final class QrInvestigationEngine {
       }
 
       evaluate('tracking-excessive');
-      final List<String> trackers = webUri.queryParameters.keys.where((String key) {
-        final String normalized = key.toLowerCase();
-        return normalized.startsWith('utm_') ||
-            const <String>{'gclid', 'fbclid', 'mc_cid', 'mc_eid', 'ref'}.contains(normalized);
-      }).toList(growable: false);
+      final List<String> trackers = webUri.queryParameters.keys
+          .where((String key) {
+            final String normalized = key.toLowerCase();
+            return normalized.startsWith('utm_') ||
+                const <String>{
+                  'gclid',
+                  'fbclid',
+                  'mc_cid',
+                  'mc_eid',
+                  'ref',
+                }.contains(normalized);
+          })
+          .toList(growable: false);
       if (trackers.length >= 3) {
         add(
           'tracking-excessive',
@@ -500,7 +540,9 @@ abstract final class QrInvestigationEngine {
           3,
           QrFindingConfidence.high,
           QrFindingCategory.obfuscation,
-          <QrEvidenceFact>[QrEvidenceFact(id: 'trackingParameters', value: trackers.join(','))],
+          <QrEvidenceFact>[
+            QrEvidenceFact(id: 'trackingParameters', value: trackers.join(',')),
+          ],
         );
       }
 
@@ -521,7 +563,10 @@ abstract final class QrInvestigationEngine {
       }
 
       evaluate('brand-domain-mismatch');
-      final _BrandMismatch? brand = _brandMismatch(webUri, policy.trustedBrands);
+      final _BrandMismatch? brand = _brandMismatch(
+        webUri,
+        policy.trustedBrands,
+      );
       if (brand != null) {
         add(
           'brand-domain-mismatch',
@@ -539,11 +584,12 @@ abstract final class QrInvestigationEngine {
     }
 
     final List<QrFinding> findings = collector.findings;
-    final QrSeverity severity = findings.any((QrFinding item) => item.severity == QrSeverity.critical)
+    final QrSeverity severity =
+        findings.any((QrFinding item) => item.severity == QrSeverity.critical)
         ? QrSeverity.critical
         : findings.any((QrFinding item) => item.severity == QrSeverity.warning)
-            ? QrSeverity.warning
-            : QrSeverity.normal;
+        ? QrSeverity.warning
+        : QrSeverity.normal;
     final int score = findings
         .fold<int>(0, (int total, QrFinding item) => total + item.score)
         .clamp(0, 100)
@@ -553,7 +599,9 @@ abstract final class QrInvestigationEngine {
     if (forceBlock) {
       action = QrActionDecision.block;
     } else if (webUri != null) {
-      action = findings.isEmpty ? QrActionDecision.allow : QrActionDecision.confirm;
+      action = findings.isEmpty
+          ? QrActionDecision.allow
+          : QrActionDecision.confirm;
     } else if (safeAction) {
       action = QrActionDecision.confirm;
     } else {
@@ -570,13 +618,22 @@ abstract final class QrInvestigationEngine {
       'host-shortener',
       'redirect-nested-domain',
     };
-    if (ids.any(phishingSignals.contains)) hypotheses.add('qr-phishing-suspected');
-    if (ids.contains('credential-lure-path') && ids.any(phishingSignals.contains)) {
+    if (ids.any(phishingSignals.contains)) {
+      hypotheses.add('qr-phishing-suspected');
+    }
+    if (ids.contains('credential-lure-path') &&
+        ids.any(phishingSignals.contains)) {
       hypotheses.add('credential-theft-suspected');
     }
-    if (ids.contains('download-dangerous-extension')) hypotheses.add('malware-delivery-suspected');
-    if (ids.contains('payment-instruction')) hypotheses.add('payment-substitution-review');
-    if (ids.contains('host-private-or-local')) hypotheses.add('local-network-lure');
+    if (ids.contains('download-dangerous-extension')) {
+      hypotheses.add('malware-delivery-suspected');
+    }
+    if (ids.contains('payment-instruction')) {
+      hypotheses.add('payment-substitution-review');
+    }
+    if (ids.contains('host-private-or-local')) {
+      hypotheses.add('local-network-lure');
+    }
     if (ids.contains('scheme-blocked')) hypotheses.add('unsafe-uri-execution');
 
     return QrInvestigation(
@@ -596,26 +653,34 @@ abstract final class QrInvestigationEngine {
   }
 
   static bool _isKnownStructuredScheme(String scheme) => const <String>{
-        'begin',
-        'binary-base64',
-        'bitcoin',
-        'ethereum',
-        'lightning',
-        'matmsg',
-        'mecard',
-        'otpauth',
-        'wifi',
-      }.contains(scheme);
+    'begin',
+    'binary-base64',
+    'bitcoin',
+    'ethereum',
+    'lightning',
+    'matmsg',
+    'mecard',
+    'otpauth',
+    'wifi',
+  }.contains(scheme);
 
   static String? _declaredScheme(String value) {
-    final RegExpMatch? match = RegExp(r'^([a-z][a-z0-9+.-]*):', caseSensitive: false).firstMatch(value);
+    final RegExpMatch? match = RegExp(
+      r'^([a-z][a-z0-9+.-]*):',
+      caseSensitive: false,
+    ).firstMatch(value);
     return match?.group(1)?.toLowerCase();
   }
 
   static Uri? _toWebUri(String value) {
-    final String normalized = value.toLowerCase().startsWith('www.') ? 'https://$value' : value;
+    final String normalized = value.toLowerCase().startsWith('www.')
+        ? 'https://$value'
+        : value;
     final Uri? uri = Uri.tryParse(normalized);
-    if (uri == null || !const <String>{'http', 'https'}.contains(uri.scheme.toLowerCase())) return null;
+    if (uri == null ||
+        !const <String>{'http', 'https'}.contains(uri.scheme.toLowerCase())) {
+      return null;
+    }
     return uri;
   }
 
@@ -631,13 +696,18 @@ abstract final class QrInvestigationEngine {
       host == expected || host.endsWith('.$expected');
 
   static bool _isIpAddress(String host) {
-    final RegExp ipv4 = RegExp(r'^(?:(?:25[0-5]|2[0-4]\d|1?\d?\d)\.){3}(?:25[0-5]|2[0-4]\d|1?\d?\d)$');
+    final RegExp ipv4 = RegExp(
+      r'^(?:(?:25[0-5]|2[0-4]\d|1?\d?\d)\.){3}(?:25[0-5]|2[0-4]\d|1?\d?\d)$',
+    );
     return ipv4.hasMatch(host) || host.contains(':');
   }
 
   static bool _isPrivateOrLocalHost(String host) {
     final String h = host.toLowerCase();
-    if (h == 'localhost' || h.endsWith('.localhost') || h.endsWith('.local') || h.endsWith('.internal')) {
+    if (h == 'localhost' ||
+        h.endsWith('.localhost') ||
+        h.endsWith('.local') ||
+        h.endsWith('.internal')) {
       return true;
     }
     if (h.contains(':') &&
@@ -647,8 +717,13 @@ abstract final class QrInvestigationEngine {
             h.startsWith('fe80:'))) {
       return true;
     }
-    final List<int?> parsed = h.split('.').map(int.tryParse).toList(growable: false);
-    if (parsed.length != 4 || parsed.any((int? value) => value == null)) return false;
+    final List<int?> parsed = h
+        .split('.')
+        .map(int.tryParse)
+        .toList(growable: false);
+    if (parsed.length != 4 || parsed.any((int? value) => value == null)) {
+      return false;
+    }
     final List<int> parts = parsed.cast<int>();
     return parts[0] == 0 ||
         parts[0] == 10 ||
@@ -667,7 +742,8 @@ abstract final class QrInvestigationEngine {
       if (rune >= 0x0400 && rune <= 0x052F) cyrillic = true;
       if (rune >= 0x0370 && rune <= 0x03FF) greek = true;
     }
-    return <bool>[latin, cyrillic, greek].where((bool value) => value).length > 1;
+    return <bool>[latin, cyrillic, greek].where((bool value) => value).length >
+        1;
   }
 
   static bool _containsControlOrInvisible(String value) {
@@ -677,15 +753,17 @@ abstract final class QrInvestigationEngine {
         lower.contains('%ef%bb%bf')) {
       return true;
     }
-    return value.runes.any((int rune) =>
-        rune < 0x20 ||
-        rune == 0x7F ||
-        rune == 0x200B ||
-        rune == 0x200C ||
-        rune == 0x200D ||
-        rune == 0xFEFF ||
-        (rune >= 0x202A && rune <= 0x202E) ||
-        (rune >= 0x2066 && rune <= 0x2069));
+    return value.runes.any(
+      (int rune) =>
+          rune < 0x20 ||
+          rune == 0x7F ||
+          rune == 0x200B ||
+          rune == 0x200C ||
+          rune == 0x200D ||
+          rune == 0xFEFF ||
+          (rune >= 0x202A && rune <= 0x202E) ||
+          (rune >= 0x2066 && rune <= 0x2069),
+    );
   }
 
   static String _safeDecode(String value) {
@@ -729,7 +807,9 @@ abstract final class QrInvestigationEngine {
     for (final MapEntry<String, String> entry in uri.queryParameters.entries) {
       final String key = entry.key.toLowerCase();
       if (!_redirectParameters.contains(key)) continue;
-      final String candidate = entry.value.startsWith('//') ? '${uri.scheme}:${entry.value}' : entry.value;
+      final String candidate = entry.value.startsWith('//')
+          ? '${uri.scheme}:${entry.value}'
+          : entry.value;
       final Uri? nested = _toWebUri(candidate);
       if (nested == null || nested.host.isEmpty) continue;
       final String nestedHost = nested.host.toLowerCase();
@@ -741,7 +821,9 @@ abstract final class QrInvestigationEngine {
   }
 
   static bool _sameHostFamily(String first, String second) =>
-      first == second || first.endsWith('.$second') || second.endsWith('.$first');
+      first == second ||
+      first.endsWith('.$second') ||
+      second.endsWith('.$first');
 
   static _BrandMismatch? _brandMismatch(Uri uri, List<QrTrustedBrand> brands) {
     if (brands.isEmpty || uri.host.isEmpty) return null;

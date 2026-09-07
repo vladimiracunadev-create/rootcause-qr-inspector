@@ -51,11 +51,17 @@ class ScanStore extends ChangeNotifier {
     }
   }
 
-  Future<int> importPreview(HistoryImportPreview preview, ImportStrategy strategy) async {
+  Future<int> importPreview(
+    HistoryImportPreview preview,
+    ImportStrategy strategy,
+  ) async {
     final List<ScanRecord> selected = preview.apply(ids, strategy);
     if (strategy == ImportStrategy.replace) {
       await _repository.replaceAll(selected);
-      _history = List<ScanRecord>.of(selected)..sort((ScanRecord a, ScanRecord b) => b.scannedAt.compareTo(a.scannedAt));
+      _history = List<ScanRecord>.of(selected)
+        ..sort(
+          (ScanRecord a, ScanRecord b) => b.scannedAt.compareTo(a.scannedAt),
+        );
       notifyListeners();
     } else {
       await addAll(selected);
@@ -70,13 +76,16 @@ class ScanStore extends ChangeNotifier {
       for (final ScanRecord item in _history) item.id: item,
       for (final ScanRecord item in records) item.id: item,
     };
-    _history = unique.values.toList(growable: false)
-      ..sort((ScanRecord a, ScanRecord b) => b.scannedAt.compareTo(a.scannedAt));
+    _history = unique.values.toList(
+      growable: false,
+    )..sort((ScanRecord a, ScanRecord b) => b.scannedAt.compareTo(a.scannedAt));
     notifyListeners();
   }
 
   Future<void> update(ScanRecord record) async {
-    final int index = _history.indexWhere((ScanRecord item) => item.id == record.id);
+    final int index = _history.indexWhere(
+      (ScanRecord item) => item.id == record.id,
+    );
     if (index < 0) return;
     await _repository.upsert(record);
     _history = List<ScanRecord>.of(_history)..[index] = record;
@@ -94,7 +103,9 @@ class ScanStore extends ChangeNotifier {
     if (days <= 0) return;
     final DateTime cutoff = DateTime.now().subtract(Duration(days: days));
     await _repository.pruneOlderThan(days);
-    _history = _history.where((ScanRecord item) => !item.scannedAt.isBefore(cutoff)).toList(growable: false);
+    _history = _history
+        .where((ScanRecord item) => !item.scannedAt.isBefore(cutoff))
+        .toList(growable: false);
     notifyListeners();
   }
 

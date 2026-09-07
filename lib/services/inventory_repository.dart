@@ -11,33 +11,50 @@ import 'package:rootcause_qr_inspector/models/inventory_session.dart';
 /// (`id`, `createdAt`), carga cifrada, aislamiento —no borrado— del registro
 /// ilegible y actualización perezosa del sobre.
 class InventoryRepository {
-  InventoryRepository(this._database, this._cipher, {RecoveryRepository? recovery})
-      : _recovery = recovery ?? RecoveryRepository(_database);
+  InventoryRepository(
+    this._database,
+    this._cipher, {
+    RecoveryRepository? recovery,
+  }) : _recovery = recovery ?? RecoveryRepository(_database);
 
   final AppDatabase _database;
   final PayloadCipher _cipher;
   final RecoveryRepository _recovery;
-  final StoreRef<String, Map<String, Object?>> _store = stringMapStoreFactory.store('inventory_sessions');
+  final StoreRef<String, Map<String, Object?>> _store = stringMapStoreFactory
+      .store('inventory_sessions');
 
   Future<List<InventorySession>> load() async {
-    final List<RecordSnapshot<String, Map<String, Object?>>> snapshots = await _store.find(
-      _database.database,
-      finder: Finder(sortOrders: <SortOrder>[SortOrder('createdAt', false)]),
-    );
+    final List<RecordSnapshot<String, Map<String, Object?>>> snapshots =
+        await _store.find(
+          _database.database,
+          finder: Finder(
+            sortOrders: <SortOrder>[SortOrder('createdAt', false)],
+          ),
+        );
     final List<InventorySession> sessions = <InventorySession>[];
-    for (final RecordSnapshot<String, Map<String, Object?>> snapshot in snapshots) {
+    for (final RecordSnapshot<String, Map<String, Object?>> snapshot
+        in snapshots) {
       final String? encrypted = snapshot.value['payload'] as String?;
       if (encrypted == null) {
-        await _recovery.record(entityType: RecoveryEntityType.inventory, entityId: snapshot.key, code: 'missing_payload');
+        await _recovery.record(
+          entityType: RecoveryEntityType.inventory,
+          entityId: snapshot.key,
+          code: 'missing_payload',
+        );
         continue;
       }
       try {
-        sessions.add(InventorySession.fromJson(await _cipher.decryptJson(encrypted)));
+        sessions.add(
+          InventorySession.fromJson(await _cipher.decryptJson(encrypted)),
+        );
         final CipherEnvelopeInfo info = _cipher.inspect(encrypted);
         if (info.legacy || info.version < PayloadCipher.currentVersion) {
-          await _store.record(snapshot.key).update(_database.database, <String, Object?>{
-            'payload': await _cipher.upgradeEnvelope(encrypted),
-          });
+          await _store.record(snapshot.key).update(
+            _database.database,
+            <String, Object?>{
+              'payload': await _cipher.upgradeEnvelope(encrypted),
+            },
+          );
         }
       } on Object catch (error) {
         await _recovery.record(
@@ -59,5 +76,6 @@ class InventoryRepository {
     });
   }
 
-  Future<void> remove(String id) => _store.record(id).delete(_database.database);
+  Future<void> remove(String id) =>
+      _store.record(id).delete(_database.database);
 }

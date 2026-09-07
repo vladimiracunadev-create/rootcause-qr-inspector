@@ -28,33 +28,42 @@ class RecoveryService {
   final AppDatabase _database;
   final PayloadCipher _cipher;
   final RecoveryRepository repository;
-  final StoreRef<String, Map<String, Object?>> _history = stringMapStoreFactory.store('scan_history');
-  final StoreRef<String, Map<String, Object?>> _inventory = stringMapStoreFactory.store('inventory_sessions');
+  final StoreRef<String, Map<String, Object?>> _history = stringMapStoreFactory
+      .store('scan_history');
+  final StoreRef<String, Map<String, Object?>> _inventory =
+      stringMapStoreFactory.store('inventory_sessions');
 
-  Future<List<RecoveryIssue>> load({bool unresolvedOnly = false}) => repository.load(unresolvedOnly: unresolvedOnly);
+  Future<List<RecoveryIssue>> load({bool unresolvedOnly = false}) =>
+      repository.load(unresolvedOnly: unresolvedOnly);
 
   Future<bool> retry(RecoveryIssue issue) async {
     final String? encrypted = issue.encryptedPayload;
-    if (encrypted == null || issue.state != RecoveryIssueState.unresolved) return false;
+    if (encrypted == null || issue.state != RecoveryIssueState.unresolved) {
+      return false;
+    }
     try {
       final Map<String, dynamic> clear = await _cipher.decryptJson(encrypted);
       final String upgraded = await _cipher.upgradeEnvelope(encrypted);
       switch (issue.entityType) {
         case RecoveryEntityType.history:
           final ScanRecord record = ScanRecord.fromJson(clear);
-          await _history.record(issue.entityId).put(_database.database, <String, Object?>{
-            'id': record.id,
-            'scannedAt': record.scannedAt.toUtc().toIso8601String(),
-            'payload': upgraded,
-          });
+          await _history
+              .record(issue.entityId)
+              .put(_database.database, <String, Object?>{
+                'id': record.id,
+                'scannedAt': record.scannedAt.toUtc().toIso8601String(),
+                'payload': upgraded,
+              });
           break;
         case RecoveryEntityType.inventory:
           final InventorySession session = InventorySession.fromJson(clear);
-          await _inventory.record(issue.entityId).put(_database.database, <String, Object?>{
-            'id': session.id,
-            'createdAt': session.createdAt.toIso8601String(),
-            'payload': upgraded,
-          });
+          await _inventory
+              .record(issue.entityId)
+              .put(_database.database, <String, Object?>{
+                'id': session.id,
+                'createdAt': session.createdAt.toIso8601String(),
+                'payload': upgraded,
+              });
           break;
         case RecoveryEntityType.migration:
         case RecoveryEntityType.database:
@@ -85,14 +94,19 @@ class RecoveryService {
   }
 
   Future<String> exportBundle() async {
-    final List<RecoveryIssue> issues = await repository.load(unresolvedOnly: false);
+    final List<RecoveryIssue> issues = await repository.load(
+      unresolvedOnly: false,
+    );
     return const JsonEncoder.withIndent('  ').convert(<String, Object?>{
       'application': 'RootCause QR Inspector',
       'type': 'recovery',
       'schemaVersion': 1,
       'exportedAt': DateTime.now().toUtc().toIso8601String(),
-      'notice': 'Encrypted payloads remain encrypted. No decryption key is included.',
-      'issues': issues.map((RecoveryIssue issue) => issue.toJson()).toList(growable: false),
+      'notice':
+          'Encrypted payloads remain encrypted. No decryption key is included.',
+      'issues': issues
+          .map((RecoveryIssue issue) => issue.toJson())
+          .toList(growable: false),
     });
   }
 }

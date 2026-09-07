@@ -81,7 +81,7 @@ Inventario jerárquico de todo lo relevante del repositorio. La columna
 | `diagnostics/app_diagnostics.dart` | `DiagnosticEntry`, `AppDiagnostics`, `installGlobalErrorHandlers` | Diagnóstico sin cargas ni mensajes | Activo |
 | `diagnostics/startup_failure.dart` | `StartupFailure.from` | Fallo de arranque reducido a lo mostrable | Activo |
 | `feature_flags/feature_flags.dart` | `FeatureFlags` con nueve banderas | Capacidades futuras apagadas | **Experimental · apagado** |
-| `localization/app_localizations.dart` | `AppLocalizations`, `AppStringsContext` | Diez cadenas y el delegado que rechaza inglés | Activo · parcial |
+| `localization/app_localizations.dart` | `AppLocalizations`, `AppStringsContext`, `AppText` | Español, inglés, francés y alemán; conserva literalmente cargas no registradas | Activo |
 | `theme/app_theme.dart` | `AppTheme.light/dark` | Material 3 con contraste, densidad y movimiento | Activo |
 | `utils/barcode_labels.dart` | `BarcodeLabels.format/contentType` | Nombres legibles de simbología y tipo | Activo |
 | `app_info.dart` | `appVersion`, `appName` | Único lugar donde se escribe la versión visible | Activo |
@@ -133,8 +133,9 @@ Inventario jerárquico de todo lo relevante del repositorio. La columna
 | `result/scan_result_sheet.dart` | `ScanResultsSheet`, `ScanRecordCard` | Hechos, hipótesis, límites, acciones y evidencia | Activo |
 | `history/history_screen.dart` | `HistoryScreen` | Búsqueda, filtros, notas, importación y exportación | Activo |
 | `inventory/inventory_screen.dart` | `InventoryScreen` | Sesiones y conteo continuo | Activo |
+| `help/tab_guide_screen.dart` | `TabGuideScreen` | Explica las cinco pestañas y el flujo detallado de Inventario | Activo |
 | `generator/generator_screen.dart` | `GeneratorScreen` | Nueve tipos de carga, diez formatos; descarga PNG/SVG en web y hoja nativa en móvil | Activo |
-| `settings/settings_screen.dart` | `SettingsScreen` | Apariencia, inspección, privacidad, datos y versión | Activo |
+| `settings/settings_screen.dart` | `SettingsScreen` | Apariencia, idioma, inspección, privacidad, ayuda, datos y versión | Activo |
 | `recovery/recovery_screen.dart` | `RecoveryScreen` | Registros aislados y diagnóstico | Activo |
 | `formats/formats_screen.dart` | `FormatsScreen` | Catálogo informativo de simbologías | Activo |
 | `formats/domain/content_parser.dart` | `ContentParser` | Interfaz de extensión | Activo |

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:rootcause_qr_inspector/core/localization/app_localizations.dart';
 import 'package:rootcause_qr_inspector/core/security/scan_security_analyzer.dart';
 import 'package:rootcause_qr_inspector/features/result/scan_result_sheet.dart';
 import 'package:rootcause_qr_inspector/models/scan_record.dart';
@@ -50,15 +51,22 @@ class _HistoryScreenState extends State<HistoryScreen> {
   @override
   Widget build(BuildContext context) {
     final String query = _searchController.text.trim().toLowerCase();
-    final List<ScanRecord> records = widget.store.history.where((ScanRecord item) {
-      final bool matchesSearch = query.isEmpty ||
-          item.rawValue.toLowerCase().contains(query) ||
-          item.contentType.toLowerCase().contains(query) ||
-          item.format.toLowerCase().contains(query) ||
-          item.tags.any((String tag) => tag.toLowerCase().contains(query)) ||
-          item.notes.toLowerCase().contains(query);
-      return matchesSearch && (_risk == null || item.riskLevel == _risk) && (!_favoritesOnly || item.favorite);
-    }).toList(growable: false);
+    final List<ScanRecord> records = widget.store.history
+        .where((ScanRecord item) {
+          final bool matchesSearch =
+              query.isEmpty ||
+              item.rawValue.toLowerCase().contains(query) ||
+              item.contentType.toLowerCase().contains(query) ||
+              item.format.toLowerCase().contains(query) ||
+              item.tags.any(
+                (String tag) => tag.toLowerCase().contains(query),
+              ) ||
+              item.notes.toLowerCase().contains(query);
+          return matchesSearch &&
+              (_risk == null || item.riskLevel == _risk) &&
+              (!_favoritesOnly || item.favorite);
+        })
+        .toList(growable: false);
 
     return Column(
       children: <Widget>[
@@ -70,17 +78,20 @@ class _HistoryScreenState extends State<HistoryScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text(
+                    AppText(
                       'ROOTCAUSE · EVIDENCIA LOCAL',
                       style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                            color: Theme.of(context).colorScheme.primary,
-                            fontWeight: FontWeight.w900,
-                            letterSpacing: 1.15,
-                          ),
+                        color: Theme.of(context).colorScheme.primary,
+                        fontWeight: FontWeight.w900,
+                        letterSpacing: 1.15,
+                      ),
                     ),
                     const SizedBox(height: 3),
-                    Text('Casos inspeccionados', style: Theme.of(context).textTheme.titleLarge),
-                    Text(
+                    AppText(
+                      'Casos inspeccionados',
+                      style: Theme.of(context).textTheme.titleLarge,
+                    ),
+                    AppText(
                       '${records.length} visibles · ${widget.store.history.where((ScanRecord item) => item.favorite).length} favoritos · ${widget.store.history.where((ScanRecord item) => item.riskLevel == RiskLevel.high).length} críticos',
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
@@ -97,14 +108,30 @@ class _HistoryScreenState extends State<HistoryScreen> {
                   if (value == 'import') unawaited(_importHistory());
                   if (value == 'clear') unawaited(_clearHistory());
                 },
-                itemBuilder: (BuildContext context) => const <PopupMenuEntry<String>>[
-                  PopupMenuItem(value: 'csv', child: Text('Exportar CSV')),
-                  PopupMenuItem(value: 'json', child: Text('Exportar JSON')),
-                  PopupMenuItem(value: 'xlsx', child: Text('Exportar Excel XLSX')),
-                  PopupMenuItem(value: 'import', child: Text('Importar respaldo JSON')),
-                  PopupMenuDivider(),
-                  PopupMenuItem(value: 'clear', child: Text('Borrar historial')),
-                ],
+                itemBuilder: (BuildContext context) =>
+                    const <PopupMenuEntry<String>>[
+                      PopupMenuItem(
+                        value: 'csv',
+                        child: AppText('Exportar CSV'),
+                      ),
+                      PopupMenuItem(
+                        value: 'json',
+                        child: AppText('Exportar JSON'),
+                      ),
+                      PopupMenuItem(
+                        value: 'xlsx',
+                        child: AppText('Exportar Excel XLSX'),
+                      ),
+                      PopupMenuItem(
+                        value: 'import',
+                        child: AppText('Importar respaldo JSON'),
+                      ),
+                      PopupMenuDivider(),
+                      PopupMenuItem(
+                        value: 'clear',
+                        child: AppText('Borrar historial'),
+                      ),
+                    ],
               ),
             ],
           ),
@@ -114,7 +141,11 @@ class _HistoryScreenState extends State<HistoryScreen> {
           child: TextField(
             controller: _searchController,
             onChanged: (_) => setState(() {}),
-            decoration: const InputDecoration(prefixIcon: Icon(Icons.search), hintText: 'Buscar contenido, formato, nota o etiqueta', border: OutlineInputBorder()),
+            decoration: const InputDecoration(
+              prefixIcon: Icon(Icons.search),
+              hintText: 'Buscar contenido, formato, nota o etiqueta',
+              border: OutlineInputBorder(),
+            ),
           ),
         ),
         const SizedBox(height: 8),
@@ -125,16 +156,27 @@ class _HistoryScreenState extends State<HistoryScreen> {
             scrollDirection: Axis.horizontal,
             children: <Widget>[
               FilterChip(
-                label: const Text('Favoritos'),
+                label: const AppText('Favoritos'),
                 selected: _favoritesOnly,
-                onSelected: (bool value) => setState(() => _favoritesOnly = value),
+                onSelected: (bool value) =>
+                    setState(() => _favoritesOnly = value),
               ),
               const SizedBox(width: 8),
-              ChoiceChip(label: const Text('Todos'), selected: _risk == null, onSelected: (_) => setState(() => _risk = null)),
+              ChoiceChip(
+                label: const AppText('Todos'),
+                selected: _risk == null,
+                onSelected: (_) => setState(() => _risk = null),
+              ),
               const SizedBox(width: 8),
               for (final RiskLevel level in RiskLevel.values) ...<Widget>[
                 ChoiceChip(
-                  label: Text(level == RiskLevel.low ? 'Bajo' : level == RiskLevel.caution ? 'Precaución' : 'Alto'),
+                  label: AppText(
+                    level == RiskLevel.low
+                        ? 'Bajo'
+                        : level == RiskLevel.caution
+                        ? 'Precaución'
+                        : 'Alto',
+                  ),
                   selected: _risk == level,
                   onSelected: (_) => setState(() => _risk = level),
                 ),
@@ -153,50 +195,81 @@ class _HistoryScreenState extends State<HistoryScreen> {
                   separatorBuilder: (_, _) => const SizedBox(height: 8),
                   itemBuilder: (BuildContext context, int index) {
                     final ScanRecord item = records[index];
-                    final (Color background, Color foreground) riskColors = switch (item.riskLevel) {
-                      RiskLevel.low => (
-                          Theme.of(context).colorScheme.primaryContainer,
-                          Theme.of(context).colorScheme.onPrimaryContainer,
-                        ),
-                      RiskLevel.caution => (
-                          Theme.of(context).colorScheme.tertiaryContainer,
-                          Theme.of(context).colorScheme.onTertiaryContainer,
-                        ),
-                      RiskLevel.high => (
-                          Theme.of(context).colorScheme.errorContainer,
-                          Theme.of(context).colorScheme.onErrorContainer,
-                        ),
-                    };
+                    final (Color background, Color foreground) riskColors =
+                        switch (item.riskLevel) {
+                          RiskLevel.low => (
+                            Theme.of(context).colorScheme.primaryContainer,
+                            Theme.of(context).colorScheme.onPrimaryContainer,
+                          ),
+                          RiskLevel.caution => (
+                            Theme.of(context).colorScheme.tertiaryContainer,
+                            Theme.of(context).colorScheme.onTertiaryContainer,
+                          ),
+                          RiskLevel.high => (
+                            Theme.of(context).colorScheme.errorContainer,
+                            Theme.of(context).colorScheme.onErrorContainer,
+                          ),
+                        };
                     return Card(
                       child: ListTile(
                         contentPadding: const EdgeInsets.fromLTRB(14, 8, 8, 8),
                         leading: Container(
                           width: 44,
                           height: 44,
-                          decoration: BoxDecoration(color: riskColors.$1, borderRadius: BorderRadius.circular(14)),
-                          child: Icon(_riskIcon(item.riskLevel), color: riskColors.$2),
+                          decoration: BoxDecoration(
+                            color: riskColors.$1,
+                            borderRadius: BorderRadius.circular(14),
+                          ),
+                          child: Icon(
+                            _riskIcon(item.riskLevel),
+                            color: riskColors.$2,
+                          ),
                         ),
-                        title: Text(item.parsed.summary?.isNotEmpty == true ? item.parsed.summary! : item.contentType, maxLines: 1, overflow: TextOverflow.ellipsis),
-                        subtitle: Text('${item.format} · ${_formatDate(item.scannedAt)}\n${item.rawValue}', maxLines: 2, overflow: TextOverflow.ellipsis),
+                        title: Text(
+                          item.parsed.summary?.isNotEmpty == true
+                              ? item.parsed.summary!
+                              : item.contentType,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        subtitle: AppText(
+                          '${item.format} · ${_formatDate(item.scannedAt)}\n${item.rawValue}',
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                         isThreeLine: true,
                         onTap: () => _showDetails(item),
                         trailing: Wrap(
                           spacing: 0,
                           children: <Widget>[
                             IconButton(
-                              tooltip: item.favorite ? 'Quitar favorito' : 'Marcar favorito',
-                              onPressed: () => widget.store.toggleFavorite(item.id),
-                              icon: Icon(item.favorite ? Icons.star : Icons.star_border),
+                              tooltip: item.favorite
+                                  ? 'Quitar favorito'
+                                  : 'Marcar favorito',
+                              onPressed: () =>
+                                  widget.store.toggleFavorite(item.id),
+                              icon: Icon(
+                                item.favorite ? Icons.star : Icons.star_border,
+                              ),
                             ),
                             PopupMenuButton<String>(
                               onSelected: (String value) {
                                 if (value == 'edit') unawaited(_edit(item));
-                                if (value == 'delete') unawaited(widget.store.remove(item.id));
+                                if (value == 'delete') {
+                                  unawaited(widget.store.remove(item.id));
+                                }
                               },
-                              itemBuilder: (_) => const <PopupMenuEntry<String>>[
-                                PopupMenuItem(value: 'edit', child: Text('Notas y etiquetas')),
-                                PopupMenuItem(value: 'delete', child: Text('Eliminar')),
-                              ],
+                              itemBuilder: (_) =>
+                                  const <PopupMenuEntry<String>>[
+                                    PopupMenuItem(
+                                      value: 'edit',
+                                      child: AppText('Notas y etiquetas'),
+                                    ),
+                                    PopupMenuItem(
+                                      value: 'delete',
+                                      child: AppText('Eliminar'),
+                                    ),
+                                  ],
                             ),
                           ],
                         ),
@@ -216,30 +289,33 @@ class _HistoryScreenState extends State<HistoryScreen> {
       builder: (BuildContext context) => SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16),
-          child: SingleChildScrollView(child: ScanRecordCard(record: record, settings: widget.settings)),
+          child: SingleChildScrollView(
+            child: ScanRecordCard(record: record, settings: widget.settings),
+          ),
         ),
       ),
     );
   }
 
   Future<void> _exportHistory(String format, List<ScanRecord> records) async {
-    final bool confirmed = await showDialog<bool>(
+    final bool confirmed =
+        await showDialog<bool>(
           context: context,
           builder: (BuildContext dialogContext) => AlertDialog(
             icon: const Icon(Icons.privacy_tip_outlined),
-            title: const Text('Exportar historial completo'),
-            content: const Text(
+            title: const AppText('Exportar historial completo'),
+            content: const AppText(
               'El archivo incluye cargas, parámetros, notas y etiquetas sin cifrar. '
               'Para compartir un solo caso con mínima exposición, usa “Evidencia” en su detalle.',
             ),
             actions: <Widget>[
               TextButton(
                 onPressed: () => Navigator.of(dialogContext).pop(false),
-                child: const Text('Cancelar'),
+                child: const AppText('Cancelar'),
               ),
               FilledButton(
                 onPressed: () => Navigator.of(dialogContext).pop(true),
-                child: const Text('Exportar'),
+                child: const AppText('Exportar'),
               ),
             ],
           ),
@@ -252,84 +328,149 @@ class _HistoryScreenState extends State<HistoryScreen> {
   }
 
   Future<void> _edit(ScanRecord record) async {
-    final TextEditingController notes = TextEditingController(text: record.notes);
-    final TextEditingController tags = TextEditingController(text: record.tags.join(', '));
-    final bool saved = await showDialog<bool>(
+    final TextEditingController notes = TextEditingController(
+      text: record.notes,
+    );
+    final TextEditingController tags = TextEditingController(
+      text: record.tags.join(', '),
+    );
+    final bool saved =
+        await showDialog<bool>(
           context: context,
           builder: (BuildContext context) => AlertDialog(
-            title: const Text('Notas y etiquetas'),
+            title: const AppText('Notas y etiquetas'),
             content: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                TextField(controller: notes, maxLines: 3, decoration: const InputDecoration(labelText: 'Notas')),
+                TextField(
+                  controller: notes,
+                  maxLines: 3,
+                  decoration: const InputDecoration(labelText: 'Notas'),
+                ),
                 const SizedBox(height: 12),
-                TextField(controller: tags, decoration: const InputDecoration(labelText: 'Etiquetas separadas por comas')),
+                TextField(
+                  controller: tags,
+                  decoration: const InputDecoration(
+                    labelText: 'Etiquetas separadas por comas',
+                  ),
+                ),
               ],
             ),
             actions: <Widget>[
-              TextButton(onPressed: () => Navigator.of(context).pop(false), child: const Text('Cancelar')),
-              FilledButton(onPressed: () => Navigator.of(context).pop(true), child: const Text('Guardar')),
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: const AppText('Cancelar'),
+              ),
+              FilledButton(
+                onPressed: () => Navigator.of(context).pop(true),
+                child: const AppText('Guardar'),
+              ),
             ],
           ),
         ) ??
         false;
     if (saved) {
-      await widget.store.update(record.copyWith(
-        notes: notes.text.trim(),
-        tags: tags.text.split(',').map((String value) => value.trim()).where((String value) => value.isNotEmpty).toSet().toList(),
-      ));
+      await widget.store.update(
+        record.copyWith(
+          notes: notes.text.trim(),
+          tags: tags.text
+              .split(',')
+              .map((String value) => value.trim())
+              .where((String value) => value.isNotEmpty)
+              .toSet()
+              .toList(),
+        ),
+      );
     }
     notes.dispose();
     tags.dispose();
   }
 
-
   Future<void> _importHistory() async {
     try {
-      final HistoryImportPreview? preview = await ImportService.pickHistoryJson(existingIds: widget.store.ids);
+      final HistoryImportPreview? preview = await ImportService.pickHistoryJson(
+        existingIds: widget.store.ids,
+      );
       if (preview == null || !mounted) return;
       final ImportStrategy? strategy = await showDialog<ImportStrategy>(
         context: context,
         builder: (BuildContext context) => AlertDialog(
-          title: const Text('Vista previa de importación'),
+          title: const AppText('Vista previa de importación'),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Text('Archivo: ${preview.fileName}'),
-              Text('Esquema: ${preview.schemaVersion}${preview.legacy ? ' (formato anterior)' : ''}'),
-              Text('Registros válidos: ${preview.valid}'),
-              Text('Duplicados: ${preview.duplicates}'),
-              Text('Rechazados: ${preview.rejected}'),
+              AppText('Archivo: ${preview.fileName}'),
+              AppText(
+                'Esquema: ${preview.schemaVersion}${preview.legacy ? ' (formato anterior)' : ''}',
+              ),
+              AppText('Registros válidos: ${preview.valid}'),
+              AppText('Duplicados: ${preview.duplicates}'),
+              AppText('Rechazados: ${preview.rejected}'),
               const SizedBox(height: 12),
-              const Text('La base existente no se modifica hasta elegir una estrategia.'),
+              const AppText(
+                'La base existente no se modifica hasta elegir una estrategia.',
+              ),
             ],
           ),
           actions: <Widget>[
-            TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Cancelar')),
-            TextButton(onPressed: () => Navigator.of(context).pop(ImportStrategy.skipDuplicates), child: const Text('Omitir duplicados')),
-            TextButton(onPressed: () => Navigator.of(context).pop(ImportStrategy.merge), child: const Text('Combinar')),
-            FilledButton(onPressed: () => Navigator.of(context).pop(ImportStrategy.replace), child: const Text('Reemplazar')),
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const AppText('Cancelar'),
+            ),
+            TextButton(
+              onPressed: () =>
+                  Navigator.of(context).pop(ImportStrategy.skipDuplicates),
+              child: const AppText('Omitir duplicados'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(ImportStrategy.merge),
+              child: const AppText('Combinar'),
+            ),
+            FilledButton(
+              onPressed: () =>
+                  Navigator.of(context).pop(ImportStrategy.replace),
+              child: const AppText('Reemplazar'),
+            ),
           ],
         ),
       );
       if (strategy == null) return;
       final int imported = await widget.store.importPreview(preview, strategy);
-      if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('$imported lecturas importadas.')));
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: AppText('$imported lecturas importadas.')),
+        );
+      }
     } on Object {
-      if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('El respaldo no es válido o no pudo leerse.')));
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: AppText('El respaldo no es válido o no pudo leerse.'),
+          ),
+        );
+      }
     }
   }
 
   Future<void> _clearHistory() async {
-    final bool confirmed = await showDialog<bool>(
+    final bool confirmed =
+        await showDialog<bool>(
           context: context,
           builder: (BuildContext context) => AlertDialog(
-            title: const Text('Borrar historial'),
-            content: const Text('Esta acción eliminará todas las lecturas guardadas en la base local.'),
+            title: const AppText('Borrar historial'),
+            content: const AppText(
+              'Esta acción eliminará todas las lecturas guardadas en la base local.',
+            ),
             actions: <Widget>[
-              TextButton(onPressed: () => Navigator.of(context).pop(false), child: const Text('Cancelar')),
-              FilledButton(onPressed: () => Navigator.of(context).pop(true), child: const Text('Borrar')),
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: const AppText('Cancelar'),
+              ),
+              FilledButton(
+                onPressed: () => Navigator.of(context).pop(true),
+                child: const AppText('Borrar'),
+              ),
             ],
           ),
         ) ??
@@ -338,10 +479,10 @@ class _HistoryScreenState extends State<HistoryScreen> {
   }
 
   IconData _riskIcon(RiskLevel level) => switch (level) {
-        RiskLevel.low => Icons.verified_user_outlined,
-        RiskLevel.caution => Icons.info_outline,
-        RiskLevel.high => Icons.warning_amber_rounded,
-      };
+    RiskLevel.low => Icons.verified_user_outlined,
+    RiskLevel.caution => Icons.info_outline,
+    RiskLevel.high => Icons.warning_amber_rounded,
+  };
 
   String _formatDate(DateTime value) {
     String two(int number) => number.toString().padLeft(2, '0');
@@ -371,21 +512,33 @@ class _HistoryEmptyState extends StatelessWidget {
                   Container(
                     width: 66,
                     height: 66,
-                    decoration: BoxDecoration(color: colors.primaryContainer, borderRadius: BorderRadius.circular(22)),
-                    child: Icon(filtered ? Icons.filter_alt_off_outlined : Icons.shield_outlined, color: colors.onPrimaryContainer, size: 32),
+                    decoration: BoxDecoration(
+                      color: colors.primaryContainer,
+                      borderRadius: BorderRadius.circular(22),
+                    ),
+                    child: Icon(
+                      filtered
+                          ? Icons.filter_alt_off_outlined
+                          : Icons.shield_outlined,
+                      color: colors.onPrimaryContainer,
+                      size: 32,
+                    ),
                   ),
                   const SizedBox(height: 18),
-                  Text(
+                  AppText(
                     filtered ? 'Ningún caso coincide' : 'Aún no hay casos',
                     style: Theme.of(context).textTheme.titleLarge,
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 8),
-                  Text(
+                  AppText(
                     filtered
                         ? 'Ajusta la búsqueda o los filtros para volver a ver la evidencia guardada.'
                         : 'Inspecciona un QR. Los resultados no sensibles que autorices quedarán cifrados en este dispositivo.',
-                    style: TextStyle(color: colors.onSurfaceVariant, height: 1.4),
+                    style: TextStyle(
+                      color: colors.onSurfaceVariant,
+                      height: 1.4,
+                    ),
                     textAlign: TextAlign.center,
                   ),
                 ],

@@ -5,7 +5,11 @@ import 'package:rootcause_qr_inspector/core/security/payload_cipher.dart';
 
 /// Recuento de lo que una rotación de llave reencriptó realmente.
 class EncryptionRotationResult {
-  const EncryptionRotationResult({required this.keyId, required this.historyRecords, required this.inventorySessions});
+  const EncryptionRotationResult({
+    required this.keyId,
+    required this.historyRecords,
+    required this.inventorySessions,
+  });
   final String keyId;
   final int historyRecords;
   final int inventorySessions;
@@ -36,37 +40,61 @@ class DataMaintenanceService {
   final AppDatabase _database;
   final PayloadCipher _cipher;
   final EncryptionMetadataRepository _metadata;
-  final StoreRef<String, Map<String, Object?>> _history = stringMapStoreFactory.store('scan_history');
-  final StoreRef<String, Map<String, Object?>> _inventory = stringMapStoreFactory.store('inventory_sessions');
+  final StoreRef<String, Map<String, Object?>> _history = stringMapStoreFactory
+      .store('scan_history');
+  final StoreRef<String, Map<String, Object?>> _inventory =
+      stringMapStoreFactory.store('inventory_sessions');
   bool _rotationInProgress = false;
 
   Future<EncryptionRotationResult> rotateEncryptionKey() async {
-    if (_rotationInProgress) throw StateError('encryption_rotation_in_progress');
+    if (_rotationInProgress) {
+      throw StateError('encryption_rotation_in_progress');
+    }
     _rotationInProgress = true;
     final String keyId = 'v3_${DateTime.now().toUtc().millisecondsSinceEpoch}';
     try {
-      final List<RecordSnapshot<String, Map<String, Object?>>> history = await _history.find(_database.database);
-      final List<RecordSnapshot<String, Map<String, Object?>>> inventory = await _inventory.find(_database.database);
+      final List<RecordSnapshot<String, Map<String, Object?>>> history =
+          await _history.find(_database.database);
+      final List<RecordSnapshot<String, Map<String, Object?>>> inventory =
+          await _inventory.find(_database.database);
       final Map<String, String> historyPayloads = <String, String>{};
       final Map<String, String> inventoryPayloads = <String, String>{};
 
       for (final RecordSnapshot<String, Map<String, Object?>> item in history) {
         final String? payload = item.value['payload'] as String?;
-        if (payload == null) throw StateError('history_payload_missing:${item.key}');
-        historyPayloads[item.key] = await _cipher.encryptJson(await _cipher.decryptJson(payload), keyId: keyId);
+        if (payload == null) {
+          throw StateError('history_payload_missing:${item.key}');
+        }
+        historyPayloads[item.key] = await _cipher.encryptJson(
+          await _cipher.decryptJson(payload),
+          keyId: keyId,
+        );
       }
-      for (final RecordSnapshot<String, Map<String, Object?>> item in inventory) {
+      for (final RecordSnapshot<String, Map<String, Object?>> item
+          in inventory) {
         final String? payload = item.value['payload'] as String?;
-        if (payload == null) throw StateError('inventory_payload_missing:${item.key}');
-        inventoryPayloads[item.key] = await _cipher.encryptJson(await _cipher.decryptJson(payload), keyId: keyId);
+        if (payload == null) {
+          throw StateError('inventory_payload_missing:${item.key}');
+        }
+        inventoryPayloads[item.key] = await _cipher.encryptJson(
+          await _cipher.decryptJson(payload),
+          keyId: keyId,
+        );
       }
 
       await _database.database.transaction((Transaction transaction) async {
         for (final MapEntry<String, String> entry in historyPayloads.entries) {
-          await _history.record(entry.key).update(transaction, <String, Object?>{'payload': entry.value});
+          await _history.record(entry.key).update(
+            transaction,
+            <String, Object?>{'payload': entry.value},
+          );
         }
-        for (final MapEntry<String, String> entry in inventoryPayloads.entries) {
-          await _inventory.record(entry.key).update(transaction, <String, Object?>{'payload': entry.value});
+        for (final MapEntry<String, String> entry
+            in inventoryPayloads.entries) {
+          await _inventory.record(entry.key).update(
+            transaction,
+            <String, Object?>{'payload': entry.value},
+          );
         }
         await _metadata.saveActiveKeyId(keyId, transaction: transaction);
       });

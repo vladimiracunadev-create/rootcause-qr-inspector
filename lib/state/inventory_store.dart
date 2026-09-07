@@ -22,7 +22,8 @@ class InventoryStore extends ChangeNotifier {
   List<InventorySession> _sessions = <InventorySession>[];
   String? _activeId;
 
-  List<InventorySession> get sessions => List<InventorySession>.unmodifiable(_sessions);
+  List<InventorySession> get sessions =>
+      List<InventorySession>.unmodifiable(_sessions);
   InventorySession? get activeSession {
     for (final InventorySession session in _sessions) {
       if (session.id == _activeId && session.isOpen) return session;
@@ -32,13 +33,19 @@ class InventoryStore extends ChangeNotifier {
 
   Future<void> initialize() async {
     _sessions = await _repository.load();
-    final Iterable<InventorySession> open = _sessions.where((InventorySession item) => item.isOpen);
+    final Iterable<InventorySession> open = _sessions.where(
+      (InventorySession item) => item.isOpen,
+    );
     _activeId = open.isEmpty ? null : open.first.id;
   }
 
-  Future<void> importSession(InventorySession imported) => _writes.run<void>(() async {
+  Future<void> importSession(InventorySession imported) =>
+      _writes.run<void>(() async {
         final DateTime now = DateTime.now();
-        final String id = sha1.convert('${now.microsecondsSinceEpoch}|${imported.id}'.codeUnits).toString().substring(0, 16);
+        final String id = sha1
+            .convert('${now.microsecondsSinceEpoch}|${imported.id}'.codeUnits)
+            .toString()
+            .substring(0, 16);
         final InventorySession session = InventorySession(
           id: id,
           name: '${imported.name} (importado)',
@@ -53,19 +60,24 @@ class InventoryStore extends ChangeNotifier {
       });
 
   Future<void> createSession(String name) => _writes.run<void>(() async {
-        final DateTime now = DateTime.now();
-        final String id = sha1.convert('${now.microsecondsSinceEpoch}|$name'.codeUnits).toString().substring(0, 16);
-        final InventorySession session = InventorySession(
-          id: id,
-          name: name.trim().isEmpty ? 'Inventario ${_formatDate(now)}' : name.trim(),
-          createdAt: now,
-          items: const <String, InventoryItem>{},
-        );
-        await _repository.save(session);
-        _sessions = <InventorySession>[session, ..._sessions];
-        _activeId = id;
-        notifyListeners();
-      });
+    final DateTime now = DateTime.now();
+    final String id = sha1
+        .convert('${now.microsecondsSinceEpoch}|$name'.codeUnits)
+        .toString()
+        .substring(0, 16);
+    final InventorySession session = InventorySession(
+      id: id,
+      name: name.trim().isEmpty
+          ? 'Inventario ${_formatDate(now)}'
+          : name.trim(),
+      createdAt: now,
+      items: const <String, InventoryItem>{},
+    );
+    await _repository.save(session);
+    _sessions = <InventorySession>[session, ..._sessions];
+    _activeId = id;
+    notifyListeners();
+  });
 
   Future<void> activate(String id) async {
     _activeId = id;
@@ -73,76 +85,99 @@ class InventoryStore extends ChangeNotifier {
   }
 
   Future<void> reopenSession(String id) => _writes.run<void>(() async {
-        final int index = _sessions.indexWhere((InventorySession item) => item.id == id);
-        if (index < 0) return;
-        final InventorySession current = _sessions[index];
-        final InventorySession reopened = InventorySession(
-          id: current.id,
-          name: current.name,
-          createdAt: current.createdAt,
-          items: current.items,
-        );
-        await _replaceUnlocked(reopened);
-        _activeId = id;
-        notifyListeners();
-      });
+    final int index = _sessions.indexWhere(
+      (InventorySession item) => item.id == id,
+    );
+    if (index < 0) return;
+    final InventorySession current = _sessions[index];
+    final InventorySession reopened = InventorySession(
+      id: current.id,
+      name: current.name,
+      createdAt: current.createdAt,
+      items: current.items,
+    );
+    await _replaceUnlocked(reopened);
+    _activeId = id;
+    notifyListeners();
+  });
 
-  Future<void> updateItemNotes(String code, String notes) => _writes.run<void>(() async {
+  Future<void> updateItemNotes(String code, String notes) =>
+      _writes.run<void>(() async {
         final InventorySession? session = activeSession;
         if (session == null || session.items[code] == null) return;
-        final Map<String, InventoryItem> items = Map<String, InventoryItem>.of(session.items);
-        items[code] = items[code]!.copyWith(notes: notes.trim(), lastScannedAt: DateTime.now());
+        final Map<String, InventoryItem> items = Map<String, InventoryItem>.of(
+          session.items,
+        );
+        items[code] = items[code]!.copyWith(
+          notes: notes.trim(),
+          lastScannedAt: DateTime.now(),
+        );
         await _replaceUnlocked(session.copyWith(items: items));
       });
 
   Future<void> addScan(ScanRecord record) => _writes.run<void>(() async {
-        final InventorySession? session = activeSession;
-        if (session == null) return;
-        final DateTime now = DateTime.now();
-        final Map<String, InventoryItem> items = Map<String, InventoryItem>.of(session.items);
-        final InventoryItem? existing = items[record.rawValue];
-        items[record.rawValue] = existing == null
-            ? InventoryItem(
-                code: record.rawValue,
-                format: record.format,
-                label: record.parsed.summary ?? record.contentType,
-                quantity: 1,
-                firstScannedAt: now,
-                lastScannedAt: now,
-              )
-            : existing.copyWith(quantity: existing.quantity + 1, lastScannedAt: now);
-        await _replaceUnlocked(session.copyWith(items: items));
-      });
+    final InventorySession? session = activeSession;
+    if (session == null) return;
+    final DateTime now = DateTime.now();
+    final Map<String, InventoryItem> items = Map<String, InventoryItem>.of(
+      session.items,
+    );
+    final InventoryItem? existing = items[record.rawValue];
+    items[record.rawValue] = existing == null
+        ? InventoryItem(
+            code: record.rawValue,
+            format: record.format,
+            label: record.parsed.summary ?? record.contentType,
+            quantity: 1,
+            firstScannedAt: now,
+            lastScannedAt: now,
+          )
+        : existing.copyWith(
+            quantity: existing.quantity + 1,
+            lastScannedAt: now,
+          );
+    await _replaceUnlocked(session.copyWith(items: items));
+  });
 
-  Future<void> setQuantity(String code, int quantity) => _writes.run<void>(() async {
+  Future<void> setQuantity(String code, int quantity) =>
+      _writes.run<void>(() async {
         final InventorySession? session = activeSession;
         if (session == null) return;
-        final Map<String, InventoryItem> items = Map<String, InventoryItem>.of(session.items);
+        final Map<String, InventoryItem> items = Map<String, InventoryItem>.of(
+          session.items,
+        );
         if (quantity <= 0) {
           items.remove(code);
         } else if (items[code] != null) {
-          items[code] = items[code]!.copyWith(quantity: quantity, lastScannedAt: DateTime.now());
+          items[code] = items[code]!.copyWith(
+            quantity: quantity,
+            lastScannedAt: DateTime.now(),
+          );
         }
         await _replaceUnlocked(session.copyWith(items: items));
       });
 
   Future<void> closeActive() => _writes.run<void>(() async {
-        final InventorySession? session = activeSession;
-        if (session == null) return;
-        await _replaceUnlocked(session.copyWith(closedAt: DateTime.now()));
-        _activeId = null;
-        notifyListeners();
-      });
+    final InventorySession? session = activeSession;
+    if (session == null) return;
+    await _replaceUnlocked(session.copyWith(closedAt: DateTime.now()));
+    _activeId = null;
+    notifyListeners();
+  });
 
   Future<void> deleteSession(String id) => _writes.run<void>(() async {
-        await _repository.remove(id);
-        _sessions = _sessions.where((InventorySession item) => item.id != id).toList();
-        if (_activeId == id) _activeId = null;
-        notifyListeners();
-      });
+    await _repository.remove(id);
+    _sessions = _sessions
+        .where((InventorySession item) => item.id != id)
+        .toList();
+    if (_activeId == id) _activeId = null;
+    notifyListeners();
+  });
 
   Future<void> _replaceUnlocked(InventorySession session) async {
-    final int index = _sessions.indexWhere((InventorySession item) => item.id == session.id);
+    final int index = _sessions.indexWhere(
+      (InventorySession item) => item.id == session.id,
+    );
     if (index < 0) return;
     await _repository.save(session);
     _sessions = List<InventorySession>.of(_sessions)..[index] = session;

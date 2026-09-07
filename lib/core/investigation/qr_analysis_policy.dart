@@ -19,17 +19,20 @@ class QrTrustedBrand {
   final List<String> allowedHosts;
 
   factory QrTrustedBrand.fromJson(Map<String, dynamic> json) => QrTrustedBrand(
-        id: json['id'] as String? ?? 'unknown',
-        tokens: (json['tokens'] as List<dynamic>? ?? const <dynamic>[]).whereType<String>().toList(growable: false),
-        allowedHosts:
-            (json['allowedHosts'] as List<dynamic>? ?? const <dynamic>[]).whereType<String>().toList(growable: false),
-      );
+    id: json['id'] as String? ?? 'unknown',
+    tokens: (json['tokens'] as List<dynamic>? ?? const <dynamic>[])
+        .whereType<String>()
+        .toList(growable: false),
+    allowedHosts: (json['allowedHosts'] as List<dynamic>? ?? const <dynamic>[])
+        .whereType<String>()
+        .toList(growable: false),
+  );
 
   Map<String, Object?> toJson() => <String, Object?>{
-        'id': id,
-        'tokens': tokens,
-        'allowedHosts': allowedHosts,
-      };
+    'id': id,
+    'tokens': tokens,
+    'allowedHosts': allowedHosts,
+  };
 }
 
 /// Umbrales y marcas que parametrizan el motor, sin tocar su código.
@@ -57,21 +60,28 @@ class QrAnalysisPolicy {
   final bool allowPrivateTargets;
   final List<QrTrustedBrand> trustedBrands;
 
-  factory QrAnalysisPolicy.fromJson(Map<String, dynamic> json) => QrAnalysisPolicy(
+  factory QrAnalysisPolicy.fromJson(Map<String, dynamic> json) =>
+      QrAnalysisPolicy(
         maxUrlLength: (json['maxUrlLength'] as num?)?.toInt() ?? 240,
         maxDomainLabels: (json['maxDomainLabels'] as num?)?.toInt() ?? 5,
         allowPrivateTargets: json['allowPrivateTargets'] as bool? ?? false,
-        trustedBrands: (json['trustedBrands'] as List<dynamic>? ?? const <dynamic>[])
-            .whereType<Map>()
-            .map((Map item) => QrTrustedBrand.fromJson(Map<String, dynamic>.from(item)))
-            .toList(growable: false),
+        trustedBrands:
+            (json['trustedBrands'] as List<dynamic>? ?? const <dynamic>[])
+                .whereType<Map>()
+                .map(
+                  (Map item) =>
+                      QrTrustedBrand.fromJson(Map<String, dynamic>.from(item)),
+                )
+                .toList(growable: false),
       );
 
   Map<String, Object?> toJson() => <String, Object?>{
-        'schema': 'rootcause.qr-policy.v1',
-        'maxUrlLength': maxUrlLength,
-        'maxDomainLabels': maxDomainLabels,
-        'allowPrivateTargets': allowPrivateTargets,
-        'trustedBrands': trustedBrands.map((QrTrustedBrand item) => item.toJson()).toList(growable: false),
-      };
+    'schema': 'rootcause.qr-policy.v1',
+    'maxUrlLength': maxUrlLength,
+    'maxDomainLabels': maxDomainLabels,
+    'allowPrivateTargets': allowPrivateTargets,
+    'trustedBrands': trustedBrands
+        .map((QrTrustedBrand item) => item.toJson())
+        .toList(growable: false),
+  };
 }

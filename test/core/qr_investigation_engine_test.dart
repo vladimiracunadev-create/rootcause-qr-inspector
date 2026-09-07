@@ -8,13 +8,12 @@ void main() {
   QrInvestigation analyze(
     String value, {
     QrAnalysisPolicy policy = const QrAnalysisPolicy(),
-  }) =>
-      QrInvestigationEngine.analyze(
-        value,
-        parsed: ContentInterpreter.parse(value),
-        policy: policy,
-        analyzedAt: DateTime.utc(2026, 8, 20),
-      );
+  }) => QrInvestigationEngine.analyze(
+    value,
+    parsed: ContentInterpreter.parse(value),
+    policy: policy,
+    analyzedAt: DateTime.utc(2026, 8, 20),
+  );
 
   group('QrInvestigationEngine', () {
     test('un HTTPS común queda normal, pero conserva límites explícitos', () {
@@ -29,7 +28,9 @@ void main() {
 
     test('la huella cubre la carga exacta aunque el parser recorte bordes', () {
       final QrInvestigation plain = analyze('https://example.com/documento');
-      final QrInvestigation padded = analyze('\nhttps://example.com/documento\n');
+      final QrInvestigation padded = analyze(
+        '\nhttps://example.com/documento\n',
+      );
 
       expect(padded.normalizedHost, plain.normalizedHost);
       expect(padded.payloadSha256, isNot(plain.payloadSha256));
@@ -49,18 +50,28 @@ void main() {
     });
 
     test('Punycode deriva phishing como hipótesis, no como certeza', () {
-      final QrInvestigation result = analyze('https://xn--pple-43d.example/login');
+      final QrInvestigation result = analyze(
+        'https://xn--pple-43d.example/login',
+      );
 
       expect(result.severity, QrSeverity.critical);
-      expect(result.findings.map((QrFinding item) => item.id), contains('host-punycode'));
+      expect(
+        result.findings.map((QrFinding item) => item.id),
+        contains('host-punycode'),
+      );
       expect(result.hypotheses, contains('qr-phishing-suspected'));
       expect(result.hypotheses, contains('credential-theft-suspected'));
     });
 
     test('credenciales en la autoridad quedan como ofuscación crítica', () {
-      final QrInvestigation result = analyze('https://banco.example@evil.example/');
+      final QrInvestigation result = analyze(
+        'https://banco.example@evil.example/',
+      );
 
-      expect(result.findings.map((QrFinding item) => item.id), contains('authority-userinfo'));
+      expect(
+        result.findings.map((QrFinding item) => item.id),
+        contains('authority-userinfo'),
+      );
       expect(result.normalizedHost, 'evil.example');
       expect(result.action, QrActionDecision.confirm);
     });
@@ -93,35 +104,55 @@ void main() {
       final QrFinding finding = result.findings.firstWhere(
         (QrFinding item) => item.id == 'redirect-nested-domain',
       );
-      expect(finding.evidence.map((QrEvidenceFact item) => item.value), contains('evil.example'));
+      expect(
+        finding.evidence.map((QrEvidenceFact item) => item.value),
+        contains('evil.example'),
+      );
     });
 
     test('detecta posible entrega de archivo ejecutable', () {
-      final QrInvestigation result = analyze('https://download.example/update.apk');
-
-      expect(result.findings.map((QrFinding item) => item.id), contains('download-dangerous-extension'));
-      expect(result.hypotheses, contains('malware-delivery-suspected'));
-    });
-
-    test('destino privado se trata como indicio local, salvo política explícita', () {
-      final QrInvestigation blocked = analyze('https://192.168.1.10/admin');
-      final QrInvestigation allowedByPolicy = analyze(
-        'https://192.168.1.10/admin',
-        policy: const QrAnalysisPolicy(allowPrivateTargets: true),
+      final QrInvestigation result = analyze(
+        'https://download.example/update.apk',
       );
-
-      expect(blocked.findings.map((QrFinding item) => item.id), contains('host-private-or-local'));
-      expect(allowedByPolicy.findings.map((QrFinding item) => item.id), isNot(contains('host-private-or-local')));
-    });
-
-    test('un dominio que comienza en fc no se confunde con un IPv6 privado', () {
-      final QrInvestigation result = analyze('https://fca.example/documento');
 
       expect(
         result.findings.map((QrFinding item) => item.id),
-        isNot(contains('host-private-or-local')),
+        contains('download-dangerous-extension'),
       );
+      expect(result.hypotheses, contains('malware-delivery-suspected'));
     });
+
+    test(
+      'destino privado se trata como indicio local, salvo política explícita',
+      () {
+        final QrInvestigation blocked = analyze('https://192.168.1.10/admin');
+        final QrInvestigation allowedByPolicy = analyze(
+          'https://192.168.1.10/admin',
+          policy: const QrAnalysisPolicy(allowPrivateTargets: true),
+        );
+
+        expect(
+          blocked.findings.map((QrFinding item) => item.id),
+          contains('host-private-or-local'),
+        );
+        expect(
+          allowedByPolicy.findings.map((QrFinding item) => item.id),
+          isNot(contains('host-private-or-local')),
+        );
+      },
+    );
+
+    test(
+      'un dominio que comienza en fc no se confunde con un IPv6 privado',
+      () {
+        final QrInvestigation result = analyze('https://fca.example/documento');
+
+        expect(
+          result.findings.map((QrFinding item) => item.id),
+          isNot(contains('host-private-or-local')),
+        );
+      },
+    );
 
     test('instrucción de pago exige revisión sin declarar fraude', () {
       final QrInvestigation result = analyze('bitcoin:bc1qexample?amount=0.01');
@@ -152,8 +183,14 @@ void main() {
         policy: policy,
       );
 
-      expect(mismatch.findings.map((QrFinding item) => item.id), contains('brand-domain-mismatch'));
-      expect(valid.findings.map((QrFinding item) => item.id), isNot(contains('brand-domain-mismatch')));
+      expect(
+        mismatch.findings.map((QrFinding item) => item.id),
+        contains('brand-domain-mismatch'),
+      );
+      expect(
+        valid.findings.map((QrFinding item) => item.id),
+        isNot(contains('brand-domain-mismatch')),
+      );
     });
   });
 }

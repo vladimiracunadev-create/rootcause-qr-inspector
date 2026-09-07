@@ -184,10 +184,13 @@ def patch_android() -> None:
     gradle_groovy = ROOT / "android/app/build.gradle"
     if gradle_kts.exists():
         text = gradle_kts.read_text(encoding="utf-8")
+        text = text.replace("compileSdk = flutter.compileSdkVersion", "compileSdk = 37")
         text = text.replace("minSdk = flutter.minSdkVersion", "minSdk = 24")
         gradle_kts.write_text(text, encoding="utf-8")
     elif gradle_groovy.exists():
         text = gradle_groovy.read_text(encoding="utf-8")
+        text = text.replace("compileSdkVersion flutter.compileSdkVersion", "compileSdkVersion 37")
+        text = text.replace("compileSdk = flutter.compileSdkVersion", "compileSdk = 37")
         text = text.replace("minSdkVersion flutter.minSdkVersion", "minSdkVersion 24")
         text = text.replace("minSdk = flutter.minSdkVersion", "minSdk = 24")
         gradle_groovy.write_text(text, encoding="utf-8")

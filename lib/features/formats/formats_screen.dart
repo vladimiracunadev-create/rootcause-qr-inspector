@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rootcause_qr_inspector/core/localization/app_localizations.dart';
 
 /// Catálogo informativo de simbologías, abierto desde Ajustes.
 ///
@@ -59,14 +60,14 @@ class FormatsScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Text(
+                AppText(
                   'Formatos compatibles',
                   style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                        fontWeight: FontWeight.w800,
-                      ),
+                    fontWeight: FontWeight.w800,
+                  ),
                 ),
                 const SizedBox(height: 8),
-                const Text(
+                const AppText(
                   'La aplicación solicita al motor detectar todos los '
                   'formatos disponibles. La compatibilidad exacta depende '
                   'del sistema operativo, el dispositivo y el navegador.',
@@ -92,11 +93,10 @@ class FormatsScreen extends StatelessWidget {
                         children: <Widget>[
                           Icon(group.icon),
                           const SizedBox(width: 10),
-                          Text(
+                          AppText(
                             group.title,
-                            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                  fontWeight: FontWeight.w700,
-                                ),
+                            style: Theme.of(context).textTheme.titleMedium
+                                ?.copyWith(fontWeight: FontWeight.w700),
                           ),
                         ],
                       ),
@@ -124,14 +124,14 @@ class FormatsScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text(
+                    AppText(
                       'Contenido interpretado',
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.w700,
-                          ),
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
                     const SizedBox(height: 8),
-                    const Text(
+                    const AppText(
                       'Enlaces, texto, redes Wi-Fi, contactos, correos, '
                       'teléfonos, SMS, ubicaciones, eventos, ISBN, productos '
                       'y documentos compatibles con el motor nativo.',
@@ -143,7 +143,7 @@ class FormatsScreen extends StatelessWidget {
                         Icon(Icons.privacy_tip_outlined),
                         SizedBox(width: 10),
                         Expanded(
-                          child: Text(
+                          child: AppText(
                             'El reconocimiento se realiza localmente. El '
                             'historial queda guardado en el dispositivo y '
                             'puede borrarse desde la aplicación.',

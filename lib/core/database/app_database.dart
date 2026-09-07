@@ -21,13 +21,18 @@ class AppDatabase {
   final bool temporary;
 
   static Future<AppDatabase> open() async {
-    final AppDatabase result = AppDatabase._(await openScannerDatabase(), temporary: false);
+    final AppDatabase result = AppDatabase._(
+      await openScannerDatabase(),
+      temporary: false,
+    );
     await SchemaMigrator(result.database).migrate();
     return result;
   }
 
   static Future<AppDatabase> openTemporary() async {
-    final Database database = await databaseFactoryMemory.openDatabase('rcqr_temporary_${DateTime.now().microsecondsSinceEpoch}');
+    final Database database = await databaseFactoryMemory.openDatabase(
+      'rcqr_temporary_${DateTime.now().microsecondsSinceEpoch}',
+    );
     final AppDatabase result = AppDatabase._(database, temporary: true);
     await SchemaMigrator(database).migrate();
     return result;

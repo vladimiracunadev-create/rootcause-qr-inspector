@@ -9,7 +9,7 @@ función, una prueba o un comando concreto de este repositorio.
 > mediante `FileInspectionCoordinator`, `FileCodeDecoder` y
 > `ResolvedScanTarget`. Los capítulos 03, 04, 05, 08, 11, 12, 15, 17, 18 y 19
 > registran los gates verdes y la prueba nativa pendiente; la versión continúa
-> siendo 0.1.2+3.
+> siendo 0.1.3+4.
 
 ## El sistema en una frase
 
@@ -97,7 +97,7 @@ Otras convenciones:
 
 Lo que esta documentación **no** pudo comprobar en el entorno de análisis:
 
-1. **Decodificación nativa de fixtures.** El análisis, las 102 pruebas y los
+1. **Decodificación nativa de fixtures.** El análisis, las 103 pruebas y los
    builds web/APK se ejecutaron localmente; falta leer los cuatro fixtures con
    `mobile_scanner` en un dispositivo Android. Ver
    [12-testing-and-quality.md](12-testing-and-quality.md).

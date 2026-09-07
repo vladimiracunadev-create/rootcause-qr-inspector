@@ -1,6 +1,6 @@
 # Estado de validación
 
-**Versión:** 0.1.2+3
+**Versión:** 0.1.3+4
 
 **Fecha:** 7 de septiembre de 2026
 **Fuente derivada:** Universal Code Scanner 1.1.0+2, commit
@@ -10,7 +10,7 @@ Este archivo distingue lo ejecutado sobre **RootCause QR Inspector** de lo que
 solo fue validado en la base heredada y de lo que todavía exige hardware o
 credenciales de distribución.
 
-## Inspección de archivos no publicada · 7 de septiembre de 2026
+## Release 0.1.3 · 7 de septiembre de 2026
 
 | Comprobación | Resultado real |
 |---|---|
@@ -19,14 +19,25 @@ credenciales de distribución.
 | `python -m compileall -q tool` | **Correcto** |
 | `flutter analyze --fatal-infos` | **Correcto:** sin issues con Flutter 3.44.7 / Dart 3.12.2 |
 | Nuevas pruebas de inspección | **Correcto:** 15 casos de coordinador, destino, persistencia, limpieza PDF y widget |
-| `flutter test` | **Correcto:** 102 pruebas aprobadas |
+| `flutter test` | **Correcto:** 103 pruebas aprobadas, incluidas localización y guía de Inventario |
 | `flutter build web --release` | **Correcto:** `build/web`; la decodificación de archivos web continúa PLANIFICADA |
-| `flutter build apk --release` | **Correcto:** APK release de 88,6 MB, SHA-256 `338c6520f74d471016d0f48ec25e3b52bab6b83c6f23e8189012e9d7b4752b5b` |
+| `flutter build apk --release` | **Correcto:** APK release de 92.923.360 bytes, SHA-256 `41b8f1108ad2dcc6f6141ac82fb464dd9f74fd5a6eb0cbbc1469766caa81f0fb` |
 | Fixture PNG/PDF | **Parcial:** cuatro fixtures generados; PDF de cinco páginas renderizado y revisado visualmente; falta decodificación con `mobile_scanner` en dispositivo |
 
-Los gates automatizados están verdes. La evolución se mantiene **PARCIAL** y
-la versión no cambia a 0.1.3 únicamente porque la decodificación nativa de los
-fixtures todavía requiere un dispositivo Android.
+Los gates automatizados están verdes. La decodificación nativa de la matriz
+completa de fixtures todavía requiere hardware Android y permanece declarada
+como validación física pendiente; no se confunde con un fallo del gate de
+fuente, pruebas o compilación.
+
+### Idiomas y ayuda contextual
+
+| Comprobación | Resultado real |
+|---|---|
+| Locales admitidos | Español de Chile/internacional, inglés, francés y alemán registrados en Flutter y seleccionables en Ajustes |
+| Persistencia | Cada opción se mapea a un `Locale`; preferencias desconocidas continúan degradando a `system` |
+| Datos de la persona | Una prueba widget confirma que una carga no registrada se conserva literalmente al cambiar el idioma |
+| Guía de Inventario | Prueba widget a 320×568 y texto al 160 %; contenido completo accesible por desplazamiento y sin overflow |
+| Regresión visual | Se mantienen tema, navegación, jerarquía y componentes Material existentes; la ayuda se añade como tarjeta/icono, sin ocultar pestañas |
 
 ## Línea base publicada 0.1.2+3
 
@@ -45,11 +56,11 @@ La compilación Android, la firma técnica, el checksum y la atestación se repi
 en la CI pública desde el tag `v0.1.2`. La validación física de cámara y ciclo
 de vida móvil continúa separada y pendiente.
 
-El intento de compilación Android en este host no se usa como evidencia: su
-gestor instaló API 37 en `platforms/android-37.0`, mientras Gradle resuelve el
-identificador estándar `android-37`. El mismo conjunto de dependencias ya fue
-compilado por la CI pública de 0.1.1; para 0.1.2 el runner limpio del tag es el
-gate autoritativo del APK.
+El generador fija `compileSdk 37`, requisito de `flutter_secure_storage`, y
+conserva `minSdk 24` (Android 7). El build local anterior fallaba al heredar el
+valor 36 del SDK; tras hacer explícito el contrato reproducible, el mismo host
+compiló el APK release indicado arriba. El runner limpio del tag sigue siendo
+el gate autoritativo del artefacto publicado.
 
 ## Mejora del generador de 0.1.2
 
@@ -158,7 +169,7 @@ Seis casos añadidos en 0.1.1 cubren la interacción de la cámara: el estado
 `Código leído`, el precalentado del tono y su degradación, y la configuración
 del motor de captura.
 
-Los resultados de 0.1.2 indicados al inicio provienen de una ejecución local con
+Los resultados de 0.1.3 indicados al inicio provienen de una ejecución local con
 Flutter 3.44.7. Las validaciones públicas históricas conservan sus propios
 enlaces y alcance.
 
