@@ -126,6 +126,24 @@ existe.
 
 ## Calidad mínima por cambio
 
+## Inspección de archivos como superficie de primer nivel
+
+- La entrada visible se denomina **Analizar archivo** y convive con cámara sin
+  crear otro motor ni reducir de forma fija el visor.
+- El flujo obligatorio es archivo no confiable → validación → decodificación
+  local → deduplicación por unidad → `ScanRecord` → `ParsedContent` →
+  `QrInvestigation` → explicación → decisión humana.
+- La presentación puede derivar un `ResolvedScanTarget`, pero nunca duplicar ni
+  reemplazar esos contratos.
+- La procedencia persistible se limita a `Imagen · N` y
+  `PDF · página N`; no contiene nombres ni rutas.
+- Un PDF informa páginas totales, páginas inspeccionadas y cualquier límite
+  aplicado. Una ausencia se expresa como “no fue posible detectar”, nunca como
+  prueba de que no exista un código.
+- Web queda **PLANIFICADO** hasta disponer de un decodificador local probado;
+  habilitar un botón no constituye soporte.
+
+
 Ejecuta:
 
 ```bash

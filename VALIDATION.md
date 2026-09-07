@@ -2,7 +2,7 @@
 
 **Versión:** 0.1.2+3
 
-**Fecha:** 31 de agosto de 2026
+**Fecha:** 7 de septiembre de 2026
 **Fuente derivada:** Universal Code Scanner 1.1.0+2, commit
 `c1f98781575bf8223b19ad8344fdfddeaccef373`
 
@@ -10,7 +10,25 @@ Este archivo distingue lo ejecutado sobre **RootCause QR Inspector** de lo que
 solo fue validado en la base heredada y de lo que todavía exige hardware o
 credenciales de distribución.
 
-## Ejecutado sobre 0.1.2+3 en este entorno
+## Inspección de archivos no publicada · 7 de septiembre de 2026
+
+| Comprobación | Resultado real |
+|---|---|
+| `python tool/verify_rootcause_contract.py` | **Correcto:** 26 reglas, esquema, textos, fixtures, política, versión y redacción coherentes |
+| `python tool/validate_structure.py --require-lock` | **Correcto:** estructura y lock validados |
+| `python -m compileall -q tool` | **Correcto** |
+| `flutter analyze --fatal-infos` | **Correcto:** sin issues con Flutter 3.44.7 / Dart 3.12.2 |
+| Nuevas pruebas de inspección | **Correcto:** 15 casos de coordinador, destino, persistencia, limpieza PDF y widget |
+| `flutter test` | **Correcto:** 102 pruebas aprobadas |
+| `flutter build web --release` | **Correcto:** `build/web`; la decodificación de archivos web continúa PLANIFICADA |
+| `flutter build apk --release` | **Correcto:** APK release de 88,6 MB, SHA-256 `338c6520f74d471016d0f48ec25e3b52bab6b83c6f23e8189012e9d7b4752b5b` |
+| Fixture PNG/PDF | **Parcial:** cuatro fixtures generados; PDF de cinco páginas renderizado y revisado visualmente; falta decodificación con `mobile_scanner` en dispositivo |
+
+Los gates automatizados están verdes. La evolución se mantiene **PARCIAL** y
+la versión no cambia a 0.1.3 únicamente porque la decodificación nativa de los
+fixtures todavía requiere un dispositivo Android.
+
+## Línea base publicada 0.1.2+3
 
 | Comprobación | Comando | Resultado |
 |---|---|---|

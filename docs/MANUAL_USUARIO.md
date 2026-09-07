@@ -2,6 +2,24 @@
 
 ## Inspeccionar un QR ahora
 
+### Desde una imagen o PDF
+
+1. Toca **Analizar archivo** en el encabezado de Inspeccionar.
+2. Elige **Elegir imagen**, **Elegir varias imágenes** o **Elegir PDF**.
+3. Revisa el progreso; puedes usar **Cancelar** sin guardar resultados
+   parciales silenciosamente.
+4. En cada resultado lee **Qué se encontró**, **Qué contiene**, el destino
+   semántico y, para enlaces, el **HOST REAL**.
+5. Solo después decide si copiar, compartir o continuar con una aplicación
+   externa. RootCause nunca abre el contenido por detectarlo.
+
+Si no se detecta un código legible, prueba una imagen de mayor resolución y
+comprueba que el código completo sea visible. El mensaje no demuestra que el
+archivo carezca de códigos; indica únicamente que no fue posible detectarlos.
+
+Los PDF mayores de 50 páginas muestran el total y dejan claro que solo se
+inspeccionan las primeras 50. En web esta capacidad está **PLANIFICADA**.
+
 Para Android 7 o posterior, descarga el APK público desde
 [`GitHub Release v0.1.2`](https://github.com/vladimiracunadev-create/rootcause-qr-inspector/releases/tag/v0.1.2)
 o usa la

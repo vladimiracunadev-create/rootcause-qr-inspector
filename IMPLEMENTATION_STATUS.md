@@ -1,5 +1,19 @@
 # Estado de implementación · 0.1.2
 
+## Evolución de inspección de archivos (no publicada)
+
+| Capacidad | Estado verificable |
+|---|---|
+| Acción visible `Analizar archivo` | **IMPLEMENTADA:** compacta sin reducir la altura fija del visor; geometría y accesibilidad pasan la suite, prueba física pendiente |
+| Una o varias imágenes | **IMPLEMENTADA:** coordinador nativo, límite de 20 y 50 MiB por archivo; lógica y build Android verificados, fixture nativo pendiente |
+| PDF multipágina | **IMPLEMENTADA:** límite de 50, total/truncación visibles, cancelación y limpieza probadas; fixture renderizado, decodificación en dispositivo pendiente |
+| Destino semántico y host real | **VERIFICADO:** contratos existentes, pruebas unitarias y widget al 200 %; un resultado bloqueado no expone acción externa |
+| Cámara, historial y acción externa | **SIN REGRESIONES EN SUITE:** se reutilizan motor, persistencia selectiva y política existentes; 102 pruebas aprobadas |
+| Decodificación en web | **PLANIFICADO:** `mobile_scanner 7.4.0` no implementa `analyzeImage` web; la UI no afirma soporte |
+
+La versión permanece en `0.1.2+3`. No se preparará `0.1.3` hasta completar
+la validación funcional de fixtures en un dispositivo Android.
+
 ## Operativo en el código fuente
 
 | Área | Estado |
@@ -23,13 +37,14 @@
 - redacción verificada para impedir que `effectiveUri` reconstruya la carga;
 - frase obligatoria para resultados normales;
 - YAML, JSON, imports, enlaces, SBOM, versión y lockfile.
-- 88 casos Dart/Flutter declarados (87 los ejecuta `flutter test`; uno es de
+- 103 casos Dart/Flutter declarados (102 los ejecuta `flutter test`; uno es de
   integración y requiere dispositivo).
 
-Para 0.1.2 se ejecutaron localmente análisis estático, las 87 pruebas de
+Para la línea base publicada 0.1.2 se ejecutaron análisis estático, 87 pruebas de
 `test/`, compilación web release y una prueba funcional de descarga PNG/SVG en
-localhost. La CI pública repite los gates y genera el APK desde el tag. La
-evidencia y los límites se registran en [`VALIDATION.md`](VALIDATION.md).
+localhost. El addendum no publicado eleva la suite local a 102 y también pasa
+web/APK release. La evidencia y los límites se registran en
+[`VALIDATION.md`](VALIDATION.md).
 
 ## Parcial y declarado
 

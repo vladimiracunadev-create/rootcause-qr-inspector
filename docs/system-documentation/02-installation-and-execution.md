@@ -167,7 +167,7 @@ firma de tienda. Ver [13-deployment-and-operations.md](13-deployment-and-operati
 flutter test
 ```
 
-Ejecuta los 87 casos de `test/`. Para cobertura:
+Ejecuta los 102 casos de `test/`. Para cobertura:
 
 ```bash
 flutter test --coverage

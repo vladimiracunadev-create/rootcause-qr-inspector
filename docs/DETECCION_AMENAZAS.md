@@ -7,6 +7,11 @@
 
 ## Qué significa “detectar” en este repositorio
 
+Una carga obtenida desde imagen o PDF pasa por las mismas 26 reglas y la misma
+política de acción que una captura de cámara. El origen del archivo no eleva la
+confianza. La UI distingue el destino codificado y el host parseado de un
+destino final remoto, que no se resuelve automáticamente.
+
 El sensor no detecta una campaña ni atribuye intención. Detecta propiedades de
 una carga que aumentan el costo de verificación o habilitan una acción sensible.
 La hipótesis aparece después y conserva lenguaje de sospecha.

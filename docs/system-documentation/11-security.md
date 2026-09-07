@@ -333,3 +333,16 @@ Matriz MASVS: [`../security/MASVS_CHECKLIST.md`](../security/MASVS_CHECKLIST.md)
 Mediante GitHub Security Advisories, según [`../../SECURITY.md`](../../SECURITY.md).
 **Sin adjuntar** QR reales, OTP, contraseñas, semillas, documentos de identidad
 ni datos de pago.
+
+## Addendum: superficie de ataque de archivos
+
+- Imágenes y PDF se tratan como entrada no confiable y nunca como autorización
+  para abrir, consultar o ejecutar.
+- Límite por archivo: 50 MiB; lote: 20 imágenes; PDF: 50 páginas; raster
+  objetivo: 2400 px.
+- PDF requiere cabecera `%PDF-`, se consume solo visualmente y no ejecuta
+  JavaScript, enlaces ni acciones embebidas.
+- Los temporales se eliminan tras éxito, excepción y cancelación.
+- La carga usa la misma política `allow/confirm/inspectOnly/block` de cámara.
+- **Pendiente:** fuzzing de archivos malformados y medición frente a bombas de
+  descompresión en dispositivos de memoria limitada.

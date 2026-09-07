@@ -194,7 +194,8 @@ Estas ausencias se emiten como una lista explícita en cada investigación
 
 - el código fuente está completo y es coherente: los verificadores
   `tool/validate_structure.py` y `tool/verify_rootcause_contract.py` pasan;
-- hay 88 casos de prueba declarados;
+- hay 103 casos de prueba declarados; 102 pasan localmente y uno requiere
+  dispositivo;
 - el APK Android se publica desde un tag mediante GitHub Actions;
 - las carpetas nativas no están versionadas: se generan de forma reproducible.
 

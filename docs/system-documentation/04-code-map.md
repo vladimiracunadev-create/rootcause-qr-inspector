@@ -158,7 +158,7 @@ Inventario jerárquico de todo lo relevante del repositorio. La columna
 | `finalize_stable.sh` | Gate previo a etiquetar | Antes de un release |
 | `build_system_documentation_pdf.py` | Genera los PDF de esta documentación | Manual |
 
-## `test/` — 24 archivos, 88 casos
+## `test/` e `integration_test/` — 29 archivos, 103 casos
 
 | Archivo | Casos | Qué protege |
 |---|---|---|
@@ -185,6 +185,11 @@ Inventario jerárquico de todo lo relevante del repositorio. La columna
 | `scan_security_analyzer_test.dart` | 9 | El adaptador y sus niveles de riesgo |
 | `scan_record_test.dart` | 4 | Serialización, binario y contenido sensible |
 | `inventory_session_test.dart` | 1 | Unidades y serialización |
+| `features/file_inspection_coordinator_test.dart` | 5 | Lotes, duplicados, vacío, cancelación y timeout |
+| `features/resolved_scan_target_test.dart` | 4 | Destinos semánticos, host real y bloqueo |
+| `features/scan_persistence_policy_test.dart` | 1 | Exclusión de cargas sensibles |
+| `features/scan_result_file_target_test.dart` | 2 | Texto al 200 % y acción externa bloqueada |
+| `services/pdf_page_renderer_cleanup_test.dart` | 3 | Limpieza y metadatos de truncación PDF |
 | `integration_test/app_launch_test.dart` | 1 | Arranque normal o seguro; **requiere dispositivo** |
 
 ## Elementos sin uso, duplicados o de compatibilidad
@@ -201,3 +206,13 @@ recomendación están en [15-risks-and-technical-debt.md](15-risks-and-technical
 | `AppLanguage.en` | Inalcanzable por la interfaz | El desplegable de Ajustes lo convierte a «Sistema» |
 | `ScannerEngine.controller` | Fuga de abstracción | La frontera expone el tipo del paquete que pretende ocultar |
 | `HandheldFrame` en móvil | Sin efecto | Por debajo de 560 px no envuelve nada; es intencional |
+
+### Archivos añadidos para inspección local
+
+| Archivo | Responsabilidad | Estado |
+|---|---|---|
+| `features/scanner/domain/file_code_decoder.dart` | Puerto de decodificación de raster local | Verificado por adaptador falso y build nativo |
+| `features/scanner/data/native_file_code_decoder.dart` | Adaptador al `ScannerEngine` existente | Build Android correcto; fixture en dispositivo pendiente |
+| `features/scanner/domain/file_inspection_coordinator.dart` | Secuencia, progreso, cancelación, deduplicación y procedencia | Cinco pruebas aprobadas |
+| `features/result/resolved_scan_target.dart` | Presentación semántica derivada | Unitarias y widgets aprobados |
+| `tool/generate_file_inspection_fixtures.py` | Reproduce cuatro fixtures sintéticos | Operativo fuera del runtime de la app |

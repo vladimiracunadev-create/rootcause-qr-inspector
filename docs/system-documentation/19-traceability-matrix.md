@@ -60,6 +60,17 @@ Permite seguir una funcionalidad desde la interfaz hasta el dato y su prueba.
 | F-48 | Marco sin solapes | Nunca bajo los controles | `ScannerOverlay` | `features/scanner/widgets` | `ScannerViewportGeometry.forSize` | — | `scanner_viewport_geometry_test` (3) | [04](04-code-map.md) | 🟢 |
 | F-49 | Política de marcas | Token fuera de dominio autorizado | **Sin interfaz** | `core/investigation` | `QrAnalysisPolicy` | — | `qr_investigation_engine_test` | [10](10-configuration.md) | 🟡 |
 | F-50 | Extender el intérprete | Sin tocar el parser integrado | — | `features/formats/domain` | `ContentParserRegistry` | — | `content_parser_registry_test` | [09](09-apis-and-integrations.md) | 🟢 |
+| F-51 | Importar una imagen | Archivo no confiable, sin ejecución | `Analizar archivo` | `features/scanner` | `_scanSingleImage`, `FileInspectionCoordinator` | Opcional al terminar | `file_inspection_coordinator_test` | [`SCANNER_UX`](../quality/SCANNER_UX.md) | 🟢 📱 |
+| F-52 | Importar varias imágenes | Máximo 20 y 50 MiB cada una | Hoja `Elegir fuente` | `features/scanner` | `_scanFromGallery`, `FileInspectionLimits` | Opcional al terminar | Íd.; fixture nativo pendiente | [`PERFORMANCE`](../quality/PERFORMANCE.md) | 🟡 📱 |
+| F-53 | Importar PDF | Solo raster visual; máximo 50 páginas/50 MiB | `Elegir PDF` | `services` | `PdfPageRenderer.pickAndRender` | Temporales | fixture visual y cleanup verdes; decode nativo pendiente | [`PERFORMANCE`](../quality/PERFORMANCE.md) | 🟡 📱 |
+| F-54 | Detectar múltiples códigos | Procesar todos; deduplicar por unidad | Progreso y resultados | `features/scanner/domain` | `FileInspectionCoordinator.inspect` | — | `file_inspection_coordinator_test` | [08](08-data-flow.md) | 🟢 |
+| F-55 | Mostrar destino decodificado | Semántica según `ParsedContent.kind` | `DESTINO INTERPRETADO` | `features/result` | `ResolvedScanTarget` | — | unitarias y widget | [03](03-architecture.md) | 🟢 |
+| F-56 | Mostrar host efectivo | Destacar host parseado, no redirección final | `HOST REAL` | `features/result` | `normalizedHost` | — | unitarias y widget al 200 % | [`LIMITATIONS`](../rootcause/LIMITATIONS.md) | 🟢 |
+| F-57 | No ejecutar automáticamente | Detectar no autoriza conexión | Resultado | `features/result` | `_openRecord` solo por botón | — | widget bloqueado sin acción | [11](11-security.md) | 🟢 |
+| F-58 | Cancelar inspección | No persistir parcial | Diálogo de progreso | `core/performance` | `CancellationToken` | — | `file_inspection_coordinator_test` | [08](08-data-flow.md) | 🟢 |
+| F-59 | Limpiar temporales | Éxito, excepción y cancelación | — | `services` | `PdfPageRenderer.cleanup` | Temporal | `pdf_page_renderer_cleanup_test` | [`PERFORMANCE`](../quality/PERFORMANCE.md) | 🟢 |
+| F-60 | Informar sin códigos | No afirmar inexistencia | SnackBar | `features/scanner` | resultado vacío explícito | — | coordinador cubre vacío | [`SCANNER_UX`](../quality/SCANNER_UX.md) | 🟢 |
+| F-61 | Respetar límites | Cantidad, tamaño, páginas y raster | Progreso/mensaje | `features/scanner` + `services` | `FileInspectionLimits`, `PdfRenderBatch` | — | validación y truncación cubiertas | [`PERFORMANCE`](../quality/PERFORMANCE.md) | 🟢 |
 
 ## Reglas de negocio no negociables
 

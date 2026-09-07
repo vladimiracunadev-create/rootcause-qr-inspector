@@ -83,6 +83,17 @@ una cadena autenticada.
 
 ## Plataformas
 
+### Archivos locales
+
+- Nativo: análisis, 102 pruebas y builds web/APK están correctos; estado
+  **PARCIAL** hasta decodificar los fixtures funcionales en dispositivo.
+- Web: **PLANIFICADO**. `pdfrx` puede rasterizar en navegador, pero eso no
+  aporta decodificación de códigos y `mobile_scanner 7.4.0` no implementa
+  `analyzeImage` allí.
+- Un host mostrado es el host parseado localmente. RootCause no conoce el
+  destino final tras redirecciones HTTP sin una navegación consentida, que no
+  forma parte de esta capacidad.
+
 - Android: cámara real y biometría requieren prueba en dispositivo físico.
 - iOS: compilación y permisos requieren entorno Apple y firma para distribución.
 - Web: es un canal de demostración; el origen y las políticas del navegador

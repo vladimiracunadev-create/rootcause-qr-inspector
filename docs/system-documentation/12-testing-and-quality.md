@@ -8,10 +8,14 @@
 |---|---|
 | `python tool/verify_rootcause_contract.py` | Correcto: 26 reglas coherentes entre motor, esquema, textos, fixtures, política, versión y redacción |
 | `python tool/validate_structure.py --require-lock` | Correcto |
-| Recuento de casos sobre `test/` e `integration_test/` | 88 declarados |
+| Recuento de casos sobre `test/` e `integration_test/` | 103 declarados |
+| `flutter analyze --fatal-infos` | Sin hallazgos con Flutter 3.44.7 |
+| `flutter test` | 102 aprobadas |
+| `flutter build web --release` | Correcto |
+| `flutter build apk --release` | Correcto |
 
-**No ejecutado localmente:** `flutter analyze`, `flutter test` y las
-compilaciones. Flutter y Dart no están instalados en la máquina de análisis.
+**No ejecutado localmente:** el caso de integración y la decodificación de los
+fixtures con `mobile_scanner`, porque requieren dispositivo o emulador Android.
 
 **Comprobado en la CI pública**, ejecución
 [`33029927460`](https://github.com/vladimiracunadev-create/rootcause-qr-inspector/actions/runs/33029927460)
@@ -30,12 +34,12 @@ sobre el commit `a7ebf2c`:
 
 | Tipo | Archivos | Casos | Necesita dispositivo |
 |---|---|---|---|
-| Unitarias puras | 15 | 55 | No |
-| De widget | 5 | 15 | No |
+| Unitarias puras | 19 | 68 | No |
+| De widget | 6 | 17 | No |
 | Con base de datos en memoria | 3 | 17 | No |
 | De integración | 1 | 1 | **Sí** |
 
-`flutter test` ejecuta los 87 de `test/`. El caso de `integration_test/` exige
+`flutter test` ejecuta los 102 de `test/`. El caso de `integration_test/` exige
 un dispositivo o emulador y no forma parte del gate de CI.
 
 ## Inventario por área
@@ -65,6 +69,11 @@ un dispositivo o emulador y no forma parte del gate de CI.
 | Historial | `test/services/history_repository_test.dart` | 1 |
 | Registro de parsers | `test/services/content_parser_registry_test.dart` | 1 |
 | Sesión de inventario | `test/inventory_session_test.dart` | 1 |
+| Coordinador de archivos | `test/features/file_inspection_coordinator_test.dart` | 5 |
+| Destino semántico | `test/features/resolved_scan_target_test.dart` | 4 |
+| Persistencia de archivos | `test/features/scan_persistence_policy_test.dart` | 1 |
+| Resultado adaptable | `test/features/scan_result_file_target_test.dart` | 2 |
+| Limpieza PDF | `test/services/pdf_page_renderer_cleanup_test.dart` | 3 |
 | Arranque | `integration_test/app_launch_test.dart` | 1 |
 
 ## Cobertura observable
@@ -95,8 +104,8 @@ Lo que sí puede afirmarse leyendo el código y las pruebas:
 | `HistoryScreen` | **Ninguna** | — |
 | `GeneratorScreen` | **Ninguna** | — |
 | `SettingsScreen` | **Ninguna** | — |
-| `ScanResultsSheet` | **Ninguna** | — |
-| `PdfPageRenderer` | **Ninguna** | Requiere `dart:io` y un PDF |
+| `ScanResultsSheet` | Media | Texto al 200 %, host real y bloqueo sin acción externa |
+| `PdfPageRenderer` | Media | Limpieza y metadatos; render nativo funcional pendiente |
 | `ExportService` | **Ninguna** | Requiere la hoja de compartir |
 | `BiometricService` | **Ninguna** | Requiere plataforma |
 
@@ -263,7 +272,7 @@ Ordenada por relación entre riesgo cubierto y esfuerzo.
 | Prueba | Por qué |
 |---|---|
 | `InventoryStore` con la cola: lecturas y ediciones concurrentes | La cola tiene prueba; su uso real no |
-| `ScanResultsSheet`: `block` no muestra botón; `confirm` exige diálogo | Es una propiedad de seguridad verificada hoy solo por un `grep` del verificador |
+| `ScanResultsSheet`: `confirm` exige diálogo | El caso `block` sin botón ya tiene prueba widget; falta automatizar la confirmación |
 | `ScanResultsSheet`: la ocultación de sensibles funciona | Control de exposición |
 | `ContentInterpreter`: las 11 familias sin cobertura, en especial AAMVA, Swiss QR y EPC | Deciden `sensitive` |
 | `ScanRecord.fromJson` con `trustDerivedAnalysis` en ambos valores | Control anti-inyección |
@@ -273,7 +282,6 @@ Ordenada por relación entre riesgo cubierto y esfuerzo.
 | Prueba | Por qué |
 |---|---|
 | `ExportService`: cabeceras y escapado del CSV | Un carácter mal escapado corrompe el archivo |
-| `PdfPageRenderer`: cancelación y limpieza | Requiere un PDF de prueba |
 | `RecoveryService.retry` y `discard` | Solo el export tiene prueba |
 | Widget del historial: filtros y búsqueda | — |
 | Umbral de cobertura en CI | Evita regresiones silenciosas |
@@ -284,3 +292,21 @@ Toda la matriz de [`../quality/DEVICE_TEST_MATRIX.md`](../quality/DEVICE_TEST_MA
 con las cuatro filas añadidas en 0.1.1: código lejano y descentrado,
 confirmación de captura, relectura del mismo código y conteo de unidades
 repetidas.
+
+## Addendum: cobertura de inspección de archivos
+
+Se añadieron 15 casos en pruebas de coordinador, destino resuelto, persistencia,
+limpieza PDF y widget para múltiples códigos, duplicados por unidad, unidades
+sin código, cancelación sin resultado parcial, procedencia, host real,
+semántica URL/correo/Wi-Fi/texto, texto al 200 % y bloqueo de acción externa.
+También se generaron:
+
+- `fixture_single_url.png`;
+- `fixture_multiple_codes.png`;
+- `fixture_no_code.png`;
+- `fixture_document.pdf` con QR en páginas 1, 3 y 5.
+
+El PDF fue renderizado y revisado visualmente. Con Flutter 3.44.7 pasaron el
+análisis estricto, las 102 pruebas y las compilaciones web/APK release. Solo la
+decodificación con `mobile_scanner` en un dispositivo Android figura
+**PENDIENTE**.

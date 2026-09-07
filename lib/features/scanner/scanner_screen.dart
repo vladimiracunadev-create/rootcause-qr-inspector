@@ -8,7 +8,10 @@ import 'package:rootcause_qr_inspector/core/localization/app_localizations.dart'
 import 'package:rootcause_qr_inspector/core/performance/cancellation_token.dart';
 import 'package:rootcause_qr_inspector/features/result/scan_result_sheet.dart';
 import 'package:rootcause_qr_inspector/features/scanner/data/mobile_scanner_engine.dart';
+import 'package:rootcause_qr_inspector/features/scanner/data/native_file_code_decoder.dart';
+import 'package:rootcause_qr_inspector/features/scanner/domain/file_inspection_coordinator.dart';
 import 'package:rootcause_qr_inspector/features/scanner/domain/scanner_engine.dart';
+import 'package:rootcause_qr_inspector/features/scanner/domain/scan_persistence_policy.dart';
 import 'package:rootcause_qr_inspector/features/scanner/widgets/scan_status_bar.dart';
 import 'package:rootcause_qr_inspector/features/scanner/widgets/scanner_overlay.dart';
 import 'package:rootcause_qr_inspector/features/scanner/widgets/scanner_viewport_geometry.dart';
@@ -49,7 +52,8 @@ class ScannerScreen extends StatefulWidget {
   State<ScannerScreen> createState() => _ScannerScreenState();
 }
 
-class _ScannerScreenState extends State<ScannerScreen> with WidgetsBindingObserver {
+class _ScannerScreenState extends State<ScannerScreen>
+    with WidgetsBindingObserver {
   late ScannerEngine _engine;
   final ImagePicker _imagePicker = ImagePicker();
   final ScanFeedback _feedback = ScanFeedback();
@@ -133,7 +137,9 @@ class _ScannerScreenState extends State<ScannerScreen> with WidgetsBindingObserv
     } on MobileScannerException catch (error) {
       if (mounted) setState(() => _startFailure = _describe(error));
     } on Object {
-      if (mounted) setState(() => _startFailure = 'No fue posible iniciar la cámara.');
+      if (mounted) {
+        setState(() => _startFailure = 'No fue posible iniciar la cámara.');
+      }
     }
   }
 
@@ -146,11 +152,12 @@ class _ScannerScreenState extends State<ScannerScreen> with WidgetsBindingObserv
   }
 
   String _describe(MobileScannerException error) => switch (error.errorCode) {
-        MobileScannerErrorCode.permissionDenied =>
-          'Falta el permiso de cámara. Actívalo en los ajustes del sistema y vuelve a intentarlo.',
-        MobileScannerErrorCode.unsupported => 'Este dispositivo no permite leer códigos con la cámara.',
-        _ => 'La cámara no pudo iniciarse. Toca «Reintentar».',
-      };
+    MobileScannerErrorCode.permissionDenied =>
+      'Falta el permiso de cámara. Actívalo en los ajustes del sistema y vuelve a intentarlo.',
+    MobileScannerErrorCode.unsupported =>
+      'Este dispositivo no permite leer códigos con la cámara.',
+    _ => 'La cámara no pudo iniciarse. Toca «Reintentar».',
+  };
 
   /// Replaces the controller and the preview widget. This is the recovery path
   /// offered to the user whenever the camera does not come up.
@@ -184,265 +191,356 @@ class _ScannerScreenState extends State<ScannerScreen> with WidgetsBindingObserv
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints viewport) {
         final bool compactHeader = viewport.maxHeight < 700;
+        final bool compactFileAction =
+            viewport.maxWidth < 430 ||
+            MediaQuery.textScalerOf(context).scale(1) > 1.3;
         return Column(
-      children: <Widget>[
-        Padding(
-          padding: EdgeInsets.fromLTRB(20, compactHeader ? 10 : 18, 20, compactHeader ? 8 : 14),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.fromLTRB(
+                20,
+                compactHeader ? 10 : 18,
+                20,
+                compactHeader ? 8 : 14,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget>[
-                  const _RootCauseMark(),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text(
-                          'ROOTCAUSE · SEGURIDAD QR',
-                          style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                                color: Theme.of(context).colorScheme.primary,
-                                fontWeight: FontWeight.w900,
-                                letterSpacing: 1.25,
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      const _RootCauseMark(),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text(
+                              'ROOTCAUSE · SEGURIDAD QR',
+                              style: Theme.of(context).textTheme.labelSmall
+                                  ?.copyWith(
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.primary,
+                                    fontWeight: FontWeight.w900,
+                                    letterSpacing: 1.25,
+                                  ),
+                            ),
+                            const SizedBox(height: 3),
+                            Text(
+                              context.strings.scannerTitle,
+                              style: compactHeader
+                                  ? Theme.of(context).textTheme.titleMedium
+                                        ?.copyWith(fontWeight: FontWeight.w800)
+                                  : Theme.of(context).textTheme.titleLarge,
+                            ),
+                            if (!compactHeader) ...<Widget>[
+                              const SizedBox(height: 3),
+                              Text(
+                                context.strings.scannerSubtitle,
+                                style: TextStyle(
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.onSurfaceVariant,
+                                ),
                               ),
-                        ),
-                        const SizedBox(height: 3),
-                        Text(
-                          context.strings.scannerTitle,
-                          style: compactHeader
-                              ? Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w800)
-                              : Theme.of(context).textTheme.titleLarge,
-                        ),
-                        if (!compactHeader) ...<Widget>[
-                          const SizedBox(height: 3),
-                          Text(
-                            context.strings.scannerSubtitle,
-                            style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant),
-                          ),
-                        ],
-                      ],
-                    ),
-                  ),
-                  const SizedBox(width: 6),
-                  PopupMenuButton<String>(
-                    tooltip: 'Inspeccionar desde imágenes o PDF',
-                    enabled: !kIsWeb,
-                    icon: const Icon(Icons.add_photo_alternate_outlined),
-                    onSelected: (String value) {
-                      if (value == 'images') unawaited(_scanFromGallery());
-                      if (value == 'pdf') unawaited(_scanFromPdf());
-                    },
-                    itemBuilder: (BuildContext context) => const <PopupMenuEntry<String>>[
-                      PopupMenuItem<String>(
-                        value: 'images',
-                        child: ListTile(
-                          contentPadding: EdgeInsets.zero,
-                          leading: Icon(Icons.collections_outlined),
-                          title: Text('Inspeccionar imágenes'),
+                            ],
+                          ],
                         ),
                       ),
-                      PopupMenuItem<String>(
-                        value: 'pdf',
-                        child: ListTile(
-                          contentPadding: EdgeInsets.zero,
-                          leading: Icon(Icons.picture_as_pdf_outlined),
-                          title: Text('Inspeccionar PDF'),
+                      const SizedBox(width: 8),
+                      Semantics(
+                        button: true,
+                        label: kIsWeb
+                            ? 'Analizar archivo, planificado para web'
+                            : 'Analizar archivo local: imagen o PDF',
+                        child: OutlinedButton.icon(
+                          onPressed: kIsWeb ? null : _showFileSourcePicker,
+                          style: OutlinedButton.styleFrom(
+                            minimumSize: const Size(48, 48),
+                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                          ),
+                          icon: const Icon(Icons.add_photo_alternate_outlined),
+                          label: Text(
+                            compactFileAction ? 'Archivo' : 'Analizar archivo',
+                          ),
                         ),
                       ),
                     ],
                   ),
-                ],
-              ),
-              if (!compactHeader) ...<Widget>[
-                const SizedBox(height: 12),
-                const Wrap(
-                  spacing: 8,
-                  runSpacing: 8,
-                  children: <Widget>[
-                    _SecurityCapability(icon: Icons.phonelink_lock_outlined, label: 'Análisis local'),
-                    _SecurityCapability(icon: Icons.rule_outlined, label: '26 señales'),
-                    _SecurityCapability(icon: Icons.visibility_off_outlined, label: 'Telemetría cero'),
+                  if (!compactHeader) ...<Widget>[
+                    const SizedBox(height: 12),
+                    const Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: <Widget>[
+                        _SecurityCapability(
+                          icon: Icons.phonelink_lock_outlined,
+                          label: 'Análisis local',
+                        ),
+                        _SecurityCapability(
+                          icon: Icons.rule_outlined,
+                          label: '26 señales',
+                        ),
+                        _SecurityCapability(
+                          icon: Icons.visibility_off_outlined,
+                          label: 'Telemetría cero',
+                        ),
+                      ],
+                    ),
                   ],
-                ),
-              ],
-            ],
-          ),
-        ),
-        Expanded(
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-            child: DecoratedBox(
-              decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                  colors: <Color>[Color(0xFF26D9BC), Color(0xFF087A6D), Color(0xFF112B27)],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-                borderRadius: BorderRadius.circular(32),
-                boxShadow: <BoxShadow>[
-                  BoxShadow(
-                    color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.18),
-                    blurRadius: 24,
-                    offset: const Offset(0, 10),
-                  ),
                 ],
               ),
+            ),
+            Expanded(
               child: Padding(
-                padding: const EdgeInsets.all(3),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(29),
-                  child: LayoutBuilder(
-                builder: (BuildContext context, BoxConstraints constraints) {
-                  final ScannerViewportGeometry geometry = ScannerViewportGeometry.forSize(
-                    Size(constraints.maxWidth, constraints.maxHeight),
-                  );
-                  final bool compactPreview = geometry.compact;
-                  final Rect window = geometry.scanWindow;
-                  return ValueListenableBuilder<MobileScannerState>(
-                    valueListenable: _engine.state,
-                    builder: (BuildContext context, MobileScannerState state, Widget? child) {
-                      final ScanPhase phase = _phaseFor(state);
-                      final bool scanning = phase == ScanPhase.scanning;
-                      return Stack(
-                        fit: StackFit.expand,
-                        children: <Widget>[
-                          MobileScanner(
-                            key: _previewKey,
-                            controller: _engine.controller,
-                            // No `scanWindow`: the frame is a guide, not a
-                            // gate. As a gate it discarded every code whose
-                            // bounding box fell outside the central square,
-                            // and it did so in silence — a QR the person could
-                            // read perfectly well on screen simply produced
-                            // nothing. Detection now covers the whole preview
-                            // and the frame only helps to aim.
-                            tapToFocus: true,
-                            onDetect: (BarcodeCapture capture) => unawaited(_handleCapture(capture, source: 'Cámara')),
-                            errorBuilder: (BuildContext context, MobileScannerException error) =>
-                                _ScannerError(error: error, onRetry: _restartCamera),
-                          ),
-                          if (_settings.useScanWindow && phase != ScanPhase.unavailable)
-                            ScannerOverlay(
-                              scanWindow: window,
-                              // A captured code keeps the frame lit but still:
-                              // the sweep means «analysing», and analysis is
-                              // over.
-                              active: scanning || phase == ScanPhase.captured,
-                              animate: !_settings.reduceMotion && phase != ScanPhase.captured,
-                            ),
-                          if (phase == ScanPhase.paused)
-                            Positioned.fill(
-                              child: IgnorePointer(
-                                child: ColoredBox(color: Colors.black.withValues(alpha: 0.35)),
-                              ),
-                            ),
-                          Positioned(
-                            top: compactPreview ? 10 : 18,
-                            left: compactPreview ? 10 : 18,
-                            right: compactPreview ? 10 : 18,
-                            child: ScanStatusBar(
-                              phase: phase,
-                              message: _messageFor(phase),
-                              animate: !_settings.reduceMotion,
-                            ),
-                          ),
-                          Positioned(
-                            left: 18,
-                            right: 18,
-                            bottom: compactPreview ? 76 : 82,
-                            child: Row(
-                              children: <Widget>[
-                                const Icon(Icons.zoom_out, color: Colors.white),
-                                Expanded(
-                                  child: Slider(
-                                    value: _zoom,
-                                    onChanged: (double value) {
-                                      setState(() => _zoom = value);
-                                      unawaited(_engine.setZoomScale(value));
-                                    },
-                                  ),
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                      colors: <Color>[
+                        Color(0xFF26D9BC),
+                        Color(0xFF087A6D),
+                        Color(0xFF112B27),
+                      ],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                    borderRadius: BorderRadius.circular(32),
+                    boxShadow: <BoxShadow>[
+                      BoxShadow(
+                        color: Theme.of(
+                          context,
+                        ).colorScheme.primary.withValues(alpha: 0.18),
+                        blurRadius: 24,
+                        offset: const Offset(0, 10),
+                      ),
+                    ],
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(3),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(29),
+                      child: LayoutBuilder(
+                        builder: (BuildContext context, BoxConstraints constraints) {
+                          final ScannerViewportGeometry geometry =
+                              ScannerViewportGeometry.forSize(
+                                Size(
+                                  constraints.maxWidth,
+                                  constraints.maxHeight,
                                 ),
-                                const Icon(Icons.zoom_in, color: Colors.white),
-                              ],
-                            ),
-                          ),
-                          Positioned(
-                            left: 12,
-                            right: 12,
-                            bottom: compactPreview ? 10 : 18,
-                            // Wrap, not Row: with large controls or a big text
-                            // scale these four actions do not fit on one line,
-                            // and a second line is better than a clipped one.
-                            child: Wrap(
-                              alignment: WrapAlignment.center,
-                              crossAxisAlignment: WrapCrossAlignment.center,
-                              spacing: 10,
-                              runSpacing: 8,
-                              children: <Widget>[
-                                _CameraButton(
-                                  tooltip: 'Linterna',
-                                  onPressed: state.torchState == TorchState.unavailable ? null : _engine.toggleTorch,
-                                  icon: state.torchState == TorchState.on ? Icons.flash_on : Icons.flash_off,
-                                ),
-                                FilledButton.icon(
-                                  onPressed: switch (phase) {
-                                    ScanPhase.scanning || ScanPhase.paused => _togglePause,
-                                    ScanPhase.unavailable => _restartCamera,
-                                    ScanPhase.starting || ScanPhase.captured => null,
-                                  },
-                                  style: FilledButton.styleFrom(
-                                    backgroundColor: scanning ? Colors.white : Theme.of(context).colorScheme.primary,
-                                    foregroundColor: scanning ? Colors.black : Theme.of(context).colorScheme.onPrimary,
-                                  ),
-                                  icon: Icon(switch (phase) {
-                                    ScanPhase.scanning => Icons.pause,
-                                    ScanPhase.captured => Icons.check_circle,
-                                    ScanPhase.paused => Icons.play_arrow,
-                                    ScanPhase.unavailable => Icons.refresh,
-                                    ScanPhase.starting => Icons.hourglass_top,
-                                  }),
-                                  label: Text(switch (phase) {
-                                    ScanPhase.scanning => 'Pausar',
-                                    ScanPhase.captured => 'Leído',
-                                    ScanPhase.paused => 'Reanudar',
-                                    ScanPhase.unavailable => 'Reintentar',
-                                    ScanPhase.starting => 'Preparando',
-                                  }),
-                                ),
-                                _CameraButton(
-                                  tooltip: 'Cambiar cámara',
-                                  onPressed: () => _engine.switchCamera(),
-                                  icon: Icons.cameraswitch_outlined,
-                                ),
-                                _CameraButton(
-                                  tooltip: 'Reiniciar cámara',
-                                  onPressed: _restartCamera,
-                                  icon: Icons.refresh,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      );
-                    },
-                  );
-                },
+                              );
+                          final bool compactPreview = geometry.compact;
+                          final Rect window = geometry.scanWindow;
+                          return ValueListenableBuilder<MobileScannerState>(
+                            valueListenable: _engine.state,
+                            builder:
+                                (
+                                  BuildContext context,
+                                  MobileScannerState state,
+                                  Widget? child,
+                                ) {
+                                  final ScanPhase phase = _phaseFor(state);
+                                  final bool scanning =
+                                      phase == ScanPhase.scanning;
+                                  return Stack(
+                                    fit: StackFit.expand,
+                                    children: <Widget>[
+                                      MobileScanner(
+                                        key: _previewKey,
+                                        controller: _engine.controller,
+                                        // No `scanWindow`: the frame is a guide, not a
+                                        // gate. As a gate it discarded every code whose
+                                        // bounding box fell outside the central square,
+                                        // and it did so in silence — a QR the person could
+                                        // read perfectly well on screen simply produced
+                                        // nothing. Detection now covers the whole preview
+                                        // and the frame only helps to aim.
+                                        tapToFocus: true,
+                                        onDetect: (BarcodeCapture capture) =>
+                                            unawaited(
+                                              _handleCapture(
+                                                capture,
+                                                source: 'Cámara',
+                                              ),
+                                            ),
+                                        errorBuilder:
+                                            (
+                                              BuildContext context,
+                                              MobileScannerException error,
+                                            ) => _ScannerError(
+                                              error: error,
+                                              onRetry: _restartCamera,
+                                            ),
+                                      ),
+                                      if (_settings.useScanWindow &&
+                                          phase != ScanPhase.unavailable)
+                                        ScannerOverlay(
+                                          scanWindow: window,
+                                          // A captured code keeps the frame lit but still:
+                                          // the sweep means «analysing», and analysis is
+                                          // over.
+                                          active:
+                                              scanning ||
+                                              phase == ScanPhase.captured,
+                                          animate:
+                                              !_settings.reduceMotion &&
+                                              phase != ScanPhase.captured,
+                                        ),
+                                      if (phase == ScanPhase.paused)
+                                        Positioned.fill(
+                                          child: IgnorePointer(
+                                            child: ColoredBox(
+                                              color: Colors.black.withValues(
+                                                alpha: 0.35,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      Positioned(
+                                        top: compactPreview ? 10 : 18,
+                                        left: compactPreview ? 10 : 18,
+                                        right: compactPreview ? 10 : 18,
+                                        child: ScanStatusBar(
+                                          phase: phase,
+                                          message: _messageFor(phase),
+                                          animate: !_settings.reduceMotion,
+                                        ),
+                                      ),
+                                      Positioned(
+                                        left: 18,
+                                        right: 18,
+                                        bottom: compactPreview ? 76 : 82,
+                                        child: Row(
+                                          children: <Widget>[
+                                            const Icon(
+                                              Icons.zoom_out,
+                                              color: Colors.white,
+                                            ),
+                                            Expanded(
+                                              child: Slider(
+                                                value: _zoom,
+                                                onChanged: (double value) {
+                                                  setState(() => _zoom = value);
+                                                  unawaited(
+                                                    _engine.setZoomScale(value),
+                                                  );
+                                                },
+                                              ),
+                                            ),
+                                            const Icon(
+                                              Icons.zoom_in,
+                                              color: Colors.white,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      Positioned(
+                                        left: 12,
+                                        right: 12,
+                                        bottom: compactPreview ? 10 : 18,
+                                        // Wrap, not Row: with large controls or a big text
+                                        // scale these four actions do not fit on one line,
+                                        // and a second line is better than a clipped one.
+                                        child: Wrap(
+                                          alignment: WrapAlignment.center,
+                                          crossAxisAlignment:
+                                              WrapCrossAlignment.center,
+                                          spacing: 10,
+                                          runSpacing: 8,
+                                          children: <Widget>[
+                                            _CameraButton(
+                                              tooltip: 'Linterna',
+                                              onPressed:
+                                                  state.torchState ==
+                                                      TorchState.unavailable
+                                                  ? null
+                                                  : _engine.toggleTorch,
+                                              icon:
+                                                  state.torchState ==
+                                                      TorchState.on
+                                                  ? Icons.flash_on
+                                                  : Icons.flash_off,
+                                            ),
+                                            FilledButton.icon(
+                                              onPressed: switch (phase) {
+                                                ScanPhase.scanning ||
+                                                ScanPhase.paused =>
+                                                  _togglePause,
+                                                ScanPhase.unavailable =>
+                                                  _restartCamera,
+                                                ScanPhase.starting ||
+                                                ScanPhase.captured => null,
+                                              },
+                                              style: FilledButton.styleFrom(
+                                                backgroundColor: scanning
+                                                    ? Colors.white
+                                                    : Theme.of(
+                                                        context,
+                                                      ).colorScheme.primary,
+                                                foregroundColor: scanning
+                                                    ? Colors.black
+                                                    : Theme.of(
+                                                        context,
+                                                      ).colorScheme.onPrimary,
+                                              ),
+                                              icon: Icon(switch (phase) {
+                                                ScanPhase.scanning =>
+                                                  Icons.pause,
+                                                ScanPhase.captured =>
+                                                  Icons.check_circle,
+                                                ScanPhase.paused =>
+                                                  Icons.play_arrow,
+                                                ScanPhase.unavailable =>
+                                                  Icons.refresh,
+                                                ScanPhase.starting =>
+                                                  Icons.hourglass_top,
+                                              }),
+                                              label: Text(switch (phase) {
+                                                ScanPhase.scanning => 'Pausar',
+                                                ScanPhase.captured => 'Leído',
+                                                ScanPhase.paused => 'Reanudar',
+                                                ScanPhase.unavailable =>
+                                                  'Reintentar',
+                                                ScanPhase.starting =>
+                                                  'Preparando',
+                                              }),
+                                            ),
+                                            _CameraButton(
+                                              tooltip: 'Cambiar cámara',
+                                              onPressed: () =>
+                                                  _engine.switchCamera(),
+                                              icon: Icons.cameraswitch_outlined,
+                                            ),
+                                            _CameraButton(
+                                              tooltip: 'Reiniciar cámara',
+                                              onPressed: _restartCamera,
+                                              icon: Icons.refresh,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                },
+                          );
+                        },
+                      ),
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-        ),
-      ],
+          ],
         );
       },
     );
   }
 
   ScanPhase _phaseFor(MobileScannerState state) {
-    if (_startFailure != null || state.error != null) return ScanPhase.unavailable;
+    if (_startFailure != null || state.error != null) {
+      return ScanPhase.unavailable;
+    }
     // A read in progress is announced as a capture, not as a pause: the two
     // states are opposite in meaning and used to share the same wording.
     if (_handlingResult) return ScanPhase.captured;
@@ -452,12 +550,14 @@ class _ScannerScreenState extends State<ScannerScreen> with WidgetsBindingObserv
   }
 
   String _messageFor(ScanPhase phase) => switch (phase) {
-        ScanPhase.starting => 'Iniciando cámara',
-        ScanPhase.scanning => _repeatNotice ?? 'Lectura automática en toda la imagen',
-        ScanPhase.captured => 'Abriendo el análisis local',
-        ScanPhase.paused => 'Lectura detenida',
-        ScanPhase.unavailable => _startFailure ?? 'Revisa el permiso de cámara y vuelve a intentarlo.',
-      };
+    ScanPhase.starting => 'Iniciando cámara',
+    ScanPhase.scanning =>
+      _repeatNotice ?? 'Lectura automática en toda la imagen',
+    ScanPhase.captured => 'Abriendo el análisis local',
+    ScanPhase.paused => 'Lectura detenida',
+    ScanPhase.unavailable =>
+      _startFailure ?? 'Revisa el permiso de cámara y vuelve a intentarlo.',
+  };
 
   /// Explains a skipped repetition instead of leaving the screen silent.
   ///
@@ -470,7 +570,10 @@ class _ScannerScreenState extends State<ScannerScreen> with WidgetsBindingObserv
       if (mounted) setState(() => _repeatNotice = null);
     });
     if (_repeatNotice == null) {
-      setState(() => _repeatNotice = 'Ese código ya se inspeccionó; aparta y apunta otra vez');
+      setState(
+        () => _repeatNotice =
+            'Ese código ya se inspeccionó; aparta y apunta otra vez',
+      );
     }
   }
 
@@ -488,103 +591,250 @@ class _ScannerScreenState extends State<ScannerScreen> with WidgetsBindingObserv
     if (mounted) setState(() => _paused = true);
   }
 
+  Future<void> _showFileSourcePicker() async {
+    final String? source = await showModalBottomSheet<String>(
+      context: context,
+      showDragHandle: true,
+      builder: (BuildContext context) => SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(16, 4, 16, 16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              Text(
+                'Elegir fuente',
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
+              const SizedBox(height: 8),
+              ListTile(
+                leading: const Icon(Icons.image_outlined),
+                title: const Text('Elegir imagen'),
+                subtitle: const Text('Fotografía o captura almacenada'),
+                onTap: () => Navigator.of(context).pop('image'),
+              ),
+              ListTile(
+                leading: const Icon(Icons.collections_outlined),
+                title: const Text('Elegir varias imágenes'),
+                subtitle: const Text('Hasta 20 imágenes'),
+                onTap: () => Navigator.of(context).pop('images'),
+              ),
+              ListTile(
+                leading: const Icon(Icons.picture_as_pdf_outlined),
+                title: const Text('Elegir PDF'),
+                subtitle: const Text('Hasta 50 páginas y 50 MiB'),
+                onTap: () => Navigator.of(context).pop('pdf'),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+    if (!mounted) return;
+    if (source == 'image') unawaited(_scanSingleImage());
+    if (source == 'images') unawaited(_scanFromGallery());
+    if (source == 'pdf') unawaited(_scanFromPdf());
+  }
+
+  Future<void> _scanSingleImage() async {
+    final XFile? image = await _imagePicker.pickImage(
+      source: ImageSource.gallery,
+      maxWidth: FileInspectionLimits.maxImageDimension.toDouble(),
+      maxHeight: FileInspectionLimits.maxImageDimension.toDouble(),
+      imageQuality: 100,
+    );
+    if (image != null) await _inspectImages(<XFile>[image]);
+  }
+
   Future<void> _scanFromGallery() async {
-    final List<XFile> images = await _imagePicker.pickMultiImage(limit: 20);
+    final List<XFile> images = await _imagePicker.pickMultiImage(
+      limit: FileInspectionLimits.maxImages,
+      maxWidth: FileInspectionLimits.maxImageDimension.toDouble(),
+      maxHeight: FileInspectionLimits.maxImageDimension.toDouble(),
+      imageQuality: 100,
+    );
     if (images.isEmpty || !mounted) return;
+    await _inspectImages(images);
+  }
+
+  Future<void> _inspectImages(List<XFile> images) async {
+    if (!mounted) return;
     final CancellationToken token = CancellationToken();
-    final BatchProgress progress = BatchProgress(label: 'Preparando imágenes')..update(total: images.length);
+    int imagesInspected = 0;
+    final BatchProgress progress = BatchProgress(label: 'Preparando imágenes')
+      ..update(total: images.length);
     try {
-      final List<ScanRecord> all = await _runBatchDialog<List<ScanRecord>>(
+      final FileInspectionResult
+      result = await _runBatchDialog<FileInspectionResult>(
         progress: progress,
         token: token,
         operation: () async {
-          final List<ScanRecord> records = <ScanRecord>[];
           await _stopCamera();
           try {
-            for (int index = 0; index < images.length; index++) {
-              token.throwIfCancelled();
-              progress.update(label: 'Analizando imagen ${index + 1} de ${images.length}', current: index);
-              final BarcodeCapture? capture = await _engine.analyzeImage(images[index].path);
-              if (capture != null) {
-                final Map<String, Barcode> unique = <String, Barcode>{};
-                for (final Barcode barcode in capture.barcodes) {
-                  final String raw = ScanRecord.payloadForBarcode(barcode);
-                  if (raw.isNotEmpty) unique.putIfAbsent(raw, () => barcode);
-                }
-                records.addAll(unique.values.map((Barcode barcode) => ScanRecord.fromBarcode(barcode, source: 'Imagen')));
-              }
-              progress.update(current: index + 1);
-              await Future<void>.delayed(Duration.zero);
+            if (images.length > FileInspectionLimits.maxImages) {
+              throw const FormatException(
+                'El lote supera el límite de 20 imágenes.',
+              );
             }
-            token.throwIfCancelled();
-            return records;
+            for (final XFile image in images) {
+              if (!FileInspectionInputValidator.isSupportedImageName(
+                image.name,
+              )) {
+                throw const FormatException(
+                  'Una imagen no tiene una extensión compatible.',
+                );
+              }
+              if (image.mimeType != null &&
+                  !image.mimeType!.toLowerCase().startsWith('image/')) {
+                throw const FormatException(
+                  'El tipo declarado del archivo no coincide con una imagen.',
+                );
+              }
+              if (!FileInspectionInputValidator.isAllowedFileSize(
+                await image.length(),
+              )) {
+                throw const FormatException(
+                  'Una imagen supera el límite local de 50 MiB.',
+                );
+              }
+            }
+            final List<FileInspectionUnit> units = <FileInspectionUnit>[
+              for (int index = 0; index < images.length; index++)
+                FileInspectionUnit(
+                  imagePath: images[index].path,
+                  source: 'Imagen · ${index + 1}',
+                ),
+            ];
+            return FileInspectionCoordinator(
+              decoder: NativeFileCodeDecoder(_engine),
+            ).inspect(
+              units,
+              cancellationToken: token,
+              onProgress: (FileInspectionProgress state) {
+                if (state.completed) imagesInspected = state.current;
+                progress.update(
+                  label:
+                      'Analizando imagen ${state.current} de ${state.total} · ${state.codesFound} códigos encontrados',
+                  current: state.current,
+                  total: state.total,
+                );
+              },
+            );
           } finally {
             if (mounted && !_paused) await _startCamera();
           }
         },
       );
       if (!mounted) return;
-      if (all.isEmpty) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('No se encontraron códigos compatibles.')));
+      if (result.records.isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              images.length == 1
+                  ? 'No encontramos códigos legibles en esta imagen. Prueba una imagen de mayor resolución y comprueba que el código completo sea visible.'
+                  : 'No encontramos códigos compatibles en las ${images.length} imágenes. Prueba archivos de mayor resolución y comprueba que cada código completo sea visible.',
+            ),
+          ),
+        );
       } else {
-        await _persistAndShow(all);
+        await _persistAndShow(
+          result.records,
+          batchSummary: ScanBatchSummary(
+            files: images.length,
+            pagesInspected: 0,
+            unitsWithoutCodes: result.unitsWithoutCodes,
+          ),
+        );
       }
     } on OperationCancelledException {
-      if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Análisis cancelado sin modificar el historial.')));
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'Análisis cancelado: se inspeccionaron $imagesInspected de ${images.length} imágenes. No se modificó el historial.',
+            ),
+          ),
+        );
+      }
+    } on FormatException catch (error) {
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(error.message)));
+      }
     } on Object {
-      if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('No fue posible analizar una o más imágenes.')));
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('No fue posible analizar una o más imágenes.'),
+          ),
+        );
+      }
     }
   }
 
   Future<void> _scanFromPdf() async {
     if (kIsWeb) return;
     final CancellationToken token = CancellationToken();
-    final BatchProgress progress = BatchProgress(label: 'Seleccionando documento');
+    final BatchProgress progress = BatchProgress(
+      label: 'Seleccionando documento',
+    );
     final List<RenderedPdfPage> pages = <RenderedPdfPage>[];
+    PdfRenderBatch? renderedBatch;
+    int pdfPagesInspected = 0;
+    int pdfPagesPlanned = 0;
     try {
-      final List<ScanRecord> records = await _runBatchDialog<List<ScanRecord>>(
+      final FileInspectionResult?
+      result = await _runBatchDialog<FileInspectionResult?>(
         progress: progress,
         token: token,
         operation: () async {
-          final List<ScanRecord> found = <ScanRecord>[];
           await _stopCamera();
           try {
-            pages.addAll(await PdfPageRenderer.pickAndRender(
-              maxPages: 50,
+            final PdfRenderBatch batch = await PdfPageRenderer.pickAndRender(
+              maxPages: FileInspectionLimits.maxPdfPages,
               cancellationToken: token,
               onProgress: (int current, int total) => progress.update(
                 label: 'Renderizando página $current de $total',
                 current: current,
                 total: total * 2,
               ),
-            ));
-            for (int index = 0; index < pages.length; index++) {
-              token.throwIfCancelled();
-              final RenderedPdfPage page = pages[index];
-              progress.update(
-                label: 'Buscando códigos en página ${page.pageNumber}',
-                current: pages.length + index,
-                total: pages.length * 2,
-              );
-              final BarcodeCapture? capture = await _engine.analyzeImage(page.imagePath);
-              if (capture != null) {
-                final Map<String, Barcode> uniqueOnPage = <String, Barcode>{};
-                for (final Barcode barcode in capture.barcodes) {
-                  final String raw = ScanRecord.payloadForBarcode(barcode);
-                  if (raw.isNotEmpty) uniqueOnPage.putIfAbsent(raw, () => barcode);
-                }
-                final DateTime scannedAt = DateTime.now();
-                found.addAll(uniqueOnPage.values.map((Barcode barcode) => ScanRecord.fromBarcode(
-                      barcode,
-                      source: 'PDF · página ${page.pageNumber}',
-                      scannedAt: scannedAt,
-                    )));
-              }
-              progress.update(current: pages.length + index + 1);
-              await Future<void>.delayed(Duration.zero);
-            }
-            token.throwIfCancelled();
-            return found;
+              onDocumentOpened: (int total, int inspected) {
+                pdfPagesPlanned = inspected;
+                progress.update(
+                  label: total > inspected
+                      ? 'Documento de $total páginas · se inspeccionarán las primeras $inspected'
+                      : 'Documento de $total páginas · se inspeccionarán todas',
+                  total: inspected * 2,
+                );
+              },
+            );
+            if (!batch.selected) return null;
+            renderedBatch = batch;
+            pages.addAll(batch.pages);
+            final List<FileInspectionUnit> units = pages
+                .map(
+                  (RenderedPdfPage page) => FileInspectionUnit(
+                    imagePath: page.imagePath,
+                    source: 'PDF · página ${page.pageNumber}',
+                  ),
+                )
+                .toList(growable: false);
+            return FileInspectionCoordinator(
+              decoder: NativeFileCodeDecoder(_engine),
+            ).inspect(
+              units,
+              cancellationToken: token,
+              onProgress: (FileInspectionProgress state) {
+                if (state.completed) pdfPagesInspected = state.current;
+                progress.update(
+                  label:
+                      'Analizando página ${state.current} de ${state.total} · ${state.codesFound} códigos encontrados',
+                  current: pages.length + state.current,
+                  total: pages.length * 2,
+                );
+              },
+            );
           } finally {
             await PdfPageRenderer.cleanup(pages);
             if (mounted && !_paused) await _startCamera();
@@ -592,15 +842,55 @@ class _ScannerScreenState extends State<ScannerScreen> with WidgetsBindingObserv
         },
       );
       if (!mounted) return;
-      if (records.isEmpty) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('No se encontraron códigos en las páginas analizadas.')));
+      if (result == null) return;
+      if (result.records.isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              (renderedBatch?.truncated ?? false)
+                  ? 'No se encontraron códigos compatibles en las ${result.unitsInspected} páginas inspeccionadas. El documento tiene ${renderedBatch!.totalPages} páginas y se aplicó el límite de ${renderedBatch!.inspectedPages}.'
+                  : 'No se encontraron códigos compatibles en las ${result.unitsInspected} páginas inspeccionadas.',
+            ),
+          ),
+        );
       } else {
-        await _persistAndShow(records);
+        await _persistAndShow(
+          result.records,
+          batchSummary: ScanBatchSummary(
+            files: 1,
+            pagesInspected: result.unitsInspected,
+            unitsWithoutCodes: result.unitsWithoutCodes,
+            totalPages: renderedBatch?.totalPages,
+          ),
+        );
       }
     } on OperationCancelledException {
-      if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Análisis de PDF cancelado sin modificar el historial.')));
+      if (mounted) {
+        final String inspected = pdfPagesPlanned > 0
+            ? ' Se inspeccionaron $pdfPagesInspected de $pdfPagesPlanned páginas.'
+            : '';
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'Análisis de PDF cancelado.$inspected No se modificó el historial.',
+            ),
+          ),
+        );
+      }
+    } on FormatException catch (error) {
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(error.message)));
+      }
     } on Object {
-      if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('No fue posible analizar el documento PDF.')));
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('No fue posible analizar el documento PDF.'),
+          ),
+        );
+      }
     }
   }
 
@@ -614,7 +904,8 @@ class _ScannerScreenState extends State<ScannerScreen> with WidgetsBindingObserv
     final Future<void> dialog = showDialog<void>(
       context: context,
       barrierDismissible: false,
-      builder: (BuildContext context) => _BatchProgressDialog(progress: progress, token: token),
+      builder: (BuildContext context) =>
+          _BatchProgressDialog(progress: progress, token: token),
     ).whenComplete(() => dialogOpen = false);
     await Future<void>.delayed(Duration.zero);
     try {
@@ -627,7 +918,10 @@ class _ScannerScreenState extends State<ScannerScreen> with WidgetsBindingObserv
     }
   }
 
-  Future<void> _handleCapture(BarcodeCapture capture, {required String source}) async {
+  Future<void> _handleCapture(
+    BarcodeCapture capture, {
+    required String source,
+  }) async {
     if (_handlingResult || _paused || !mounted) return;
     final Map<String, Barcode> unique = <String, Barcode>{};
     for (final Barcode barcode in capture.barcodes) {
@@ -663,9 +957,17 @@ class _ScannerScreenState extends State<ScannerScreen> with WidgetsBindingObserv
       // Not awaited: the tone and the vibration confirm the read, but making
       // the result wait for the audio plugin is what made a successful scan
       // feel like nothing had happened.
-      unawaited(_feedback.success(sound: _settings.soundEnabled, vibration: _settings.vibrationEnabled));
+      unawaited(
+        _feedback.success(
+          sound: _settings.soundEnabled,
+          vibration: _settings.vibrationEnabled,
+        ),
+      );
       final List<ScanRecord> records = unique.values
-          .map((Barcode barcode) => ScanRecord.fromBarcode(barcode, source: source, scannedAt: now))
+          .map(
+            (Barcode barcode) =>
+                ScanRecord.fromBarcode(barcode, source: source, scannedAt: now),
+          )
           .toList(growable: false);
       await _persistAndShow(records);
     } finally {
@@ -677,9 +979,14 @@ class _ScannerScreenState extends State<ScannerScreen> with WidgetsBindingObserv
     }
   }
 
-  Future<void> _persistAndShow(List<ScanRecord> records) async {
+  Future<void> _persistAndShow(
+    List<ScanRecord> records, {
+    ScanBatchSummary? batchSummary,
+  }) async {
     if (_settings.saveHistory && !_settings.privateMode) {
-      final List<ScanRecord> persistent = records.where((ScanRecord record) => !record.isSensitive).toList(growable: false);
+      final List<ScanRecord> persistent = ScanPersistencePolicy.eligible(
+        records,
+      );
       await widget.store.addAll(persistent);
     }
     if (!mounted) return;
@@ -687,7 +994,11 @@ class _ScannerScreenState extends State<ScannerScreen> with WidgetsBindingObserv
       context: context,
       isScrollControlled: true,
       showDragHandle: false,
-      builder: (BuildContext context) => ScanResultsSheet(records: records, settings: widget.settings),
+      builder: (BuildContext context) => ScanResultsSheet(
+        records: records,
+        settings: widget.settings,
+        batchSummary: batchSummary,
+      ),
     );
   }
 }
@@ -709,10 +1020,19 @@ class _RootCauseMark extends StatelessWidget {
         ),
         borderRadius: BorderRadius.circular(15),
         boxShadow: <BoxShadow>[
-          BoxShadow(color: colors.primary.withValues(alpha: 0.22), blurRadius: 14, offset: const Offset(0, 5)),
+          BoxShadow(
+            color: colors.primary.withValues(alpha: 0.22),
+            blurRadius: 14,
+            offset: const Offset(0, 5),
+          ),
         ],
       ),
-      child: Icon(Icons.qr_code_2_rounded, color: colors.onPrimary, size: 27, semanticLabel: 'RootCause QR'),
+      child: Icon(
+        Icons.qr_code_2_rounded,
+        color: colors.onPrimary,
+        size: 27,
+        semanticLabel: 'RootCause QR',
+      ),
     );
   }
 }
@@ -738,7 +1058,12 @@ class _SecurityCapability extends StatelessWidget {
         children: <Widget>[
           Icon(icon, size: 15, color: colors.primary),
           const SizedBox(width: 6),
-          Text(label, style: Theme.of(context).textTheme.labelMedium?.copyWith(fontWeight: FontWeight.w700)),
+          Text(
+            label,
+            style: Theme.of(
+              context,
+            ).textTheme.labelMedium?.copyWith(fontWeight: FontWeight.w700),
+          ),
         ],
       ),
     );
@@ -746,7 +1071,11 @@ class _SecurityCapability extends StatelessWidget {
 }
 
 class _CameraButton extends StatelessWidget {
-  const _CameraButton({required this.tooltip, required this.onPressed, required this.icon});
+  const _CameraButton({
+    required this.tooltip,
+    required this.onPressed,
+    required this.icon,
+  });
   final String tooltip;
   final Future<void> Function()? onPressed;
   final IconData icon;
@@ -784,7 +1113,11 @@ class _BatchProgressDialog extends StatelessWidget {
             LinearProgressIndicator(value: progress.fraction),
             const SizedBox(height: 12),
             Text(progress.label, textAlign: TextAlign.center),
-            if (progress.total > 0) Text('${progress.current}/${progress.total}', textAlign: TextAlign.center),
+            if (progress.total > 0)
+              Text(
+                '${progress.current}/${progress.total}',
+                textAlign: TextAlign.center,
+              ),
           ],
         ),
       ),
@@ -816,7 +1149,11 @@ class _ScannerError extends StatelessWidget {
             children: <Widget>[
               const Icon(Icons.no_photography_outlined, size: 54),
               const SizedBox(height: 14),
-              Text('No se pudo iniciar la cámara', style: Theme.of(context).textTheme.titleLarge, textAlign: TextAlign.center),
+              Text(
+                'No se pudo iniciar la cámara',
+                style: Theme.of(context).textTheme.titleLarge,
+                textAlign: TextAlign.center,
+              ),
               const SizedBox(height: 8),
               Text(
                 error.errorCode == MobileScannerErrorCode.permissionDenied

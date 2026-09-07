@@ -5,6 +5,12 @@ operativa del repositorio. Se escribió recorriendo el código fuente completo, 
 resumiendo la documentación existente: cada afirmación apunta a un archivo, una
 función, una prueba o un comando concreto de este repositorio.
 
+> Addendum no publicado (2026-09-07): la inspección de archivos evoluciona
+> mediante `FileInspectionCoordinator`, `FileCodeDecoder` y
+> `ResolvedScanTarget`. Los capítulos 03, 04, 05, 08, 11, 12, 15, 17, 18 y 19
+> registran los gates verdes y la prueba nativa pendiente; la versión continúa
+> siendo 0.1.2+3.
+
 ## El sistema en una frase
 
 RootCause QR Inspector es una **aplicación móvil Flutter que inspecciona códigos
@@ -91,18 +97,17 @@ Otras convenciones:
 
 Lo que esta documentación **no** pudo comprobar en el entorno de análisis:
 
-1. **Ejecución de Flutter.** Flutter y Dart no están instalados en la máquina
-   donde se escribió esta documentación. `flutter analyze`, `flutter test` y las
-   compilaciones no se ejecutaron localmente; la evidencia proviene de la CI
-   pública del repositorio. Ver [12-testing-and-quality.md](12-testing-and-quality.md).
+1. **Decodificación nativa de fixtures.** El análisis, las 102 pruebas y los
+   builds web/APK se ejecutaron localmente; falta leer los cuatro fixtures con
+   `mobile_scanner` en un dispositivo Android. Ver
+   [12-testing-and-quality.md](12-testing-and-quality.md).
 2. **Comportamiento en dispositivo físico.** Cámara, biometría, almacén seguro,
    ciclo de vida y apertura de aplicaciones externas solo pueden confirmarse en
    un teléfono real. Ver [`../quality/DEVICE_TEST_MATRIX.md`](../quality/DEVICE_TEST_MATRIX.md).
 3. **La corrección de lectura de 0.1.1.** Alcance de la cámara con un código
    lejano, confirmación audible y conteo de unidades repetidas.
-4. **Carpetas nativas.** `android/`, `ios/` y `web/` no están versionadas: las
-   genera `tool/bootstrap.py`. Lo que este análisis describe de ellas proviene
-   de leer ese generador, no de inspeccionar el resultado.
+4. **iOS y distribución.** El addendum compiló web y APK Android, pero iOS,
+   firma de tienda y matrices físicas siguen dependiendo de sus entornos.
 
 ## Relación con la documentación previa
 

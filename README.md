@@ -151,6 +151,27 @@ control o autoridad ambigua. Una URL crítica pero interpretable queda en
 
 ## 🔎 Cómo se comporta la lectura
 
+### Analizar una imagen o PDF sin abrir el destino
+
+En plataformas nativas, **Analizar archivo** aparece junto a la cámara y permite
+elegir una imagen, varias imágenes o un PDF. El mismo motor existente decodifica
+todos los códigos compatibles, RootCause interpreta cada carga y el resultado
+responde primero qué contiene y a qué apunta. En URLs se destaca el **HOST
+REAL**, incluso en cargas engañosas con `userinfo` como
+`https://trusted.example@evil.example/login`.
+
+El archivo no concede confianza adicional: no se sube, no se consulta el host,
+no se ejecutan acciones embebidas de PDF y no se abre ningún destino
+automáticamente. `Destino codificado` no significa destino final de Internet.
+Las imágenes se limitan a 20 por lote y 50 MiB por archivo; los PDF a 50 MiB y
+50 páginas, informando si el documento es mayor. La implementación web de esta
+entrada está **PLANIFICADA**, no soportada, porque el decodificador actual no
+analiza imágenes en navegador.
+
+> Estado no publicado: análisis estricto, 102 pruebas, web release y APK
+> release están correctos. Permanece **PARCIAL** hasta decodificar los fixtures
+> funcionales en un dispositivo Android antes de 0.1.3.
+
 Tres reglas de interacción, corregidas en 0.1.1 a partir de uso real:
 
 - **La lectura analiza toda la imagen.** El marco central es una guía de

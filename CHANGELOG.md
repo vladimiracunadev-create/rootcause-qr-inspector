@@ -6,6 +6,28 @@ Todas las versiones notables se documentan aquí. El formato sigue
 
 ## [No publicado]
 
+- Evolución de la importación existente a **Analizar archivo**, visible junto
+  a la cámara y adaptable a pantallas estrechas y texto ampliado.
+- Coordinación testeable de imágenes y páginas PDF mediante
+  `FileInspectionCoordinator` y `FileCodeDecoder`, reutilizando
+  `ScannerEngine` en nativo y sin crear un segundo scanner.
+- Presentación semántica `ResolvedScanTarget`: explica qué se encontró, qué
+  contiene, a qué apunta y destaca el host real antes de ofrecer una acción.
+- Procedencia sin nombres ni rutas privadas (`Imagen · N`,
+  `PDF · página N`), deduplicación por unidad, progreso con códigos hallados y
+  mensajes explícitos cuando no fue posible detectar códigos.
+- PDF con cabecera y tamaño validados, metadatos de páginas totales/inspeccionadas,
+  límite visible de 50 páginas y limpieza/cancelación conservadas.
+- Pruebas unitarias y widget para múltiples códigos, duplicados, unidades sin
+  código, cancelación, procedencia, limpieza PDF, destino semántico, texto al
+  200 % y ausencia de acción externa cuando el motor bloquea.
+- Verificación local con Flutter 3.44.7: análisis estricto limpio, 102 pruebas,
+  compilación web release y APK release correctos.
+- Estado: **PARCIAL** solo hasta completar la decodificación funcional de los
+  fixtures en un dispositivo Android; la versión publicada no cambia.
+
+### Planificado
+
 - Carga de políticas organizacionales desde la interfaz.
 - Skeleton Unicode UTS #39 y Public Suffix List.
 - Correlación opcional con otras superficies RootCause.

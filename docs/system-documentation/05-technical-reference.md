@@ -257,7 +257,7 @@ Condición, severidad, peso, confianza y falso positivo de cada una:
 | `python tool/validate_structure.py --require-lock` | 14 comprobaciones offline |
 | `python tool/verify_rootcause_contract.py` | Coherencia del contrato de reglas |
 | `flutter analyze --fatal-infos` | Análisis estático estricto |
-| `flutter test` | 87 casos |
+| `flutter test` | 102 casos |
 | `flutter build apk --release` | APK instalable |
 | `python tool/generate_source_manifest.py` | Regenera los hashes de la fuente |
 | `python tool/build_system_documentation_pdf.py` | Genera los PDF de esta documentación |
@@ -303,3 +303,16 @@ persona y se muestran como «El respaldo no es válido o no pudo leerse».
 | `permissionDenied` | «Falta el permiso de cámara. Actívalo en los ajustes del sistema y vuelve a intentarlo.» |
 | `unsupported` | «Este dispositivo no permite leer códigos con la cámara.» |
 | cualquier otro | «La cámara no pudo iniciarse. Toca «Reintentar».» |
+
+## Addendum de límites para archivos
+
+| Constante | Valor | Uso |
+|---|---:|---|
+| `FileInspectionLimits.maxImages` | 20 | Máximo de imágenes por lote |
+| `FileInspectionLimits.maxPdfPages` | 50 | Máximo de páginas rasterizadas |
+| `FileInspectionLimits.maxFileBytes` | 52.428.800 | 50 MiB por imagen o PDF |
+| `FileInspectionLimits.maxRasterDimension` | 2400 | Lado objetivo máximo de página PDF |
+
+`PdfRenderBatch` expone `totalPages`, `inspectedPages`, `selected` y
+`truncated`. `FileInspectionResult` expone registros, unidades inspeccionadas,
+unidades sin código y cargas decodificadas después de deduplicar por unidad.

@@ -360,3 +360,15 @@ migraciones.
 
 Regla que atraviesa todas: **un dato ausente nunca se convierte en un valor
 favorable**. Una regla que no puede evaluarse se omite y su límite se declara.
+
+### Addendum: inspección de archivos
+
+`ScannerScreen` selecciona la fuente, pero ya no deduplica ni construye
+registros. Entrega `FileInspectionUnit` al `FileInspectionCoordinator`; este
+usa un `FileCodeDecoder` inyectable. `NativeFileCodeDecoder` adapta el
+`ScannerEngine` existente y conserva una sola implementación real del scanner.
+
+Para PDF, `PdfPageRenderer` valida y rasteriza antes de entregar páginas al
+mismo coordinador. La salida pasa por `ScanRecord`, `ParsedContent` y
+`QrInvestigation`. `ResolvedScanTarget` es únicamente una proyección semántica
+de esos objetos. Un futuro `WebFileCodeDecoder` queda **PLANIFICADO**.

@@ -4,6 +4,7 @@ import 'dart:ui' as ui;
 
 import 'package:file_picker/file_picker.dart';
 import 'package:rootcause_qr_inspector/core/performance/cancellation_token.dart';
+import 'package:rootcause_qr_inspector/features/scanner/domain/file_inspection_coordinator.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pdfrx/pdfrx.dart';
 
@@ -16,6 +17,29 @@ class RenderedPdfPage {
 
   final int pageNumber;
   final String imagePath;
+}
+
+/// Rasterized pages plus the real document size, so truncation is never
+/// silent in the user interface.
+class PdfRenderBatch {
+  const PdfRenderBatch({
+    required this.pages,
+    required this.totalPages,
+    required this.inspectedPages,
+    required this.selected,
+  });
+
+  const PdfRenderBatch.cancelled()
+    : pages = const <RenderedPdfPage>[],
+      totalPages = 0,
+      inspectedPages = 0,
+      selected = false;
+
+  final List<RenderedPdfPage> pages;
+  final int totalPages;
+  final int inspectedPages;
+  final bool selected;
+  bool get truncated => totalPages > inspectedPages;
 }
 
 /// Rasteriza páginas de un PDF para buscar códigos en ellas.
@@ -32,10 +56,11 @@ class RenderedPdfPage {
 /// - ante cualquier error se limpian los archivos ya escritos y el directorio
 ///   temporal antes de relanzar.
 class PdfPageRenderer {
-  static Future<List<RenderedPdfPage>> pickAndRender({
-    int maxPages = 50,
+  static Future<PdfRenderBatch> pickAndRender({
+    int maxPages = FileInspectionLimits.maxPdfPages,
     CancellationToken? cancellationToken,
     void Function(int current, int total)? onProgress,
+    void Function(int totalPages, int inspectedPages)? onDocumentOpened,
   }) async {
     await pdfrxFlutterInitialize();
     final PlatformFile? selection = await FilePicker.pickFile(
@@ -43,7 +68,22 @@ class PdfPageRenderer {
       allowedExtensions: const <String>['pdf'],
     );
     final String? path = selection?.path;
-    if (path == null || path.isEmpty) return const <RenderedPdfPage>[];
+    if (path == null || path.isEmpty) return const PdfRenderBatch.cancelled();
+    final File input = File(path);
+    if (!FileInspectionInputValidator.isAllowedFileSize(await input.length())) {
+      throw const FormatException('El PDF supera el límite local de 50 MiB.');
+    }
+    final RandomAccessFile headerFile = await input.open();
+    try {
+      final List<int> header = await headerFile.read(5);
+      if (header.length < 5 || String.fromCharCodes(header) != '%PDF-') {
+        throw const FormatException(
+          'El archivo seleccionado no contiene una cabecera PDF válida.',
+        );
+      }
+    } finally {
+      await headerFile.close();
+    }
 
     final PdfDocument document = await PdfDocument.openFile(path);
     final Directory temporaryDirectory = await getTemporaryDirectory();
@@ -54,16 +94,22 @@ class PdfPageRenderer {
 
     final List<RenderedPdfPage> rendered = <RenderedPdfPage>[];
     try {
-      final int count = document.pages.length < maxPages ? document.pages.length : maxPages;
+      final int count = FileInspectionInputValidator.pdfPagesToInspect(
+        document.pages.length,
+        maxPages: maxPages,
+      );
+      onDocumentOpened?.call(document.pages.length, count);
       for (int index = 0; index < count; index++) {
         cancellationToken?.throwIfCancelled();
         onProgress?.call(index + 1, count);
         final PdfPage page = document.pages[index];
         final double scale = _renderScale(page.width, page.height);
-        final PdfPageRenderCancellationToken renderToken = page.createCancellationToken();
+        final PdfPageRenderCancellationToken renderToken = page
+            .createCancellationToken();
         void cancelRender() {
           if (cancellationToken?.isCancelled ?? false) renderToken.cancel();
         }
+
         cancellationToken?.addListener(cancelRender);
         cancelRender();
         final PdfImage? pdfImage;
@@ -82,11 +128,18 @@ class PdfPageRenderer {
         try {
           final ui.Image image = await pdfImage.createImage();
           try {
-            final ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+            final ByteData? byteData = await image.toByteData(
+              format: ui.ImageByteFormat.png,
+            );
             if (byteData == null) continue;
-            final String outputPath = '${outputDirectory.path}${Platform.pathSeparator}page_${index + 1}.png';
-            await File(outputPath).writeAsBytes(byteData.buffer.asUint8List(), flush: true);
-            rendered.add(RenderedPdfPage(pageNumber: index + 1, imagePath: outputPath));
+            final String outputPath =
+                '${outputDirectory.path}${Platform.pathSeparator}page_${index + 1}.png';
+            await File(
+              outputPath,
+            ).writeAsBytes(byteData.buffer.asUint8List(), flush: true);
+            rendered.add(
+              RenderedPdfPage(pageNumber: index + 1, imagePath: outputPath),
+            );
           } finally {
             image.dispose();
           }
@@ -97,7 +150,12 @@ class PdfPageRenderer {
       if (rendered.isEmpty && await outputDirectory.exists()) {
         await outputDirectory.delete(recursive: true);
       }
-      return rendered;
+      return PdfRenderBatch(
+        pages: List<RenderedPdfPage>.unmodifiable(rendered),
+        totalPages: document.pages.length,
+        inspectedPages: count,
+        selected: true,
+      );
     } catch (_) {
       await cleanup(rendered);
       if (await outputDirectory.exists()) {
@@ -125,6 +183,8 @@ class PdfPageRenderer {
   static double _renderScale(double width, double height) {
     final double longest = width > height ? width : height;
     if (longest <= 0) return 2.5;
-    return (2400 / longest).clamp(1.5, 4.0).toDouble();
+    return (FileInspectionLimits.maxRasterDimension / longest)
+        .clamp(1.5, 4.0)
+        .toDouble();
   }
 }

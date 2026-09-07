@@ -1,0 +1,41 @@
+{
+  "schema": "rootcause.file-inspection-fixtures.v1",
+  "syntheticOnly": true,
+  "files": [
+    {
+      "file": "fixture_single_url.png",
+      "expectedPayloads": [
+        "https://normal.example"
+      ]
+    },
+    {
+      "file": "fixture_multiple_codes.png",
+      "expectedPayloads": [
+        "https://normal.example",
+        "mailto:person@example.com?subject=Synthetic",
+        "WIFI:T:WPA;S:Laboratorio;P:synthetic-password;;"
+      ]
+    },
+    {
+      "file": "fixture_no_code.png",
+      "expectedPayloads": []
+    },
+    {
+      "file": "fixture_document.pdf",
+      "pages": 5,
+      "expectedByPage": {
+        "1": [
+          "https://normal.example"
+        ],
+        "2": [],
+        "3": [
+          "https://trusted.example@evil.example/login"
+        ],
+        "4": [],
+        "5": [
+          "WIFI:T:WPA;S:Laboratorio;P:synthetic-password;;"
+        ]
+      }
+    }
+  ]
+}

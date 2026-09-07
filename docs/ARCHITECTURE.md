@@ -9,6 +9,24 @@ presentación en capas independientes.
 
 ## Flujo de lectura
 
+### Archivo local
+
+```text
+ScannerScreen
+  → FileInspectionCoordinator
+    → FileCodeDecoder
+      → NativeFileCodeDecoder
+        → ScannerEngine.analyzeImage
+  → ScanRecord → ParsedContent → QrInvestigation
+  → ResolvedScanTarget (solo proyección de UI)
+```
+
+PDF añade `PdfPageRenderer` antes del coordinador. El renderizador entrega el
+total real y el número inspeccionado, rasteriza como imagen y no interpreta
+scripts, enlaces ni acciones del documento. `ResolvedScanTarget` no persiste ni
+analiza: deriva valores de los contratos existentes para evitar una segunda
+fuente de verdad.
+
 ```text
 Cámara / Imagen / PDF
         ↓

@@ -75,9 +75,10 @@ lib/
 ├── state/                 tres stores ChangeNotifier
 └── features/              una carpeta por caso de uso
 
-test/                      88 casos
-tool/                      13 herramientas Python y shell
-docs/                      36 documentos
+test/                      102 casos locales
+integration_test/          1 caso en dispositivo
+tool/                      herramientas Python y shell
+docs/                      documentación funcional y técnica
 fixtures/ test_assets/      datos de regresión
 ```
 
@@ -317,3 +318,15 @@ Están documentados para que no se repitan:
 
 Todos comparten un patrón: **un fallo silencioso es peor que uno ruidoso**. Si
 tu cambio puede hacer que algo no ocurra, haz que la aplicación lo diga.
+
+### 9. No dupliques el scanner para archivos
+
+Implementa un adaptador de `FileCodeDecoder` y pasa por
+`FileInspectionCoordinator`. En nativo usa `NativeFileCodeDecoder`, que delega
+al mismo `ScannerEngine`. Mantén la ruta y el nombre fuera de los registros.
+
+### 10. No presentes host local como destino final remoto
+
+`ResolvedScanTarget.normalizedHost` y `effectiveUri` son resultados locales.
+La interfaz debe decir `Destino codificado` y declarar que no navegó ni resolvió
+redirecciones HTTP.

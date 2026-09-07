@@ -269,3 +269,16 @@ propiedades son sólidas y merecen protección explícita:
 | Los verificadores offline fallan ante una regresión de contrato | Convierten decisiones documentales en gates ejecutables |
 | Los límites se declaran como datos, no como prosa | `limitations` viaja en el JSON |
 | El código explica **por qué**, no **qué** | Los comentarios documentan decisiones, no líneas |
+
+### R-20 · Inspección de archivos pendiente de prueba nativa
+
+**Severidad:** media antes de publicar. La lógica, los fixtures, el análisis,
+las 102 pruebas y los builds web/APK están verdes. No debe subirse a 0.1.3 ni
+declararse validación funcional completa hasta decodificar los cuatro fixtures
+con `mobile_scanner` en un dispositivo Android.
+
+### R-21 · Web sin decodificador de archivos
+
+**Severidad:** media. La abstracción permite un futuro motor local, pero
+`mobile_scanner 7.4.0` no ofrece `analyzeImage` web. La acción permanece
+deshabilitada y documentada como PLANIFICADA.

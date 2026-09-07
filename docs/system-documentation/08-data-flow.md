@@ -293,3 +293,23 @@ Carga observada: `https://banco.example@evil.example/acceso`. Ningún dato real.
 El paquete de evidencia de este caso **no contiene** la URL. Contiene su huella,
 los dos ids de hallazgo, sus hechos mínimos, las hipótesis y los límites. Basta
 para pedir ayuda o correlacionar, y no reenvía el destino.
+
+### Archivo no confiable
+
+```text
+selección local
+  → límite de cantidad/tamaño y validación razonable de tipo
+  → raster PDF (si aplica)
+  → decode(path) sin red
+  → deduplicación de carga dentro de imagen/página
+  → ScanRecord.fromBarcode
+  → ContentParserRegistry
+  → QrInvestigationEngine
+  → ResolvedScanTarget
+  → resultado y decisión humana
+  → persistencia solo al terminar y solo si no es sensible
+```
+
+La ruta real y el nombre del archivo no cruzan hacia `ScanRecord`; solo se
+conserva `Imagen · N` o `PDF · página N`. Una cancelación lanza antes de
+devolver el resultado y la pantalla no persiste un lote parcial.

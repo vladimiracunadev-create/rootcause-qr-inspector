@@ -1,5 +1,17 @@
 # Comportamiento del escáner en cámara
 
+## Analizar archivo sin degradar la cámara
+
+La nueva acción textual vive en la fila ya existente del encabezado. Usa
+`Analizar archivo` con ancho normal y se reduce a `Archivo` en menos de 430 px
+o con escala de texto superior a 1,3; mantiene un objetivo táctil mínimo de
+48×48. No añade una fila fija ni reduce la altura del visor. La cámara, zoom,
+linterna, pausa, cambio y reinicio conservan sus controles y estados.
+
+La hoja de fuente usa etiquetas accesibles: **Elegir imagen**, **Elegir varias
+imágenes**, **Elegir PDF**. El progreso expone **Cancelar** y no transforma una
+cancelación en persistencia parcial.
+
 > Registro vivo de la interfaz de cámara de RootCause QR Inspector 0.1.1. La
 > procedencia del subsistema heredado se conserva, pero los estados, controles
 > y comprobaciones descritos aquí corresponden al producto RootCause actual.

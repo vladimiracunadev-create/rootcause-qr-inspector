@@ -51,8 +51,9 @@ Flutter 3.44.7 y Dart. Base de datos embebida Sembast, cifrado AES-256-GCM con
 la llave en el almacén seguro del sistema. Integración continua en GitHub
 Actions. Licencia MIT.
 
-Escala del código: 65 archivos fuente, unas 9 600 líneas, 88 casos de prueba,
-13 herramientas de automatización, 36 documentos.
+Escala del código actual: 73 archivos fuente y 103 casos de prueba declarados;
+el inventario histórico de herramientas y documentos se conserva en la portada
+técnica.
 
 ## Arquitectura, en una idea
 
@@ -156,3 +157,12 @@ físicos, firma, auditoría— más que de *construcción*.
 Para un uso profesional serio, el orden recomendado es: cerrar las dos brechas
 de prueba, validar en hardware, y solo entonces plantear la distribución en
 tienda.
+
+## Addendum ejecutivo: Analizar archivo
+
+La evolución no publicada convierte imágenes y PDF en una entrada visible sin
+alterar el motor de cámara ni las reglas de seguridad. El resultado explicita
+el destino semántico y destaca el host real antes de cualquier acción. Análisis
+estricto, 102 pruebas y builds web/APK están verdes. El estado sigue
+**PARCIAL** únicamente hasta la decodificación de fixtures en un dispositivo
+Android antes de versionar 0.1.3.

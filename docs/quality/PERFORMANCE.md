@@ -15,3 +15,16 @@
 - Las rotaciones de llave y las escrituras de inventario se serializan para evitar carreras entre lecturas continuas, cambios de cantidad y notas.
 - La interfaz se actualiza solo después de confirmar la persistencia segura.
 - Los límites no deben ampliarse sin medir memoria, tiempo y temperatura en dispositivos reales.
+
+## Inspección de archivos no confiables
+
+- Constantes compartidas: 20 imágenes, 50 páginas PDF, 50 MiB por archivo y
+  2400 px como lado rasterizado objetivo.
+- Cada unidad se analiza secuencialmente; la deduplicación conserva una carga
+  por imagen o página, no elimina ocurrencias legítimas de archivos distintos.
+- El progreso informa unidad actual y códigos acumulados. La cancelación se
+  comprueba antes y después de decodificar y evita devolver un lote parcial.
+- PDF valida tamaño y cabecera `%PDF-` antes de abrirlo, libera objetos de
+  imagen y elimina temporales en éxito, error y cancelación.
+- **Pendiente:** medir tiempo, pico de memoria y temperatura con PDF de 50
+  páginas e imágenes extremas en dispositivos de gama baja.
