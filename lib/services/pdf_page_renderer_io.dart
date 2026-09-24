@@ -49,8 +49,8 @@ class PdfRenderBatch {
 ///
 /// Controles de recursos, todos deliberados:
 /// - como máximo 50 páginas por documento;
-/// - escala ajustada para que el lado mayor no supere unos 2400 px, con un
-///   mínimo de 1,5x para que un QR pequeño siga siendo legible;
+/// - escala adaptativa y acotada para que una página normal alcance unos
+///   4096 px en su lado mayor, preservando barras y QR pequeños;
 /// - cada imagen de página se libera en cuanto se escribe en disco;
 /// - la cancelación se propaga al renderizador nativo, no solo al bucle;
 /// - ante cualquier error se limpian los archivos ya escritos y el directorio
@@ -103,7 +103,10 @@ class PdfPageRenderer {
         cancellationToken?.throwIfCancelled();
         onProgress?.call(index + 1, count);
         final PdfPage page = document.pages[index];
-        final double scale = _renderScale(page.width, page.height);
+        final double scale = FileInspectionInputValidator.pdfRasterScale(
+          page.width,
+          page.height,
+        );
         final PdfPageRenderCancellationToken renderToken = page
             .createCancellationToken();
         void cancelRender() {
@@ -178,13 +181,5 @@ class PdfPageRenderer {
       final Directory directory = Directory(path);
       if (await directory.exists()) await directory.delete(recursive: true);
     }
-  }
-
-  static double _renderScale(double width, double height) {
-    final double longest = width > height ? width : height;
-    if (longest <= 0) return 2.5;
-    return (FileInspectionLimits.maxRasterDimension / longest)
-        .clamp(1.5, 4.0)
-        .toDouble();
   }
 }

@@ -272,7 +272,7 @@ propiedades son sólidas y merecen protección explícita:
 
 ### R-20 · Inspección de archivos pendiente de prueba nativa
 
-**Severidad:** media. La lógica, los fixtures, el análisis, las 103 pruebas y
+**Severidad:** media. La lógica, los fixtures, el análisis, las 107 pruebas y
 los builds web/APK están verdes. No debe declararse validación funcional
 completa de la matriz hasta decodificar los cuatro fixtures con
 `mobile_scanner` en un dispositivo Android.

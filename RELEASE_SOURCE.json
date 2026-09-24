@@ -1,8 +1,8 @@
 {
   "application": "RootCause QR Inspector",
-  "version": "0.1.3+4",
-  "releaseType": "feature-improvement",
-  "assembledAt": "2026-09-07",
+  "version": "0.1.4+5",
+  "releaseType": "functional-fix-and-improvement",
+  "assembledAt": "2026-09-24",
   "toolchainTarget": {
     "flutter": "3.44.7",
     "dart": ">=3.12.0 <4.0.0"
@@ -18,12 +18,30 @@
       "valid": true,
       "rules": 26,
       "fixtures": 12,
-      "declaredDartFlutterCases": 104
+      "declaredDartFlutterCases": 108
     },
     "flutterRuntimeExecuted": true,
+    "functionalAndroidEmulator": {
+      "executed": true,
+      "api": 36,
+      "pdfPagesInspected": 5,
+      "codesDetected": 4,
+      "code128Detected": true,
+      "historyHtmlShareObserved": true,
+      "externalBrowserObserved": true
+    },
+    "physicalDevice": {
+      "executed": false,
+      "pending": [
+        "audible sound",
+        "physical vibration",
+        "camera",
+        "real-world PDF performance"
+      ]
+    },
     "executed": {
       "analyzeFatalInfos": true,
-      "flutterTestsPassed": 103,
+      "flutterTestsPassed": 107,
       "webReleaseBuild": true,
       "localhostExports": [
         "png",
@@ -36,6 +54,6 @@
     "flutter test",
     "flutter build web --release",
     "flutter build apk --release",
-    "physical-device validation"
+    "android-emulator functional validation"
   ]
 }

@@ -11,6 +11,7 @@ import qrcode
 from PIL import Image, ImageDraw
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.units import mm
+from reportlab.graphics.barcode import code128
 from reportlab.pdfgen import canvas
 
 
@@ -21,6 +22,7 @@ PAYLOAD_NORMAL = "https://normal.example"
 PAYLOAD_CONFUSING = "https://trusted.example@evil.example/login"
 PAYLOAD_EMAIL = "mailto:person@example.com?subject=Synthetic"
 PAYLOAD_WIFI = "WIFI:T:WPA;S:Laboratorio;P:synthetic-password;;"
+PAYLOAD_BARCODE = "RCQR-1234567890"
 
 
 def qr_image(payload: str, box_size: int = 10) -> Image.Image:
@@ -91,6 +93,20 @@ def save_document(path: Path) -> None:
                     preserveAspectRatio=True,
                     mask="auto",
                 )
+            elif page_number == 2:
+                pdf.setFont("Helvetica", 11)
+                pdf.drawString(
+                    24 * mm,
+                    page_height - 42 * mm,
+                    "Synthetic compact Code 128 barcode",
+                )
+                barcode = code128.Code128(
+                    PAYLOAD_BARCODE,
+                    barHeight=18 * mm,
+                    barWidth=0.28 * mm,
+                    humanReadable=True,
+                )
+                barcode.drawOn(pdf, 24 * mm, page_height - 80 * mm)
             else:
                 pdf.setFont("Helvetica", 12)
                 pdf.drawString(24 * mm, page_height - 48 * mm, "This page intentionally contains no code.")
@@ -121,7 +137,7 @@ def main() -> None:
                 "pages": 5,
                 "expectedByPage": {
                     "1": [PAYLOAD_NORMAL],
-                    "2": [],
+                    "2": [PAYLOAD_BARCODE],
                     "3": [PAYLOAD_CONFUSING],
                     "4": [],
                     "5": [PAYLOAD_WIFI],

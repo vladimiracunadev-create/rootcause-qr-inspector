@@ -457,7 +457,8 @@ class _ScanRecordCardState extends State<ScanRecordCard> {
     try {
       final bool opened = await launchUrl(
         uri,
-        mode: LaunchMode.platformDefault,
+        mode: launchModeForUri(uri),
+        webOnlyWindowName: webWindowNameForUri(uri),
       );
       if (!opened && context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -498,6 +499,7 @@ class _ScanRecordCardState extends State<ScanRecordCard> {
     ContentKind.email => 'Correo',
     ContentKind.sms => 'SMS',
     ContentKind.geo => 'Mapa',
+    ContentKind.url => 'Abrir en navegador',
     _ => 'Abrir',
   };
 
@@ -521,6 +523,16 @@ class _ScanRecordCardState extends State<ScanRecordCard> {
     ContentKind.text => Icons.text_snippet_outlined,
   };
 }
+
+@visibleForTesting
+LaunchMode launchModeForUri(Uri uri) =>
+    <String>{'http', 'https'}.contains(uri.scheme)
+    ? LaunchMode.externalApplication
+    : LaunchMode.platformDefault;
+
+@visibleForTesting
+String? webWindowNameForUri(Uri uri) =>
+    <String>{'http', 'https'}.contains(uri.scheme) ? '_blank' : null;
 
 class _BatchSummary extends StatelessWidget {
   const _BatchSummary({required this.records, this.summary});

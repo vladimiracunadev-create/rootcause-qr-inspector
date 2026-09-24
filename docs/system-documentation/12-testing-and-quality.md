@@ -306,9 +306,9 @@ También se generaron:
 - `fixture_single_url.png`;
 - `fixture_multiple_codes.png`;
 - `fixture_no_code.png`;
-- `fixture_document.pdf` con QR en páginas 1, 3 y 5.
+- `fixture_document.pdf` con QR en páginas 1, 3 y 5 y Code 128 compacto en la 2.
 
-El PDF fue renderizado y revisado visualmente. Con Flutter 3.44.7 pasaron el
-análisis estricto, las 103 pruebas y las compilaciones web/APK release. Solo la
+El PDF fue renderizado y revisado visualmente. Pasaron el análisis estricto y
+las 107 pruebas; las compilaciones web/APK release forman parte del gate. Solo la
 decodificación con `mobile_scanner` en un dispositivo Android figura
 **PENDIENTE**.

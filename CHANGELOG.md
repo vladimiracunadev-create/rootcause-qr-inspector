@@ -13,6 +13,37 @@ Todas las versiones notables se documentan aquí. El formato sigue
 - Correlación opcional con otras superficies RootCause.
 - Evidencia en dispositivo físico de la corrección de lectura de 0.1.1.
 
+## [0.1.4] — 2026-09-24
+
+### Corregido
+
+- Los PDF se rasterizan con una política adaptativa acotada a 4096 px para
+  preservar barras estrechas y QR pequeños antes del análisis nativo.
+- Las páginas temporales permanecen disponibles hasta que termina la
+  decodificación nativa; antes podían borrarse mientras ML Kit abría la página
+  siguiente.
+- El banco sintético incluye ahora un Code 128 compacto dentro de un PDF, no
+  sólo QR grandes, para proteger la regresión reportada.
+- La validación correcta desde imagen o PDF confirma con el mismo tono y
+  vibración configurables que la cámara y el inventario, una vez por lote.
+- Los enlaces HTTP/HTTPS se entregan explícitamente al navegador y en web se
+  abren en una pestaña nueva.
+
+### Añadido
+
+- Exportación HTML autocontenida de Historial e Inventario, legible directamente
+  por navegador, con contenido escapado y enlaces en pestaña nueva protegidos
+  mediante `noopener noreferrer`.
+- Pruebas de resolución PDF, exportación HTML segura de Historial e Inventario
+  y política de apertura de enlaces; la suite ejecutable pasa de 103 a 107 casos.
+
+### Verificado
+
+- Contrato RootCause, estructura, análisis estricto y 107 pruebas Flutter.
+- APK 0.1.4 validado en emulador Android API 36: el PDF sintético produjo 4
+  resultados en 5 páginas y reconoció el Code 128 de la página 2. Permanece
+  pendiente la validación de audio, vibración y cámara en dispositivo físico.
+
 ## [0.1.3] — 2026-09-07
 
 ### Añadido
@@ -164,6 +195,7 @@ La procedencia exacta y las diferencias están en
 [`docs/rootcause/PROVENANCE.md`](docs/rootcause/PROVENANCE.md).
 
 [0.1.2]: https://github.com/vladimiracunadev-create/rootcause-qr-inspector/releases/tag/v0.1.2
+[0.1.4]: https://github.com/vladimiracunadev-create/rootcause-qr-inspector/releases/tag/v0.1.4
 [0.1.3]: https://github.com/vladimiracunadev-create/rootcause-qr-inspector/releases/tag/v0.1.3
 [0.1.1]: https://github.com/vladimiracunadev-create/rootcause-qr-inspector/releases/tag/v0.1.1
 [0.1.0]: https://github.com/vladimiracunadev-create/rootcause-qr-inspector/releases/tag/v0.1.0

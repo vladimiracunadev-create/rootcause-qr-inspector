@@ -67,7 +67,7 @@ versiones y, en el futuro, reutilizarlo desde otro producto. Todo lo demás
 | Aspecto | Estado |
 |---|---|
 | Código fuente | Completo y coherente; verificadores automáticos en verde |
-| Integración continua | Verde: análisis estricto, 103 pruebas y compilaciones web, Android e iOS |
+| Integración continua | Verde: análisis estricto, 107 pruebas; compilaciones web, Android e iOS son gates del release |
 | Distribución Android | **Publicada**: APK con SHA-256 y atestación de procedencia |
 | Firma de tienda | **Pendiente**: se firma con la clave de depuración de Flutter |
 | iOS | Compila para simulador; sin paquete instalable ni firma |
@@ -166,3 +166,11 @@ el destino semántico y destaca el host real antes de cualquier acción. Anális
 estricto, 103 pruebas y builds web/APK están verdes. La decodificación de la
 matriz de fixtures en un dispositivo Android continúa declarada como validación
 física pendiente.
+
+## Addendum ejecutivo: corrección funcional 0.1.4
+
+La versión 0.1.4 eleva el raster PDF hasta 4096 px de forma adaptativa para
+preservar códigos pequeños, añade un Code 128 al fixture, confirma archivos
+válidos con tono/vibración y exporta Historial e Inventario a HTML seguro para
+navegador. El análisis estricto y 107 pruebas están verdes; la decodificación
+ML Kit del PDF sigue pendiente en Android físico.

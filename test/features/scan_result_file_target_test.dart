@@ -6,11 +6,22 @@ import 'package:rootcause_qr_inspector/services/settings_repository.dart';
 import 'package:rootcause_qr_inspector/state/settings_store.dart';
 import 'package:shared_preferences_platform_interface/in_memory_shared_preferences_async.dart';
 import 'package:shared_preferences_platform_interface/shared_preferences_async_platform_interface.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 void main() {
   setUp(() {
     SharedPreferencesAsyncPlatform.instance =
         InMemorySharedPreferencesAsync.empty();
+  });
+
+  test('los enlaces web usan navegador y una pestaña nueva', () {
+    final Uri web = Uri.parse('https://example.com/path');
+    final Uri phone = Uri.parse('tel:+56912345678');
+
+    expect(launchModeForUri(web), LaunchMode.externalApplication);
+    expect(webWindowNameForUri(web), '_blank');
+    expect(launchModeForUri(phone), LaunchMode.platformDefault);
+    expect(webWindowNameForUri(phone), isNull);
   });
 
   testWidgets('el destino y host real siguen legibles con texto ampliado', (

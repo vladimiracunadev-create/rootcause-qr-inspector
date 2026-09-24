@@ -65,6 +65,30 @@ void main() {
     expect(FileInspectionInputValidator.pdfPagesToInspect(18), 18);
   });
 
+  test('rasteriza PDF con resolución suficiente para códigos pequeños', () {
+    // A4 in PDF points. The previous policy produced a 2400 px long side;
+    // this protects the higher-resolution input required by dense 1D codes.
+    final double a4Scale = FileInspectionInputValidator.pdfRasterScale(
+      595.28,
+      841.89,
+    );
+    expect(a4Scale, closeTo(4.8652, 0.001));
+    expect(841.89 * a4Scale, closeTo(4096, 1));
+
+    expect(
+      FileInspectionInputValidator.pdfRasterScale(10000, 8000),
+      FileInspectionLimits.minPdfRasterScale,
+    );
+    expect(
+      FileInspectionInputValidator.pdfRasterScale(100, 100),
+      FileInspectionLimits.maxPdfRasterScale,
+    );
+    expect(
+      FileInspectionInputValidator.pdfRasterScale(0, 0),
+      FileInspectionLimits.minPdfRasterScale,
+    );
+  });
+
   test(
     'procesa todos los códigos y deduplica solo dentro de cada origen',
     () async {

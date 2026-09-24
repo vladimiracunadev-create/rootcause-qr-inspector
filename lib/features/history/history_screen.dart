@@ -102,7 +102,12 @@ class _HistoryScreenState extends State<HistoryScreen> {
               PopupMenuButton<String>(
                 tooltip: 'Exportar o limpiar',
                 onSelected: (String value) {
-                  if (const <String>{'csv', 'json', 'xlsx'}.contains(value)) {
+                  if (const <String>{
+                    'html',
+                    'csv',
+                    'json',
+                    'xlsx',
+                  }.contains(value)) {
                     unawaited(_exportHistory(value, records));
                   }
                   if (value == 'import') unawaited(_importHistory());
@@ -110,6 +115,10 @@ class _HistoryScreenState extends State<HistoryScreen> {
                 },
                 itemBuilder: (BuildContext context) =>
                     const <PopupMenuEntry<String>>[
+                      PopupMenuItem(
+                        value: 'html',
+                        child: AppText('Exportar HTML para navegador'),
+                      ),
                       PopupMenuItem(
                         value: 'csv',
                         child: AppText('Exportar CSV'),
@@ -322,6 +331,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
         ) ??
         false;
     if (!confirmed) return;
+    if (format == 'html') await ExportService.shareHistoryHtml(records);
     if (format == 'csv') await ExportService.shareHistoryCsv(records);
     if (format == 'json') await ExportService.shareHistoryJson(records);
     if (format == 'xlsx') await ExportService.shareHistoryXlsx(records);

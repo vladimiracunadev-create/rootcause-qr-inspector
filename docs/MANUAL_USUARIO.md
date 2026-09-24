@@ -21,9 +21,9 @@ Los PDF mayores de 50 páginas muestran el total y dejan claro que solo se
 inspeccionan las primeras 50. En web esta capacidad está **PLANIFICADA**.
 
 Para Android 7 o posterior, descarga el APK público desde
-[`GitHub Release v0.1.3`](https://github.com/vladimiracunadev-create/rootcause-qr-inspector/releases/tag/v0.1.3)
+[`GitHub Release v0.1.4`](https://github.com/vladimiracunadev-create/rootcause-qr-inspector/releases/tag/v0.1.4)
 o usa la
-[`descarga directa`](https://github.com/vladimiracunadev-create/rootcause-qr-inspector/releases/download/v0.1.3/rootcause-qr-inspector-v0.1.3-android.apk).
+[`descarga directa`](https://github.com/vladimiracunadev-create/rootcause-qr-inspector/releases/download/v0.1.4/rootcause-qr-inspector-v0.1.4-android.apk).
 Android puede pedir autorización para instalar desde el navegador o gestor de
 archivos usado. El Release incluye el archivo `.sha256` para comprobar la
 descarga.
@@ -47,8 +47,9 @@ una regla local aplicable.
 2. Apunta al código o elige una imagen/PDF iniciado por ti. El marco central es
    una guía de encuadre: la lectura analiza toda la imagen, así que un código
    que se ve completo en pantalla se lee aunque quede fuera del cuadrado.
-3. Cuando el código se lee, el estado cambia a **Código leído**, suena el tono,
-   vibra el teléfono y se abre el análisis. El tono confirma una captura, no la
+3. Cuando el código se valida, el estado cambia a **Código leído**, suena el
+   tono, vibra el teléfono y se abre el análisis. La confirmación se aplica
+   también a imágenes y PDF, una vez por lote; confirma una lectura, no la
    seguridad del contenido.
 4. No necesitas tocar el visor para activar la lectura. Usa **Pausar** y
    **Reanudar** cuando quieras detener o recuperar explícitamente la cámara.
@@ -56,6 +57,11 @@ una regla local aplicable.
 6. Distingue hechos de hipótesis antes de continuar.
 7. Si el caso lo exige, exporta **Evidencia** en modo redactado.
 8. Abre el destino solo cuando también lo hayas validado por otra fuente.
+
+Los enlaces web se abren en el navegador y, en la demo web, en una pestaña
+nueva. Historial e Inventario pueden exportarse como **HTML para navegador**;
+los enlaces del archivo se abren también en pestaña nueva. La exportación no
+está cifrada, igual que CSV, JSON y XLSX, por lo que debe tratarse como sensible.
 
 ## Cómo leer el resultado
 

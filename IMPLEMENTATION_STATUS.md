@@ -1,19 +1,21 @@
-# Estado de implementación · 0.1.3
+# Estado de implementación · 0.1.4
 
-## Mejoras incluidas en 0.1.3
+## Mejoras incluidas en 0.1.4
 
 | Capacidad | Estado verificable |
 |---|---|
 | Acción visible `Analizar archivo` | **IMPLEMENTADA:** compacta sin reducir la altura fija del visor; geometría y accesibilidad pasan la suite, prueba física pendiente |
 | Una o varias imágenes | **IMPLEMENTADA:** coordinador nativo, límite de 20 y 50 MiB por archivo; lógica y build Android verificados, fixture nativo pendiente |
-| PDF multipágina | **IMPLEMENTADA:** límite de 50, total/truncación visibles, cancelación y limpieza probadas; fixture renderizado, decodificación en dispositivo pendiente |
+| PDF multipágina | **MEJORADA:** límite de 50, total/truncación visibles, cancelación y limpieza probadas; raster adaptativo 4K y fixture Code 128 renderizado, decodificación en dispositivo pendiente |
 | Destino semántico y host real | **VERIFICADO:** contratos existentes, pruebas unitarias y widget al 200 %; un resultado bloqueado no expone acción externa |
-| Cámara, historial y acción externa | **SIN REGRESIONES EN SUITE:** se reutilizan motor, persistencia selectiva y política existentes; 103 pruebas aprobadas |
+| Confirmación de lectura | **IMPLEMENTADA:** cámara, inventario, imágenes y PDF producen tono/vibración configurables; archivos confirman una vez por lote |
+| Exportación para navegador | **IMPLEMENTADA:** Historial e Inventario exportan HTML autocontenido, escapado y con enlaces en pestaña nueva |
+| Cámara, historial y acción externa | **SIN REGRESIONES EN SUITE:** se reutilizan motor, persistencia selectiva y política existentes; 107 pruebas aprobadas |
 | Decodificación en web | **PLANIFICADO:** `mobile_scanner 7.4.0` no implementa `analyzeImage` web; la UI no afirma soporte |
 | Idiomas | **IMPLEMENTADO:** sistema, español de Chile/internacional, inglés, francés y alemán; datos de usuario y cargas no se traducen |
 | Ayuda de pestañas | **IMPLEMENTADA:** guía de las cinco superficies y tutorial contextual de Inventario, probado a 320 px y texto al 160 % |
 
-La versión es `0.1.3+4`. La validación funcional de la matriz completa de
+La versión es `0.1.4+5`. La validación funcional de la matriz completa de
 fixtures en hardware Android continúa pendiente y se declara como límite; no
 impide publicar mejoras que ya pasan los gates automatizados del producto.
 
@@ -26,12 +28,12 @@ impide publicar mejoras que ya pasan los gates automatizados del producto.
 | Investigación | Motor local puro con 26 reglas, ids estables, severidad, puntos, confianza y evidencia mínima |
 | Hipótesis | Seis hipótesis separadas de los hechos, incluido `qr-phishing-suspected` |
 | Decisión | `allow`, `confirm`, `inspectOnly` o `block`; nunca “seguro” |
-| Interfaz | Puntaje, ids técnicos, evidencia, hipótesis, límites y confirmación antes de actuar. Cinco estados visibles de cámara, incluida la confirmación explícita `Código leído`; selector de cuatro idiomas, guía de pestañas e Inventario explicado; el generador diferencia contenido e imagen y descarga PNG/SVG en web |
+| Interfaz | Puntaje, ids técnicos, evidencia, hipótesis, límites y confirmación antes de actuar. Cinco estados visibles de cámara, tono/vibración también para archivos válidos; selector de cuatro idiomas, guía de pestañas e Inventario explicado; el generador diferencia contenido e imagen y descarga PNG/SVG en web |
 | Evidencia | `rootcause.evidence.qr.v1`, SHA-256 de carga, checksum no autenticado del paquete, redacción por defecto y enlace opcional a un hash anterior |
 | Datos | Historial/inventario cifrados con AES-256-GCM, llave en almacenamiento seguro, recuperación y modo temporal |
 | Compatibilidad | Importa respaldos de RootCause QR Inspector y Universal Code Scanner; recalcula campos derivados de entradas no confiables |
 | Política | El API del motor acepta marcas, dominios y umbrales; se incluye una configuración sintética de ejemplo |
-| Privacidad | Análisis local y telemetría cero; exportación solo por acción de la persona |
+| Privacidad | Análisis local y telemetría cero; exportación CSV/JSON/XLSX/HTML solo por acción de la persona y con advertencia de datos sin cifrar |
 
 ## Coherente y validado
 
@@ -40,10 +42,10 @@ impide publicar mejoras que ya pasan los gates automatizados del producto.
 - redacción verificada para impedir que `effectiveUri` reconstruya la carga;
 - frase obligatoria para resultados normales;
 - YAML, JSON, imports, enlaces, SBOM, versión y lockfile.
-- 104 casos Dart/Flutter declarados (103 los ejecuta `flutter test`; uno es de
+- 108 casos Dart/Flutter declarados (107 los ejecuta `flutter test`; uno es de
   integración y requiere dispositivo).
 
-Para 0.1.3 se ejecutan análisis estático, 103 pruebas de `test/`, compilación
+Para 0.1.4 se ejecutan análisis estático, 107 pruebas de `test/`, compilación
 web release y APK release. La evidencia y los límites se registran en
 [`VALIDATION.md`](VALIDATION.md).
 

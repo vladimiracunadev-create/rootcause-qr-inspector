@@ -1,14 +1,32 @@
 # Estado de validación
 
-**Versión:** 0.1.3+4
+**Versión:** 0.1.4+5
 
-**Fecha:** 7 de septiembre de 2026
+**Fecha:** 24 de septiembre de 2026
 **Fuente derivada:** Universal Code Scanner 1.1.0+2, commit
 `c1f98781575bf8223b19ad8344fdfddeaccef373`
 
 Este archivo distingue lo ejecutado sobre **RootCause QR Inspector** de lo que
 solo fue validado en la base heredada y de lo que todavía exige hardware o
 credenciales de distribución.
+
+## Release 0.1.4 · 24 de septiembre de 2026
+
+| Comprobación | Resultado real |
+|---|---|
+| `python tool/verify_rootcause_contract.py` | **Correcto:** 26 reglas y contrato coherentes |
+| `flutter analyze --fatal-infos` | **Correcto:** sin issues con Flutter 3.44.6 / Dart 3.12.2; CI fija Flutter 3.44.7 |
+| `flutter test` | **Correcto:** 107 pruebas aprobadas |
+| Política de raster PDF | **Correcto:** A4 alcanza 4096 px; escalas mínima/máxima quedan acotadas |
+| Exportación HTML | **Correcto:** HTML UTF-8, cargas escapadas y enlaces con pestaña nueva + `noopener noreferrer` |
+| Apertura de enlaces | **Correcto:** HTTP/HTTPS fuerza navegador y `_blank` en web; otros esquemas conservan el manejador de plataforma |
+| Fixture PDF Code 128 | **Parcial:** documento de 5 páginas regenerado; página 2 renderizada a PNG y revisada visualmente sin recortes; falta decodificación ML Kit en Android |
+
+La corrección amplía el raster de página completa de 2400 a 4096 px de forma
+adaptativa. Esto protege las barras estrechas observables en el fixture y evita
+crecimiento sin límite, pero no se presenta como evidencia de detección física:
+esa aceptación requiere ejecutar el APK en Android con el PDF reportado o un
+fixture equivalente.
 
 ## Release 0.1.3 · 7 de septiembre de 2026
 
@@ -169,7 +187,7 @@ Seis casos añadidos en 0.1.1 cubren la interacción de la cámara: el estado
 `Código leído`, el precalentado del tono y su degradación, y la configuración
 del motor de captura.
 
-Los resultados de 0.1.3 indicados al inicio provienen de una ejecución local con
+Los resultados de 0.1.3 indicados en su sección provienen de una ejecución local con
 Flutter 3.44.7. Las validaciones públicas históricas conservan sus propios
 enlaces y alcance.
 

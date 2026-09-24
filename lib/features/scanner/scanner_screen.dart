@@ -705,7 +705,9 @@ class _ScannerScreenState extends State<ScannerScreen>
                   source: 'Imagen · ${index + 1}',
                 ),
             ];
-            return FileInspectionCoordinator(
+            // Keep the camera stopped until native decoding really finishes.
+            // Returning the Future directly would run the finally block first.
+            return await FileInspectionCoordinator(
               decoder: NativeFileCodeDecoder(_engine),
             ).inspect(
               units,
@@ -737,6 +739,7 @@ class _ScannerScreenState extends State<ScannerScreen>
           ),
         );
       } else {
+        _confirmValidatedFileCodes();
         await _persistAndShow(
           result.records,
           batchSummary: ScanBatchSummary(
@@ -820,7 +823,10 @@ class _ScannerScreenState extends State<ScannerScreen>
                   ),
                 )
                 .toList(growable: false);
-            return FileInspectionCoordinator(
+            // Keep the rendered files alive until native decoding finishes.
+            // Returning the Future directly would let the finally block below
+            // delete page images while ML Kit is opening the next one.
+            return await FileInspectionCoordinator(
               decoder: NativeFileCodeDecoder(_engine),
             ).inspect(
               units,
@@ -854,6 +860,7 @@ class _ScannerScreenState extends State<ScannerScreen>
           ),
         );
       } else {
+        _confirmValidatedFileCodes();
         await _persistAndShow(
           result.records,
           batchSummary: ScanBatchSummary(
@@ -998,6 +1005,18 @@ class _ScannerScreenState extends State<ScannerScreen>
         records: records,
         settings: widget.settings,
         batchSummary: batchSummary,
+      ),
+    );
+  }
+
+  void _confirmValidatedFileCodes() {
+    // File inspection used to show the result silently even though camera and
+    // inventory reads already had an audible/haptic acknowledgement. Confirm
+    // once per successful batch so a multi-code PDF does not emit a barrage.
+    unawaited(
+      _feedback.success(
+        sound: _settings.soundEnabled,
+        vibration: _settings.vibrationEnabled,
       ),
     );
   }

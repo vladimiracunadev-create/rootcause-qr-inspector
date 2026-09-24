@@ -276,6 +276,11 @@ class _InventoryScreenState extends State<InventoryScreen>
                             : null,
                         trailing: PopupMenuButton<String>(
                           onSelected: (String value) {
+                            if (value == 'html') {
+                              unawaited(
+                                ExportService.shareInventoryHtml(session),
+                              );
+                            }
                             if (value == 'csv') {
                               unawaited(
                                 ExportService.shareInventoryCsv(session),
@@ -299,6 +304,10 @@ class _InventoryScreenState extends State<InventoryScreen>
                             }
                           },
                           itemBuilder: (_) => <PopupMenuEntry<String>>[
+                            const PopupMenuItem(
+                              value: 'html',
+                              child: AppText('Exportar HTML para navegador'),
+                            ),
                             const PopupMenuItem(
                               value: 'csv',
                               child: AppText('Exportar CSV'),
@@ -697,6 +706,11 @@ class _InventoryScreenState extends State<InventoryScreen>
         child: Wrap(
           children: <Widget>[
             ListTile(
+              leading: const Icon(Icons.language_outlined),
+              title: const AppText('HTML para navegador'),
+              onTap: () => Navigator.of(context).pop('html'),
+            ),
+            ListTile(
               leading: const Icon(Icons.table_view_outlined),
               title: const AppText('Excel XLSX'),
               onTap: () => Navigator.of(context).pop('xlsx'),
@@ -715,6 +729,7 @@ class _InventoryScreenState extends State<InventoryScreen>
         ),
       ),
     );
+    if (format == 'html') await ExportService.shareInventoryHtml(session);
     if (format == 'xlsx') await ExportService.shareInventoryXlsx(session);
     if (format == 'csv') await ExportService.shareInventoryCsv(session);
     if (format == 'json') await ExportService.shareInventoryJson(session);

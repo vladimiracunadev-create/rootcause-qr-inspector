@@ -7,7 +7,7 @@ buscarse con `grep`.
 
 | Constante | Archivo | Valor | Nota |
 |---|---|---|---|
-| `appVersion` | `lib/core/app_info.dart` | `'0.1.3'` | Único lugar donde se escribe la versión visible. `tool/validate_structure.py` falla si diverge de `pubspec.yaml` |
+| `appVersion` | `lib/core/app_info.dart` | `'0.1.4'` | Único lugar donde se escribe la versión visible. `tool/validate_structure.py` falla si diverge de `pubspec.yaml` |
 | `appName` | `lib/core/app_info.dart` | `'RootCause QR Inspector'` | Verificado por `tool/verify_rootcause_contract.py` |
 | `QrInvestigationEngine.engineVersion` | motor | `'0.1.0'` | Versión **del motor de reglas**, independiente de la app. Solo sube si cambia una regla |
 | `QrInvestigation.schema` | contrato | `'rootcause.qr-investigation.v1'` | |

@@ -85,7 +85,8 @@ una cadena autenticada.
 
 ### Archivos locales
 
-- Nativo: análisis, 103 pruebas y builds web/APK están correctos; la matriz
+- Nativo: análisis y 107 pruebas están correctos; los builds web/APK son gates
+  del release y la matriz
   funcional completa de fixtures en dispositivo continúa **PENDIENTE**.
 - Web: **PLANIFICADO**. `pdfrx` puede rasterizar en navegador, pero eso no
   aporta decodificación de códigos y `mobile_scanner 7.4.0` no implementa

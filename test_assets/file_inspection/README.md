@@ -9,7 +9,8 @@ Archivos:
 - `fixture_single_url.png`: un QR web;
 - `fixture_multiple_codes.png`: URL, correo y Wi-Fi en una misma imagen;
 - `fixture_no_code.png`: control negativo;
-- `fixture_document.pdf`: cinco páginas, con QR en 1, 3 y 5.
+- `fixture_document.pdf`: cinco páginas, con QR en 1, 3 y 5 y un Code 128
+  compacto en la página 2.
 
 `manifest.json` es la expectativa legible por pruebas. Para regenerarlos:
 

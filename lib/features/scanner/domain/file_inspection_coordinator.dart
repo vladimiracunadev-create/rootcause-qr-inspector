@@ -9,7 +9,13 @@ abstract final class FileInspectionLimits {
   static const int maxPdfPages = 50;
   static const int maxFileBytes = 50 * 1024 * 1024;
   static const int maxImageDimension = 4096;
-  static const int maxRasterDimension = 2400;
+  // A full A4/Letter page at 2400 px makes a 30 mm-wide barcode only about
+  // 240 px wide. That is marginal for dense 1D symbols once antialiasing and
+  // PDF scaling are involved. Keep the raster bounded, but give the native
+  // decoder a 4K source so narrow bars retain several pixels of separation.
+  static const int maxPdfRasterDimension = 4096;
+  static const double minPdfRasterScale = 2.0;
+  static const double maxPdfRasterScale = 6.0;
   static const Duration decodeTimeout = Duration(seconds: 30);
 }
 
@@ -40,6 +46,22 @@ abstract final class FileInspectionInputValidator {
   }) {
     if (totalPages <= 0 || maxPages <= 0) return 0;
     return totalPages < maxPages ? totalPages : maxPages;
+  }
+
+  /// Scale used to rasterize a complete PDF page before native detection.
+  ///
+  /// PDF dimensions are expressed at 72 dpi. The bounded adaptive scale keeps
+  /// ordinary A4/Letter pages close to 350 dpi while preventing unusual page
+  /// sizes from creating unbounded bitmaps.
+  static double pdfRasterScale(double width, double height) {
+    final double longest = width > height ? width : height;
+    if (longest <= 0) return FileInspectionLimits.minPdfRasterScale;
+    return (FileInspectionLimits.maxPdfRasterDimension / longest)
+        .clamp(
+          FileInspectionLimits.minPdfRasterScale,
+          FileInspectionLimits.maxPdfRasterScale,
+        )
+        .toDouble();
   }
 }
 

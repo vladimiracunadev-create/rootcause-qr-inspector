@@ -219,6 +219,19 @@ def check_redaction_contract() -> None:
         fail("El JSON Schema no prohíbe effectiveUri en paquetes redactados")
 
 
+def check_file_inspection_lifecycle() -> None:
+    scanner = (ROOT / "lib/features/scanner/scanner_screen.dart").read_text(
+        encoding="utf-8"
+    )
+    awaited = scanner.count("return await FileInspectionCoordinator(")
+    direct = len(re.findall(r"return\s+FileInspectionCoordinator\(", scanner))
+    if awaited != 2 or direct:
+        fail(
+            "Los flujos de imagen y PDF deben esperar el análisis nativo antes "
+            "de reiniciar la cámara o limpiar sus archivos temporales"
+        )
+
+
 def main() -> None:
     schema = load_json("schemas/rootcause-qr-evidence.schema.json")
     if schema.get("$schema") != "https://json-schema.org/draft/2020-12/schema":
@@ -229,6 +242,7 @@ def main() -> None:
     check_policy()
     check_version_and_identity()
     check_redaction_contract()
+    check_file_inspection_lifecycle()
     print(
         "Contrato RootCause coherente: "
         f"{len(ids)} reglas · esquema · textos · fixtures · política · versión · redacción."

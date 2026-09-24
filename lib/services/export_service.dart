@@ -18,6 +18,14 @@ import 'package:rootcause_qr_inspector/models/scan_record.dart';
 /// de CSV y XLSX se delega a `compute`, en un isolate aparte, porque un
 /// historial de miles de registros bloquearía la interfaz.
 abstract final class ExportService {
+  static Future<void> shareHistoryHtml(List<ScanRecord> records) {
+    return _shareHtml(
+      buildHistoryHtml(records),
+      'casos-qr-inspeccionados.html',
+      'Casos QR inspeccionados',
+    );
+  }
+
   static Future<void> shareHistoryJson(List<ScanRecord> records) {
     final Uint8List bytes = Uint8List.fromList(
       utf8.encode(
@@ -194,6 +202,83 @@ abstract final class ExportService {
     );
   }
 
+  static Future<void> shareInventoryHtml(InventorySession session) {
+    return _shareHtml(
+      buildInventoryHtml(session),
+      'inventario-${session.id}.html',
+      'Inventario ${session.name}',
+    );
+  }
+
+  @visibleForTesting
+  static String buildHistoryHtml(List<ScanRecord> records) {
+    final String rows = records.map((ScanRecord item) {
+      return _htmlRow(<String>[
+        item.scannedAt.toUtc().toIso8601String(),
+        item.contentType,
+        item.format,
+        item.source,
+        item.riskLevel.name,
+        item.favorite ? 'Sí' : 'No',
+        item.tags.join(' | '),
+        item.notes,
+        _linkOrText(item.rawValue),
+      ], lastCellIsMarkup: true);
+    }).join();
+    return _htmlDocument(
+      title: 'Casos QR inspeccionados',
+      notice:
+          'Exportación local sin cifrar. Los enlaces web se abren en una pestaña nueva.',
+      headers: const <String>[
+        'Fecha UTC',
+        'Tipo',
+        'Formato',
+        'Origen',
+        'Riesgo',
+        'Favorito',
+        'Etiquetas',
+        'Notas',
+        'Contenido',
+      ],
+      rows: rows,
+    );
+  }
+
+  @visibleForTesting
+  static String buildInventoryHtml(InventorySession session) {
+    final String rows = session.items.values.map((InventoryItem item) {
+      return _htmlRow(
+        <String>[
+          session.name,
+          _linkOrText(item.code),
+          item.format,
+          item.label,
+          '${item.quantity}',
+          item.firstScannedAt.toUtc().toIso8601String(),
+          item.lastScannedAt.toUtc().toIso8601String(),
+          item.notes,
+        ],
+        markupCells: const <int>{1},
+      );
+    }).join();
+    return _htmlDocument(
+      title: 'Inventario ${session.name}',
+      notice:
+          'Exportación local sin cifrar. Los enlaces web se abren en una pestaña nueva.',
+      headers: const <String>[
+        'Sesión',
+        'Código',
+        'Formato',
+        'Descripción',
+        'Cantidad',
+        'Primera lectura',
+        'Última lectura',
+        'Notas',
+      ],
+      rows: rows,
+    );
+  }
+
   static Future<void> _shareCsv(
     List<List<String>> rows,
     String name,
@@ -236,7 +321,80 @@ abstract final class ExportService {
       ),
     );
   }
+
+  static Future<void> _shareHtml(String html, String name, String title) {
+    final Uint8List bytes = Uint8List.fromList(utf8.encode(html));
+    return SharePlus.instance.share(
+      ShareParams(
+        title: title,
+        files: <XFile>[
+          XFile.fromData(bytes, mimeType: 'text/html; charset=utf-8'),
+        ],
+        fileNameOverrides: <String>[name],
+      ),
+    );
+  }
 }
+
+String _htmlDocument({
+  required String title,
+  required String notice,
+  required List<String> headers,
+  required String rows,
+}) {
+  final String safeTitle = _escapeText(title);
+  final String headings = headers
+      .map((String value) => '<th>${_escapeText(value)}</th>')
+      .join();
+  return '''<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>$safeTitle</title>
+  <style>
+    body{font-family:system-ui,sans-serif;margin:2rem;color:#112b27;background:#f7fbfa}
+    h1{margin-bottom:.25rem}p{color:#445b57}table{border-collapse:collapse;width:100%;background:white}
+    th,td{border:1px solid #c8d8d4;padding:.55rem;text-align:left;vertical-align:top;word-break:break-word}
+    th{background:#daf3ed}tbody tr:nth-child(even){background:#f2f8f6}a{color:#087a6d}
+  </style>
+</head>
+<body>
+  <h1>$safeTitle</h1>
+  <p>${_escapeText(notice)}</p>
+  <table><thead><tr>$headings</tr></thead><tbody>$rows</tbody></table>
+</body>
+</html>
+''';
+}
+
+String _htmlRow(
+  List<String> cells, {
+  bool lastCellIsMarkup = false,
+  Set<int> markupCells = const <int>{},
+}) {
+  final int last = cells.length - 1;
+  return '<tr>${List<String>.generate(cells.length, (int index) {
+    final bool markup = markupCells.contains(index) || (lastCellIsMarkup && index == last);
+    return '<td>${markup ? cells[index] : _escapeText(cells[index])}</td>';
+  }).join()}</tr>';
+}
+
+String _linkOrText(String value) {
+  final Uri? uri = Uri.tryParse(value);
+  if (uri != null &&
+      <String>{'http', 'https'}.contains(uri.scheme) &&
+      uri.host.isNotEmpty) {
+    final String safe = const HtmlEscape(
+      HtmlEscapeMode.attribute,
+    ).convert(value);
+    return '<a href="$safe" target="_blank" rel="noopener noreferrer">${_escapeText(value)}</a>';
+  }
+  return _escapeText(value);
+}
+
+String _escapeText(String value) =>
+    const HtmlEscape(HtmlEscapeMode.element).convert(value);
 
 List<int> _encodeCsv(List<List<String>> rows) {
   String csvCell(String value) => '"${value.replaceAll('"', '""')}"';

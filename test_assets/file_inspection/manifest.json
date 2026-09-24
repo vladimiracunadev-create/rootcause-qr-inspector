@@ -27,7 +27,9 @@
         "1": [
           "https://normal.example"
         ],
-        "2": [],
+        "2": [
+          "RCQR-1234567890"
+        ],
         "3": [
           "https://trusted.example@evil.example/login"
         ],
