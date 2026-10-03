@@ -17,7 +17,7 @@ dependencies:
   cross_file: 0.3.5+4
   crypto: 3.0.7
   cryptography: 2.9.0
-  cupertino_icons: 1.0.9
+  cupertino_icons: 2.0.0
   excel: 4.0.6
   file_picker: 12.0.0
   flutter_secure_storage: 11.0.0
