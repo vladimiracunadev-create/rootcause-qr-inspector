@@ -93,6 +93,14 @@ datos que le faltaban para afirmar que un dominio es quien dice ser.
   barra de estado.
 - Dos archivos llevaban tiempo sin formatear en el repositorio porque la CI no
   comprobaba el formato.
+- **La CI ya no podía compilar Android y nadie lo sabía.** El runner de GitHub
+  pasó a un JDK 25 en las seis semanas sin pushes, y Gradle 8.14.3 con AGP
+  8.11.1 no lo soportan: `flutter build apk --release` fallaba con un mensaje
+  que era solo la versión, `25.0.5`. La versión de Java era la única pieza de la
+  cadena sin fijar, teniendo fijadas Flutter, Gradle, AGP y Kotlin. Los dos
+  workflows fijan ahora Temurin 21. No lo provocó esta entrega: cualquier push
+  de hoy habría fallado igual, y el build local seguía pasando porque esta
+  máquina tiene otro JDK.
 - **El gesto se podía maximizar de un pellizco, pero no minimizar de un
   pellizco.** La escala de un pellizco es multiplicativa —el cociente entre la
   distancia actual y la inicial— y se estaba tratando como lineal: separar los

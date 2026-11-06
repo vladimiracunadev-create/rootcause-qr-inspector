@@ -24,6 +24,26 @@ exista.
 | Mayor (`X.y.z`), y cualquier `0.y.z` que suba `y` | **se evalúa como tarea aparte**, con su propia entrega | son rupturas por convención; mezclarlas con funcionalidad impide saber qué rompió qué |
 | Cualquier bump que exija un SDK de Flutter más nuevo que el fijado | **se rechaza** | `web 1.1.2` pide Flutter 3.47.9 y el proyecto fija 3.44.7. La versión del SDK se cambia por decisión propia, no arrastrada por una dependencia |
 
+## La cadena de compilación también se fija
+
+No basta con fijar las dependencias de Dart. En 0.2.0, la CI dejó de poder
+compilar Android sin que cambiara una línea del proyecto: el runner de GitHub
+pasó a un JDK 25 y Gradle 8.14.3 con AGP 8.11.1 no lo soportan. El error fue un
+mensaje de Gradle que era solo la versión, `25.0.5`.
+
+| Pieza | Dónde se fija |
+|---|---|
+| Flutter | `FLUTTER_VERSION` en los dos workflows y `environment` de `pubspec.yaml` |
+| JDK | `actions/setup-java` con Temurin 21 en los dos workflows |
+| Gradle | `GRADLE_DISTRIBUTION` en `tool/bootstrap.py` |
+| Android Gradle Plugin y Kotlin | `ANDROID_GRADLE_PLUGIN` y `KOTLIN_GRADLE_PLUGIN` en `tool/bootstrap.py` |
+| `compileSdk` y `minSdk` | parcheados por `tool/bootstrap.py` sobre la plantilla generada |
+
+La regla: **si una pieza de la cadena no está fijada, el día que el runner
+cambie no habrá cambiado nada en el repositorio y aun así el release no saldrá.**
+Un build verde en la máquina de desarrollo no responde por la CI, porque el JDK
+local es otro.
+
 ## Lo que subió en 0.2.0
 
 `crypto`, `flutter_secure_storage`, `image_picker`, `sembast`, `sembast_web`,

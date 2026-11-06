@@ -23,8 +23,8 @@
     },
     {
       "path": ".github/workflows/android-release.yml",
-      "size": 3060,
-      "sha256": "b4e3aa82ef0656f03d560fd167feb4cc0c8a2e490625e29739ebc7b6c922cbba"
+      "size": 3646,
+      "sha256": "521e5f784a32f75dbe02542926685d186d4fcfb570cf56ec24db1c8bff235bb9"
     },
     {
       "path": ".github/workflows/deploy-landing.yml",
@@ -33,8 +33,8 @@
     },
     {
       "path": ".github/workflows/flutter-ci.yml",
-      "size": 3623,
-      "sha256": "1c8e5952b9eb480a3af0480e13fc786ca466ec57e336afb8ecfb600d74c880a2"
+      "size": 4618,
+      "sha256": "627f9c9c151fcdbea4ab9efa7efd0178e5351de80117dc2d7a0886c13f40bea2"
     },
     {
       "path": ".gitignore",
@@ -223,8 +223,8 @@
     },
     {
       "path": "CHANGELOG.md",
-      "size": 17114,
-      "sha256": "300291c3d5ed983365e99fb42842d076fcaf18c46cd8e380b92a7ef39ae37b0b"
+      "size": 18715,
+      "sha256": "315fd1add585ae66c2aed3267b70b7679e6de066c7c20298d05a759f83b24ed8"
     },
     {
       "path": "config/rootcause-qr-policy.example.json",
@@ -358,8 +358,8 @@
     },
     {
       "path": "docs/quality/DEPENDENCY_POLICY.md",
-      "size": 3191,
-      "sha256": "773e0a881802549175cfd17eee7ca276f595a456951d1c030defc0bc74bc1217"
+      "size": 4315,
+      "sha256": "942cde365e4892ec5326824af7cf7f49756bd3c816fad9b57caf2e5d885847e3"
     },
     {
       "path": "docs/quality/DEVICE_TEST_MATRIX.md",
@@ -418,8 +418,8 @@
     },
     {
       "path": "docs/quality/SCANNER_UX.md",
-      "size": 17783,
-      "sha256": "c73b3a730b9c1f339eb782475c3537879b22f410a1f58784f93e72548cc9f0af"
+      "size": 18472,
+      "sha256": "165d2f4e379750122188a5074fae95b0d1f68f2bc9d73fb21e2884dff261e07d"
     },
     {
       "path": "docs/quality/SCOPE_1_0.md",
@@ -428,8 +428,8 @@
     },
     {
       "path": "docs/RELEASE.md",
-      "size": 1367,
-      "sha256": "a0fb1687cecc41b14484259a6ef565a4bcc23fb80588a5a69126c759088111c6"
+      "size": 2403,
+      "sha256": "2e672169c2c02f83a90c3fb8c9a9055f007bedaa0e0b1c15b3e89739d0262916"
     },
     {
       "path": "docs/releases/v0.1.0.md",
@@ -458,8 +458,8 @@
     },
     {
       "path": "docs/releases/v0.2.0.md",
-      "size": 5573,
-      "sha256": "eaf72df076d61394e9453c29b209ebca35a01c0679fac7a62a9921be40def743"
+      "size": 6409,
+      "sha256": "f2fddc83f3f8922c63e82366853d6d2732e9d382f7d6d94b16cb509e6a04fe53"
     },
     {
       "path": "docs/ROADMAP.md",
@@ -483,8 +483,8 @@
     },
     {
       "path": "docs/rootcause/IDENTITY_DATA.md",
-      "size": 3297,
-      "sha256": "0507fd2a4488aff9e3792d3c28e2696577b92e45712d710700e454461deaba60"
+      "size": 3644,
+      "sha256": "922cf08ca6a2c73b4033e255631e0345869d0028f3dae40a0e518f59c853d14d"
     },
     {
       "path": "docs/rootcause/INTEGRATION.md",
@@ -608,8 +608,8 @@
     },
     {
       "path": "docs/system-documentation/15-risks-and-technical-debt.md",
-      "size": 17239,
-      "sha256": "818970d94af6a5871eddeac477ddf931404c42bf8a64d97c23da38d233755d49"
+      "size": 19537,
+      "sha256": "ea6f4c921da557b91bbf85b47311519d67c10a649089aaa62d5bcf0a545b8e07"
     },
     {
       "path": "docs/system-documentation/16-glossary.md",
@@ -903,8 +903,8 @@
     },
     {
       "path": "integration_test/reading_area_gesture_test.dart",
-      "size": 2860,
-      "sha256": "8cf337b3ae868e1aa2d89ca5e55157b9057bc9c97700371fdcf6cfd99b652042"
+      "size": 4286,
+      "sha256": "19f496d31ed963ce9a4075c22d6c6e65706cb2e74df77b39364532f1713b2092"
     },
     {
       "path": "landing/assets/favicon.svg",
@@ -1028,8 +1028,8 @@
     },
     {
       "path": "lib/core/investigation/qr_investigation_engine.dart",
-      "size": 32429,
-      "sha256": "13d788153907fe4fb50d945d1d02064da2f9354d92df533633988e5409c3ffd5"
+      "size": 32476,
+      "sha256": "d8204652eb2c2ce541524a44e2ef91b9b5b79f8db35fd82e0156b3136d596c14"
     },
     {
       "path": "lib/core/investigation/unicode_confusables_data.dart",
@@ -1213,8 +1213,8 @@
     },
     {
       "path": "lib/features/scanner/widgets/scanner_viewport_geometry.dart",
-      "size": 4287,
-      "sha256": "4de72dcfda2e6910a393159e431d6b079f9453346325fdb30684924114014ebd"
+      "size": 5586,
+      "sha256": "274c8bcdc84b462fe899320fa40c49bcfccabef98ceb60610d0ee632fd90f91c"
     },
     {
       "path": "lib/features/settings/settings_screen.dart",
@@ -1358,13 +1358,13 @@
     },
     {
       "path": "README.md",
-      "size": 29644,
-      "sha256": "f0d8effab5d7db9e4f52f93b9adafc8c2b7247fb3ba37ebd77f1cc44d0aa192c"
+      "size": 30250,
+      "sha256": "463ef2a4d2265e9f1b6251cb8e3b1ebcc23e86b0b589f9829269949f0ea2aaa7"
     },
     {
       "path": "RELEASE_SOURCE.json",
-      "size": 2638,
-      "sha256": "78867469971255fe588241eadd4ed253560d75962defd0cd7d6235fda830fe3b"
+      "size": 2872,
+      "sha256": "f7050cbe947f2b0133ef6a413b7bb663e209fb00263395d6245d1e36db1d4b2a"
     },
     {
       "path": "schemas/rootcause-qr-evidence.schema.json",
@@ -1493,8 +1493,8 @@
     },
     {
       "path": "test/features/scanner_viewport_geometry_test.dart",
-      "size": 4929,
-      "sha256": "8f9866e0b4faa06b0762588272b3b25623aa3cc4f8481b6fec96b9d5141df6b7"
+      "size": 5662,
+      "sha256": "ad0edc7f75667e1d4fdaa16af1c380c3e82ef6826319dfdf6d7e05752d015868"
     },
     {
       "path": "test/features/tab_guide_screen_test.dart",
@@ -1677,6 +1677,11 @@
       "sha256": "54e49d4381a8694c18300f285d4700852e04f44b210dbed10094fd8d15c4963f"
     },
     {
+      "path": "tool/__pycache__/generate_identity_data.cpython-312.pyc",
+      "size": 11286,
+      "sha256": "d3c6f6b23603d46a56edd0ec69ca2d70008d2e93f52ff4b8962161232842b732"
+    },
+    {
       "path": "tool/__pycache__/generate_launcher_icons.cpython-312.pyc",
       "size": 9779,
       "sha256": "08d12e3cced58725bd4c24840053896ef658f6816976b1347258f1923e5fef43"
@@ -1708,8 +1713,8 @@
     },
     {
       "path": "tool/__pycache__/verify_rootcause_contract.cpython-312.pyc",
-      "size": 14522,
-      "sha256": "6e943ab7cf129fc03268248cf0ebe61ecd954f380d3291cad0bdc245c11ba73a"
+      "size": 14905,
+      "sha256": "c711e14d8ee44124a5520bd56e5d30419b1bd39f05180ed5a001e8c8f503737d"
     },
     {
       "path": "tool/bootstrap.ps1",
@@ -1788,13 +1793,13 @@
     },
     {
       "path": "tool/verify_rootcause_contract.py",
-      "size": 10709,
-      "sha256": "14c5f262b37ce1efbe70fddad806b7fef0df373cbcc1b069ef4822d973877950"
+      "size": 10711,
+      "sha256": "1db0c171b85bfd07a3ed376606946f5ac7ff76e6d02824503438aa67a6285bd1"
     },
     {
       "path": "VALIDATION.md",
-      "size": 16147,
-      "sha256": "e72f41f0ee34f7a0b7818c04bd17de36f6465090f5338f94f87bb48de63be633"
+      "size": 16871,
+      "sha256": "68e9e9c2dea880e65f9723f9da588082b2bef754b08abf910b858b978d602152"
     }
   ]
 }

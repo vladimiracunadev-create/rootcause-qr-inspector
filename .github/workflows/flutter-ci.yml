@@ -26,6 +26,16 @@ jobs:
         with:
           version: "0.12.5"
           enable-cache: false
+      - name: Pin the JDK
+        # El JDK era la única pieza sin fijar de una cadena que sí fija
+        # Flutter, Gradle, AGP y Kotlin. Cuando el runner pasó a un JDK 25,
+        # AGP 8.11.1 falló con un mensaje que era solo la versión: `25.0.5`.
+        # Java 21 es el LTS con el que esta combinación está probada.
+        uses: actions/setup-java@77dd5b2ce225ea11469928ac317850245a74ae78 # v6.2.0
+        with:
+          distribution: temurin
+          java-version: '21'
+
       - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
         with:
           flutter-version: ${{ env.FLUTTER_VERSION }}
@@ -83,6 +93,16 @@ jobs:
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version: '3.12'
+      - name: Pin the JDK
+        # El JDK era la única pieza sin fijar de una cadena que sí fija
+        # Flutter, Gradle, AGP y Kotlin. Cuando el runner pasó a un JDK 25,
+        # AGP 8.11.1 falló con un mensaje que era solo la versión: `25.0.5`.
+        # Java 21 es el LTS con el que esta combinación está probada.
+        uses: actions/setup-java@77dd5b2ce225ea11469928ac317850245a74ae78 # v6.2.0
+        with:
+          distribution: temurin
+          java-version: '21'
+
       - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
         with:
           flutter-version: ${{ env.FLUTTER_VERSION }}
