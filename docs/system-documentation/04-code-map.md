@@ -44,10 +44,14 @@ Inventario jerárquico de todo lo relevante del repositorio. La columna
 | Archivo | Símbolos principales | Responsabilidad | Depende de | Estado |
 |---|---|---|---|---|
 | `qr_investigation.dart` | `QrSeverity`, `QrFindingConfidence`, `QrFindingCategory`, `QrActionDecision`, `QrEvidenceFact`, `QrFinding`, `QrInvestigation` | Contrato de datos neutral al idioma, con `toJson`/`fromJson` | Nada externo | Activo |
-| `qr_investigation_engine.dart` | `QrInvestigationEngine.analyze` y 14 auxiliares privados | Las 26 reglas, el puntaje, la decisión y las hipótesis | `crypto`, política, `ParsedContent` | Activo |
+| `qr_investigation_engine.dart` | `QrInvestigationEngine.analyze` y 14 auxiliares privados | Las 28 reglas, el puntaje, la decisión y las hipótesis | `crypto`, política, `ParsedContent` | Activo |
 | `qr_analysis_policy.dart` | `QrTrustedBrand`, `QrAnalysisPolicy` | Umbrales y marcas de la organización | Nada | Activo · sin UI |
 | `qr_finding_text.dart` | `QrFindingText.title/explanation/recommendation/evidenceLabel/limitationLabel/severityLabel/actionLabel` | Única capa que traduce ids a español | Contrato | Activo |
 | `qr_evidence_exporter.dart` | `QrEvidenceExporter.toMap/toJson/verify` | Paquete forense redactado con checksum canónico | `crypto`, `ScanRecord` | Activo |
+| `public_suffix_list.dart` | `PublicSuffixList.publicSuffixOf/registrableDomainOf/isPublicSuffix/sameRegistrableDomain` | Algoritmo de la Public Suffix List: quién podría haber registrado este host | `public_suffix_data.dart` | Activo |
+| `public_suffix_data.dart` | `kIcannPublicSuffixRules`, `kPrivatePublicSuffixRules` | **Generado** por `tool/generate_identity_data.py` desde el archivo de Mozilla; lleva versión y SHA-256 de la fuente | Nada | Generado |
+| `unicode_skeleton.dart` | `UnicodeSkeleton.of/comparable/isWholeScriptConfusable` | Esqueleto UTS #39 con destino ASCII: qué palabra latina se lee en otra escritura | `unicode_confusables_data.dart` | Activo |
+| `unicode_confusables_data.dart` | `kConfusableAsciiMap` | **Generado** desde `confusables.txt` de Unicode; solo equivalencias con destino ASCII | Nada | Generado |
 
 ### `core/security/`
 
@@ -129,7 +133,10 @@ Inventario jerárquico de todo lo relevante del repositorio. La columna
 | `scanner/data/mobile_scanner_engine.dart` | `MobileScannerEngine` | Configuración real del controlador y de la resolución | Activo |
 | `scanner/widgets/scan_status_bar.dart` | `ScanPhase`, `ScanStatusBar` | Estado siempre visible y anunciado | Activo |
 | `scanner/widgets/scanner_overlay.dart` | `ScannerOverlay` | Atenúa fuera del marco y barre la línea | Activo |
-| `scanner/widgets/scanner_viewport_geometry.dart` | `ScannerViewportGeometry` | Geometría del marco sin solapes | Activo |
+| `scanner/widgets/scanner_viewport_geometry.dart` | `ScannerViewportGeometry` | Geometría del marco sin solapes, y amplitud del pellizco | Activo |
+| `scanner/widgets/inventory_viewport_geometry.dart` | `InventoryViewportGeometry` | Alto del visor del inventario y su marco ancho | Activo |
+| `scanner/widgets/reading_area_pinch.dart` | `ReadingAreaPinchMixin`, `ReadingAreaBadge` | El gesto de dos dedos y su porcentaje, compartidos por inspección e inventario | Activo |
+| `scanner/domain/idle_reading_coach.dart` | `IdleReadingCoach` | Qué decir cuando la cámara analiza y no lee nada | Activo |
 | `result/scan_result_sheet.dart` | `ScanResultsSheet`, `ScanRecordCard` | Hechos, hipótesis, límites, acciones y evidencia | Activo |
 | `history/history_screen.dart` | `HistoryScreen` | Búsqueda, filtros, notas, importación y exportación | Activo |
 | `inventory/inventory_screen.dart` | `InventoryScreen` | Sesiones y conteo continuo | Activo |
@@ -148,7 +155,8 @@ Inventario jerárquico de todo lo relevante del repositorio. La columna
 | `bootstrap.py` | Genera y parchea `android/`, `ios/`, `web/` | Desarrollo y los tres workflows |
 | `bootstrap.sh` · `bootstrap.ps1` | Envoltorios por sistema | Desarrollo |
 | `validate_structure.py` | 14 comprobaciones offline del repositorio | CI y desarrollo |
-| `verify_rootcause_contract.py` | Coherencia de las 26 reglas y del contrato de evidencia | CI y desarrollo |
+| `verify_rootcause_contract.py` | Coherencia de las 28 reglas y del contrato de evidencia | CI y desarrollo |
+| `generate_identity_data.py` | Genera las tablas de sufijos y confusables desde sus fuentes; `--check` falla si se desincronizan | CI y actualización de datos |
 | `generate_sbom.py` | SBOM CycloneDX | CI |
 | `generate_license_inventory.py` | Inventario de licencias | CI |
 | `generate_checksums.py` | SHA-256 de archivos | CI de release |
@@ -176,7 +184,11 @@ Inventario jerárquico de todo lo relevante del repositorio. La columna
 | `core/async_write_queue_test.dart` | 2 | Orden y aislamiento de fallos |
 | `core/cancellation_token_test.dart` | 2 | Cancelación y fracción de progreso |
 | `features/scan_status_bar_test.dart` | 7 | Los estados visibles, incluido `Código leído` |
-| `features/scanner_viewport_geometry_test.dart` | 3 | El marco no se solapa con los controles |
+| `features/scanner_viewport_geometry_test.dart` | 9 | El marco no se solapa con los controles en ninguna amplitud; aritmética del pellizco y porcentaje |
+| `features/inventory_viewport_geometry_test.dart` | 5 | El visor del inventario crece sin comerse la lista y su marco queda sobre la barra de estado |
+| `features/idle_reading_coach_test.dart` | 4 | Los avisos escalan y ninguno interrumpe a quien todavía apunta |
+| `core/domain_identity_test.dart` | 24 | Sufijo público, esqueleto UTS #39 y las dos reglas de identidad, con sus falsos positivos |
+| `core/qr_fixtures_test.dart` | 17 | Los 16 fixtures del manifiesto ejecutados contra el motor |
 | `features/scanner_engine_config_test.dart` | 3 | Resolución y modo de detección de la cámara |
 | `services/import_service_test.dart` | 5 | Entrada no confiable y límites |
 | `services/history_repository_test.dart` | 1 | `replaceAll` atómico |

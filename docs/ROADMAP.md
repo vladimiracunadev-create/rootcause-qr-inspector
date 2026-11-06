@@ -5,7 +5,7 @@ comunica como entregada cuando existe código, prueba, documentación y gate.
 
 ## 0.1 — contrato inicial
 
-- motor local de 26 reglas con ids estables;
+- motor local de 28 reglas con ids estables;
 - separación entre observación, hallazgo, hipótesis y decisión;
 - evidencia `rootcause.evidence.qr.v1` redactada por defecto;
 - captura, parsers, historial e inventario cifrados heredados y adaptados;

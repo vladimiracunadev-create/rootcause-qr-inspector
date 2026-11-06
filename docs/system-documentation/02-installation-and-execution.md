@@ -204,7 +204,7 @@ la landing, iconos y presencia del lockfile.
 python tool/verify_rootcause_contract.py
 ```
 
-Comprueba que las 26 reglas del motor existen también en el JSON Schema, en los
+Comprueba que las 28 reglas del motor existen también en el JSON Schema, en los
 textos de la interfaz y en la documentación de heurísticas; que los fixtures
 solo usan dominios reservados; que la política de ejemplo es sintética; y que el
 contrato de redacción de la evidencia sigue intacto.

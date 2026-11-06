@@ -7,7 +7,7 @@
 
 ## Qué significa “detectar” en este repositorio
 
-Una carga obtenida desde imagen o PDF pasa por las mismas 26 reglas y la misma
+Una carga obtenida desde imagen o PDF pasa por las mismas 28 reglas y la misma
 política de acción que una captura de cámara. El origen del archivo no eleva la
 confianza. La UI distingue el destino codificado y el host parseado de un
 destino final remoto, que no se resuelve automáticamente.

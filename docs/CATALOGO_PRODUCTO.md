@@ -8,11 +8,11 @@ landing, descripción o release promete más, prevalecen aquí los límites.
 | Campo | Definición |
 |---|---|
 | Producto | RootCause QR Inspector |
-| Versión | 0.1.4 |
+| Versión | 0.2.0 |
 | Superficie | Cargas QR y otros códigos 1D/2D antes de entregarlos a otra app |
 | Tecnología | Flutter y Dart; producto exclusivamente móvil para Android/iOS |
 | Formato primario | teléfonos; tablet Android/iPad quedan pendientes de verificación específica |
-| Modelo | Análisis local determinista con 26 reglas identificables |
+| Modelo | Análisis local determinista con 28 reglas identificables |
 | Evidencia | `rootcause.evidence.qr.v1`, redactada por defecto y con checksum SHA-256 |
 | Persistencia | Historial e inventarios locales cifrados con AES-256-GCM |
 | Privacidad | Sin cuenta, publicidad, analítica ni telemetría |

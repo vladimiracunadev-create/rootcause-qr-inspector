@@ -9,6 +9,7 @@ import 'package:rootcause_qr_inspector/core/security/data_maintenance_service.da
 import 'package:rootcause_qr_inspector/features/formats/formats_screen.dart';
 import 'package:rootcause_qr_inspector/features/help/tab_guide_screen.dart';
 import 'package:rootcause_qr_inspector/features/recovery/recovery_screen.dart';
+import 'package:rootcause_qr_inspector/features/scanner/widgets/scanner_viewport_geometry.dart';
 import 'package:rootcause_qr_inspector/models/app_settings.dart';
 import 'package:rootcause_qr_inspector/services/biometric_service.dart';
 import 'package:rootcause_qr_inspector/state/scan_store.dart';
@@ -156,6 +157,31 @@ class _SettingsScreenState extends State<SettingsScreen> {
               value: value.useScanWindow,
               onChanged: (bool enabled) =>
                   _update(value.copyWith(useScanWindow: enabled)),
+            ),
+            // Equivalente accesible del pellizco: el gesto es el camino normal
+            // en el teléfono, pero una función que solo existe como gesto no
+            // la puede usar quien navega con lector de pantalla o con el
+            // control por conmutador.
+            ListTile(
+              title: const AppText('Zona de lectura'),
+              subtitle: AppText(
+                '${ScannerViewportGeometry.percentageFor(value.readingAreaScale)} %. '
+                'Pellizca sobre la cámara para ampliarla o reducirla; al máximo '
+                'la vista previa ocupa toda la pestaña.',
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              child: Slider(
+                value: value.readingAreaScale.clamp(0.0, 1.0),
+                divisions: 10,
+                label:
+                    '${ScannerViewportGeometry.percentageFor(value.readingAreaScale)} %',
+                semanticFormatterCallback: (double scale) =>
+                    'Zona de lectura al ${ScannerViewportGeometry.percentageFor(scale)} por ciento',
+                onChanged: (double scale) =>
+                    _update(value.copyWith(readingAreaScale: scale)),
+              ),
             ),
             SwitchListTile(
               title: const AppText('Linterna al iniciar'),

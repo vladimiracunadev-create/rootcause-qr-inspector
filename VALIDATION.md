@@ -1,14 +1,41 @@
 # Estado de validación
 
-**Versión:** 0.1.4+5
+**Versión:** 0.2.0+6
 
-**Fecha:** 24 de septiembre de 2026
+**Fecha:** 6 de noviembre de 2026
 **Fuente derivada:** Universal Code Scanner 1.1.0+2, commit
 `c1f98781575bf8223b19ad8344fdfddeaccef373`
 
 Este archivo distingue lo ejecutado sobre **RootCause QR Inspector** de lo que
 solo fue validado en la base heredada y de lo que todavía exige hardware o
 credenciales de distribución.
+
+## Release 0.2.0 · 6 de noviembre de 2026
+
+| Comprobación | Resultado real |
+|---|---|
+| `dart format --output=none --set-exit-if-changed lib test tool` | **Correcto:** sin cambios. Gate nuevo: antes no existía y dos archivos llevaban tiempo dentro sin formatear |
+| `flutter analyze --fatal-infos` | **Correcto:** sin issues con Flutter 3.44.7 / Dart 3.12.2 |
+| `flutter test` | **Correcto:** 163 pruebas aprobadas (eran 107) |
+| `python tool/verify_rootcause_contract.py` | **Correcto:** 28 reglas coherentes entre motor, esquema, textos, fixtures, política, versión y redacción |
+| `python tool/validate_structure.py --require-lock` | **Correcto:** estructura y lock validados |
+| `python tool/generate_identity_data.py --check` | **Correcto:** las tablas generadas corresponden a sus fuentes |
+| `flutter build web --release` | **Correcto:** `build/web`; el análisis de archivos en navegador no existe y está declarado como decisión |
+| `flutter build apk --release` | **Correcto:** APK release **local** de 94.103.428 bytes, SHA-256 `6d8a870a39eb9ed5dacf241c93e3c1627b299f48574a2337033b2839c6740dba`. El artefacto publicado lo construye la CI del tag y su checksum es el del `.sha256` del release |
+| Pellizco en emulador Android API 36 | **Correcto:** `integration_test/reading_area_gesture_test.dart` separa y junta dos punteros reales sobre la vista previa; el encabezado se retira al máximo, el indicador declara `100 % · máxima`, y al juntar los dedos vuelve a `50 %` con encabezado. 37 s de ejecución. Requiere conceder la cámara antes —`adb shell pm grant dev.vladimiracuna.rootcause_qr_inspector android.permission.CAMERA`—, por R-20 |
+| Arranque en emulador Android API 36 | **Correcto:** `integration_test/app_launch_test.dart`, 10 s; la aplicación llega a la pantalla de inspección con base cifrada y preferencias reales. Antes de conceder la cámara fallaba por R-20, no por el arranque |
+| Banco de regresión | **Correcto:** los 16 fixtures se ejecutan contra el motor; el primero en correr delató `credential-lure-path` sin `acceso`, abierto desde 0.1.0 |
+| Host Unicode | **Correcto:** `https://раураӏ.example/pagar` pasa de `normal` sin hallazgos a `critical` con `host-whole-script-confusable`, `host-mixed-script` y `host-unicode`, y con la lectura latina `paypal.example` como evidencia |
+| Suplantación por sufijo incrustado | **Correcto:** `https://pagos.com.cuenta.example/pagar` declara `host-embedded-suffix` con dominio registrable `cuenta.example`; `https://es.example.com/precios` no lo declara |
+| Falso positivo de dominio internacional | **Correcto:** `https://café.example/menu` conserva solo `host-unicode`; el latín con diacríticos no se trata como engaño |
+
+**Lo que estos resultados NO demuestran.** El pellizco se ejecutó con dos
+punteros inyectados en un emulador, no con dos dedos en un teléfono: no hay
+evidencia de que no compita con el toque de enfoque de una cámara física ni de
+que el porcentaje se lea a pleno sol. La cámara virtual del AVD no sustituye a
+la matriz física de fixtures, que sigue **PENDIENTE**. Las tablas de identidad
+tienen fecha: un sufijo creado después del 4 de noviembre de 2026 no se
+reconoce.
 
 ## Release 0.1.4 · 24 de septiembre de 2026
 

@@ -1,8 +1,8 @@
 {
   "application": "RootCause QR Inspector",
-  "version": "0.1.4+5",
-  "releaseType": "functional-fix-and-improvement",
-  "assembledAt": "2026-09-24",
+  "version": "0.2.0+6",
+  "releaseType": "feature-and-functional-fix",
+  "assembledAt": "2026-11-06",
   "toolchainTarget": {
     "flutter": "3.44.7",
     "dart": ">=3.12.0 <4.0.0"
@@ -12,23 +12,45 @@
     "version": "1.1.0+2",
     "commit": "c1f98781575bf8223b19ad8344fdfddeaccef373"
   },
+  "thirdPartyData": [
+    {
+      "name": "Public Suffix List",
+      "origin": "https://publicsuffix.org/list/public_suffix_list.dat",
+      "license": "MPL-2.0",
+      "declaredVersion": "2026-11-04_19-07-29_UTC",
+      "sha256": "019fcc1daca33416846853ee1f3b99ea6cc6f03388ecd4ce3e5317039bcfd004",
+      "icannRules": 6948,
+      "privateRules": 3458
+    },
+    {
+      "name": "Unicode confusables (UTS #39)",
+      "origin": "https://www.unicode.org/Public/security/latest/confusables.txt",
+      "license": "Unicode-TOU",
+      "declaredVersion": "18.0.0",
+      "sourceDate": "2026-08-06",
+      "sha256": "6ed3ee967c9dfdf6677d563c9985182fbc50a2efb7d6059cd57b2e2ce18f5b92",
+      "asciiTargetMappings": 1023,
+      "scope": "solo equivalencias con destino ASCII; sin normalizacion NFD"
+    }
+  ],
   "validation": {
     "offlineStructure": true,
+    "formatGate": true,
+    "generatedIdentityDataInSync": true,
     "rootcauseContract": {
       "valid": true,
-      "rules": 26,
-      "fixtures": 12,
-      "declaredDartFlutterCases": 108
+      "engineVersion": "0.2.0",
+      "rules": 28,
+      "fixtures": 16,
+      "fixturesExecutedAgainstEngine": true,
+      "declaredDartFlutterCases": 164
     },
     "flutterRuntimeExecuted": true,
     "functionalAndroidEmulator": {
       "executed": true,
       "api": 36,
-      "pdfPagesInspected": 5,
-      "codesDetected": 4,
-      "code128Detected": true,
-      "historyHtmlShareObserved": true,
-      "externalBrowserObserved": true
+      "startupReached": true,
+      "readingAreaPinchTwoPointers": true
     },
     "physicalDevice": {
       "executed": false,
@@ -36,22 +58,26 @@
         "audible sound",
         "physical vibration",
         "camera",
-        "real-world PDF performance"
+        "real-world PDF performance",
+        "reading-area pinch against camera tap-to-focus"
       ]
     },
     "executed": {
       "analyzeFatalInfos": true,
-      "flutterTestsPassed": 107,
+      "flutterTestsPassed": 163,
       "webReleaseBuild": true,
-      "localhostExports": [
-        "png",
-        "svg"
-      ]
+      "apkReleaseBuild": true,
+      "apkBytesLocalBuild": 94103428,
+      "apkSha256LocalBuild": "6d8a870a39eb9ed5dacf241c93e3c1627b299f48574a2337033b2839c6740dba",
+      "publishedApkChecksumSource": "release asset rootcause-qr-inspector-v0.2.0-android.apk.sha256, built by the tag workflow"
     }
   },
   "releaseGateRequired": [
+    "dart format --output=none --set-exit-if-changed lib test tool",
     "flutter analyze --fatal-infos",
     "flutter test",
+    "python tool/verify_rootcause_contract.py",
+    "python tool/generate_identity_data.py --check",
     "flutter build web --release",
     "flutter build apk --release",
     "android-emulator functional validation"

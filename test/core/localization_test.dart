@@ -19,10 +19,7 @@ void main() {
     for (final String code in <String>['es', 'en', 'fr', 'de']) {
       expect(AppLocalizations.delegate.isSupported(Locale(code)), isTrue);
     }
-    expect(
-      AppLocalizations.delegate.isSupported(const Locale('it')),
-      isFalse,
-    );
+    expect(AppLocalizations.delegate.isSupported(const Locale('it')), isFalse);
   });
 
   test('primary navigation and Inventory help resolve in every language', () {
@@ -72,10 +69,7 @@ void main() {
           GlobalCupertinoLocalizations.delegate,
         ],
         home: Column(
-          children: <Widget>[
-            AppText('Inventario'),
-            AppText('PAYLOAD-123'),
-          ],
+          children: <Widget>[AppText('Inventario'), AppText('PAYLOAD-123')],
         ),
       ),
     );

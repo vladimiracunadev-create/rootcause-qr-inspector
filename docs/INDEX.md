@@ -20,8 +20,9 @@ completo ni la reputación remota del destino.
 | Documento | Contenido |
 |---|---|
 | [`DETECCION_AMENAZAS.md`](DETECCION_AMENAZAS.md) | Qué amenazas aproxima el sensor y con qué señales locales |
-| [`rootcause/HEURISTICS.md`](rootcause/HEURISTICS.md) | Especificación de las 26 reglas, pesos, evidencia y falsos positivos |
+| [`rootcause/HEURISTICS.md`](rootcause/HEURISTICS.md) | Especificación de las 28 reglas, pesos, evidencia y falsos positivos |
 | [`rootcause/LIMITATIONS.md`](rootcause/LIMITATIONS.md) | Fronteras de conocimiento y renuncias deliberadas |
+| [`rootcause/IDENTITY_DATA.md`](rootcause/IDENTITY_DATA.md) | Public Suffix List y confusables UTS #39: procedencia, alcance declarado y cómo se actualizan |
 | [`security/THREAT_MODEL.md`](security/THREAT_MODEL.md) | Activos, actores, controles y riesgo residual |
 | [`../schemas/rootcause-qr-evidence.schema.json`](../schemas/rootcause-qr-evidence.schema.json) | Contrato portable de evidencia |
 
@@ -34,6 +35,7 @@ completo ni la reputación remota del destino.
 | [`CI_GITHUB.md`](CI_GITHUB.md) | Workflows, permisos, artefactos y réplica local |
 | [`RELEASE.md`](RELEASE.md) | Gate de publicación y matriz física pendiente |
 | [`quality/COMPATIBILITY_CONTRACT.md`](quality/COMPATIBILITY_CONTRACT.md) | Dependencias y compatibilidad que deben preservarse |
+| [`quality/DEPENDENCY_POLICY.md`](quality/DEPENDENCY_POLICY.md) | Qué bump se sube, cuál se declara y espera, y cuál se rechaza |
 | [`../CONTRIBUTING.md`](../CONTRIBUTING.md) | Reglas para cambios, especialmente nuevas heurísticas |
 
 ## Producto, procedencia y familia

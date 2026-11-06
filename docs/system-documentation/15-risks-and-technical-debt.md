@@ -14,13 +14,17 @@ explícita.
 | Evidencia | **Comprobado** en el código, o **inferencia** |
 | Prioridad | P1 (antes de la próxima entrega) · P2 (esta serie) · P3 (cuando toque) |
 
-Resumen: **19 hallazgos** — 0 críticos, 6 altos, 8 medios, 5 bajos.
+Resumen: **20 hallazgos** — 0 críticos, 7 altos, 8 medios, 5 bajos.
+
+**Estado en 0.2.0:** R-01 **resuelto**. El resto sigue abierto y mantiene su
+clasificación. Un hallazgo resuelto conserva su entrada: borrarla haría
+desaparecer la razón por la que se hizo el trabajo.
 
 ---
 
 ## Severidad alta
 
-### R-01 · Los fixtures de regresión no los ejecuta ninguna prueba
+### R-01 · Los fixtures de regresión no los ejecuta ninguna prueba · RESUELTO EN 0.2.0
 
 | Aspecto | Detalle |
 |---|---|
@@ -29,6 +33,18 @@ Resumen: **19 hallazgos** — 0 críticos, 6 altos, 8 medios, 5 bajos.
 | **Evidencia** | **Comprobado**: `grep -rn "fixtures" test/` no devuelve nada. `verify_rootcause_contract.py` valida la *forma* del manifiesto, no ejecuta el motor contra él |
 | **Impacto** | Los 12 casos declaran `expectedSeverity`, `expectedAction`, `mustInclude` y `mustExclude`, y nadie comprueba que el motor los cumpla. Un cambio de peso o de condición puede pasar el gate completo sin que nadie note la regresión |
 | **Recomendación** | Añadir una prueba que lea el manifiesto, ejecute `QrInvestigationEngine.analyze` sobre cada carga y compare los cuatro campos. Coste estimado: una tarde. Es la mejora con mejor relación coste/beneficio del repositorio |
+| **Resolución** | 0.2.0: `test/core/qr_fixtures_test.dart` ejecuta los 16 casos y compara los cuatro campos más la presencia del id en `evaluatedRuleIds`. El primer caso ejecutado encontró una regresión real que llevaba abierta desde antes: `userinfo-host-confusion` declaraba `credential-lure-path` y el motor no lo producía porque el catálogo de rutas señuelo tenía `access` y no `acceso`. Eso es exactamente lo que este hallazgo predecía |
+
+### R-20 · `MobileScanner` arranca y detiene un controlador que no es suyo
+
+| Aspecto | Detalle |
+|---|---|
+| **Severidad** | Alta · **Probabilidad** Alta · **Prioridad P1** |
+| **Ubicación** | `lib/features/scanner/scanner_screen.dart`, `lib/features/inventory/inventory_screen.dart`, `MobileScannerController(autoStart: true)` por defecto |
+| **Evidencia** | **Comprobado** en `mobile_scanner-7.4.0/lib/src/mobile_scanner.dart:207` y `:220`: `_initializeController` llama a `controller.start()` y `_disposeController` a `controller.stop()` **siempre que `autoStart` sea cierto**, también cuando el controlador lo pasa la pantalla. Observado en el emulador API 36 al ejecutar `integration_test/`: `MobileScannerException(controllerDisposed, The MobileScannerController was used after it was disposed)` lanzada después de que la prueba terminara, con la pila en `_MobileScannerState._initializeController` |
+| **Impacto** | Tres consecuencias: (1) en cada montaje hay **dos** `start()` compitiendo, el del widget y el de la pantalla; (2) al desmontar, el widget llama `stop()` mientras la pantalla llama `dispose()`, y si el arranque estaba en vuelo la reanudación toca un controlador ya liberado; (3) el comentario de `ScannerScreen` afirma que «`MobileScanner` no gestiona el ciclo de vida», y eso solo es cierto a medias. La excepción es asíncrona y no mata la aplicación, pero es exactamente la clase de carrera que produjo el fallo de 0.1.0: una vista previa congelada al volver del segundo plano |
+| **Recomendación** | Pasar `autoStart: false` a los dos controladores y arrancar la cámara explícitamente en `initState` —hoy el primer arranque lo hace el plugin, porque `didChangeAppLifecycleState` no se dispara al montar—. **No se hizo en 0.2.0 a propósito:** es la ruta de arranque de la cámara, la más sensible del producto, y solo un teléfono puede responder por ella. Un error aquí deja la cámara sin arrancar, que es peor que la excepción que corrige |
+| **Mientras no se arregle** | Para ejecutar `integration_test/` hay que conceder la cámara antes: `adb shell pm grant dev.vladimiracuna.rootcause_qr_inspector android.permission.CAMERA`. Sin el permiso, el arranque queda pendiente durante toda la prueba y la excepción llega al desmontaje |
 
 ### R-02 · La migración del historial heredado no tiene prueba
 
@@ -272,7 +288,7 @@ propiedades son sólidas y merecen protección explícita:
 
 ### R-20 · Inspección de archivos pendiente de prueba nativa
 
-**Severidad:** media. La lógica, los fixtures, el análisis, las 107 pruebas y
+**Severidad:** media. La lógica, los fixtures, el análisis, las 163 pruebas y
 los builds web/APK están verdes. No debe declararse validación funcional
 completa de la matriz hasta decodificar los cuatro fixtures con
 `mobile_scanner` en un dispositivo Android.

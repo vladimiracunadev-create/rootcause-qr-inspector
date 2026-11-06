@@ -8,14 +8,19 @@
       "expectedSeverity": "normal",
       "expectedAction": "allow",
       "mustInclude": [],
-      "mustExclude": ["transport-http", "credential-lure-path"]
+      "mustExclude": [
+        "transport-http",
+        "credential-lure-path"
+      ]
     },
     {
       "id": "plain-http",
       "payload": "http://example.com/documento",
       "expectedSeverity": "warning",
       "expectedAction": "confirm",
-      "mustInclude": ["transport-http"],
+      "mustInclude": [
+        "transport-http"
+      ],
       "mustExclude": []
     },
     {
@@ -23,7 +28,10 @@
       "payload": "https://banco.example@evil.example/acceso",
       "expectedSeverity": "critical",
       "expectedAction": "confirm",
-      "mustInclude": ["authority-userinfo", "credential-lure-path"],
+      "mustInclude": [
+        "authority-userinfo",
+        "credential-lure-path"
+      ],
       "mustExclude": []
     },
     {
@@ -31,7 +39,10 @@
       "payload": "https://xn--pple-43d.example/login",
       "expectedSeverity": "critical",
       "expectedAction": "confirm",
-      "mustInclude": ["host-punycode", "credential-lure-path"],
+      "mustInclude": [
+        "host-punycode",
+        "credential-lure-path"
+      ],
       "mustExclude": []
     },
     {
@@ -39,7 +50,10 @@
       "payload": "https://192.168.1.10/panel",
       "expectedSeverity": "critical",
       "expectedAction": "confirm",
-      "mustInclude": ["host-ip-literal", "host-private-or-local"],
+      "mustInclude": [
+        "host-ip-literal",
+        "host-private-or-local"
+      ],
       "mustExclude": []
     },
     {
@@ -47,7 +61,9 @@
       "payload": "https://bit.ly/example-path",
       "expectedSeverity": "warning",
       "expectedAction": "confirm",
-      "mustInclude": ["host-shortener"],
+      "mustInclude": [
+        "host-shortener"
+      ],
       "mustExclude": []
     },
     {
@@ -55,7 +71,9 @@
       "payload": "https://download.example/update.apk",
       "expectedSeverity": "critical",
       "expectedAction": "confirm",
-      "mustInclude": ["download-dangerous-extension"],
+      "mustInclude": [
+        "download-dangerous-extension"
+      ],
       "mustExclude": []
     },
     {
@@ -63,7 +81,9 @@
       "payload": "javascript:alert(1)",
       "expectedSeverity": "critical",
       "expectedAction": "block",
-      "mustInclude": ["scheme-blocked"],
+      "mustInclude": [
+        "scheme-blocked"
+      ],
       "mustExclude": []
     },
     {
@@ -71,7 +91,9 @@
       "payload": "https://example.com/out?redirect=https%3A%2F%2Fevil.example%2Flogin",
       "expectedSeverity": "critical",
       "expectedAction": "confirm",
-      "mustInclude": ["redirect-nested-domain"],
+      "mustInclude": [
+        "redirect-nested-domain"
+      ],
       "mustExclude": []
     },
     {
@@ -79,24 +101,82 @@
       "payload": "bitcoin:bc1qexample?amount=0.01",
       "expectedSeverity": "warning",
       "expectedAction": "inspectOnly",
-      "mustInclude": ["payment-instruction"],
-      "mustExclude": ["scheme-blocked"]
+      "mustInclude": [
+        "payment-instruction"
+      ],
+      "mustExclude": [
+        "scheme-blocked"
+      ]
     },
     {
       "id": "otp-secret",
       "payload": "otpauth://totp/Ejemplo?secret=SYNTHETIC123",
       "expectedSeverity": "warning",
       "expectedAction": "inspectOnly",
-      "mustInclude": ["sensitive-secret"],
-      "mustExclude": ["scheme-blocked"]
+      "mustInclude": [
+        "sensitive-secret"
+      ],
+      "mustExclude": [
+        "scheme-blocked"
+      ]
     },
     {
       "id": "binary-opaque",
       "payload": "binary-base64:AAH+/w==",
       "expectedSeverity": "warning",
       "expectedAction": "inspectOnly",
-      "mustInclude": ["opaque-binary-payload"],
+      "mustInclude": [
+        "opaque-binary-payload"
+      ],
       "mustExclude": []
+    },
+    {
+      "id": "whole-script-confusable-host",
+      "payload": "https://раураӏ.example/pagar",
+      "expectedSeverity": "critical",
+      "expectedAction": "confirm",
+      "mustInclude": [
+        "host-whole-script-confusable"
+      ],
+      "mustExclude": [
+        "host-punycode"
+      ]
+    },
+    {
+      "id": "accented-latin-host-is-not-confusable",
+      "payload": "https://café.example/menu",
+      "expectedSeverity": "warning",
+      "expectedAction": "confirm",
+      "mustInclude": [
+        "host-unicode"
+      ],
+      "mustExclude": [
+        "host-whole-script-confusable",
+        "host-mixed-script"
+      ]
+    },
+    {
+      "id": "embedded-public-suffix-host",
+      "payload": "https://pagos.com.cuenta.example/pagar",
+      "expectedSeverity": "warning",
+      "expectedAction": "confirm",
+      "mustInclude": [
+        "host-embedded-suffix"
+      ],
+      "mustExclude": [
+        "host-deep-subdomains"
+      ]
+    },
+    {
+      "id": "language-subdomain-is-not-embedded-suffix",
+      "payload": "https://es.example.com/precios",
+      "expectedSeverity": "normal",
+      "expectedAction": "allow",
+      "mustInclude": [],
+      "mustExclude": [
+        "host-embedded-suffix",
+        "host-deep-subdomains"
+      ]
     }
   ]
 }

@@ -103,7 +103,7 @@ flowchart TD
     RAW --> TRIM["trim() para el parser"]
     TRIM --> PARSE["ContentInterpreter.parse"]
     PARSE --> PC["ParsedContent<br/>kind · fields · sensitive"]
-    TRIM --> RULES["26 reglas"]
+    TRIM --> RULES["28 reglas"]
     PC --> RULES
     RULES --> FIND["findings[] con evidencia"]
     FIND --> AGG["severity = máximo<br/>score = suma acotada a 100"]

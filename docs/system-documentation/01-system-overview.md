@@ -13,7 +13,7 @@ contenido codificado en un código gráfico y la forma en que ese contenido
 intenta convertirse en una acción.
 
 **Comprobado:** `pubspec.yaml` declara `name: rootcause_qr_inspector`,
-`version: 0.1.4+5`, y ninguna dependencia de red o analítica. La única
+`version: 0.2.0+6`, y ninguna dependencia de red o analítica. La única
 dependencia que abre algo hacia afuera es `url_launcher`, que entrega una URI a
 otra aplicación del sistema cuando la persona lo confirma.
 
@@ -28,7 +28,7 @@ El sistema invierte ese orden:
 
 1. captura la carga sin ejecutarla;
 2. la interpreta y muestra sus campos;
-3. aplica 26 reglas locales que producen **hechos observables**;
+3. aplica 28 reglas locales que producen **hechos observables**;
 4. deriva **hipótesis** separadas de esos hechos;
 5. decide qué acción permite, y solo entonces ofrece un botón.
 
@@ -70,7 +70,7 @@ biometría o el PIN del dispositivo.
 | Lectura con cámara | `lib/features/scanner/scanner_screen.dart` | Activo |
 | Lectura desde imagen y PDF | mismo archivo + `lib/services/pdf_page_renderer_io.dart` | Activo · PDF no disponible en web |
 | Interpretación de contenido | `lib/services/content_interpreter.dart` | Activo |
-| Motor de 26 reglas | `lib/core/investigation/qr_investigation_engine.dart` | Activo |
+| Motor de 28 reglas | `lib/core/investigation/qr_investigation_engine.dart` | Activo |
 | Resultado explicado | `lib/features/result/scan_result_sheet.dart` | Activo |
 | Evidencia exportable | `lib/core/investigation/qr_evidence_exporter.dart` | Activo |
 | Historial cifrado | `lib/services/history_repository.dart` | Activo |
@@ -88,7 +88,7 @@ flowchart TD
     A["Cámara, imagen o PDF"] --> B["Captura: mobile_scanner"]
     B --> C["ScanRecord.fromBarcode"]
     C --> D["ContentParserRegistry<br/>interpreta la carga"]
-    C --> E["QrInvestigationEngine<br/>26 reglas locales"]
+    C --> E["QrInvestigationEngine<br/>28 reglas locales"]
     D --> E
     E --> F["Hallazgos + evidencia<br/>Hipótesis separadas<br/>Decisión de acción"]
     F --> G["Hoja de resultado"]

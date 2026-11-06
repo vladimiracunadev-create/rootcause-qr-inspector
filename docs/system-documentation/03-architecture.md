@@ -28,7 +28,7 @@ mindmap
       Entrada manual
     Núcleo puro
       Intérprete de contenido
-      Motor de 26 reglas
+      Motor de 28 reglas
       Política de análisis
       Exportador de evidencia
     Persistencia
@@ -354,7 +354,7 @@ migraciones.
 | Motor de captura | `MobileScannerEngine` | Implementar `ScannerEngine` |
 | Formatos de contenido | `LegacyContentParser` | `ContentParserRegistry.register` con prioridad mayor que -1000 |
 | Política organizacional | `QrAnalysisPolicy` por API | Falta la pantalla de carga y administración |
-| Reglas | 26 reglas en el motor | Motor, textos, esquema, fixture, pruebas, documentación y `engineVersion`, todo en la misma entrega |
+| Reglas | 28 reglas en el motor | Motor, textos, esquema, fixture, pruebas, documentación y `engineVersion`, todo en la misma entrega |
 | Persistencia | Sembast | El opener por compilación condicional |
 | Reputación remota | Ninguna | Bandera `urlReputation`, apagada |
 

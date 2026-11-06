@@ -6,12 +6,21 @@ import 'package:flutter/material.dart';
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets('application reaches normal or safe startup screen', (WidgetTester tester) async {
+  testWidgets('application reaches normal or safe startup screen', (
+    WidgetTester tester,
+  ) async {
     await tester.pumpWidget(const BootstrapHost());
     await tester.pump(const Duration(seconds: 5));
     expect(
-      find.byWidgetPredicate((Widget widget) =>
-          widget is Text && <String>{'Inspector de seguridad QR', 'QR security inspector', 'Inicio seguro'}.contains(widget.data)),
+      find.byWidgetPredicate(
+        (Widget widget) =>
+            widget is Text &&
+            <String>{
+              'Inspector de seguridad QR',
+              'QR security inspector',
+              'Inicio seguro',
+            }.contains(widget.data),
+      ),
       findsAtLeastNWidgets(1),
     );
   });

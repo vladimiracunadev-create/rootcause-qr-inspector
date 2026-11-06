@@ -89,7 +89,7 @@ Ejemplo **redactado** (valores ficticios):
   },
   "investigation": {
     "schema": "rootcause.qr-investigation.v1",
-    "engineVersion": "0.1.0",
+    "engineVersion": "0.2.0",
     "analyzedAt": "2026-08-26T14:02:11.000Z",
     "payloadSha256": "3b1f...c9",
     "verdict": { "severity": "critical", "score": 33, "action": "confirm" },

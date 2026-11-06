@@ -10,6 +10,9 @@ abstract final class QrFindingText {
     'authority-userinfo' => 'Credenciales dentro de la dirección',
     'host-punycode' => 'Dominio expresado con Punycode',
     'host-mixed-script' => 'Alfabetos mezclados en el dominio',
+    'host-whole-script-confusable' =>
+      'Dominio escrito en otro alfabeto que se lee como latino',
+    'host-embedded-suffix' => 'Dominio conocido como subdominio ajeno',
     'host-unicode' => 'Caracteres internacionales en el dominio',
     'host-ip-literal' => 'Dirección IP en vez de dominio',
     'host-private-or-local' => 'Destino local o privado',
@@ -44,6 +47,10 @@ abstract final class QrFindingText {
       'Punycode puede representar caracteres visualmente parecidos a los de otra marca.',
     'host-mixed-script' =>
       'El nombre combina alfabetos que pueden producir imitaciones visuales.',
+    'host-whole-script-confusable' =>
+      'Todo el nombre usa otro alfabeto y, carácter por carácter, se lee como una palabra latina distinta.',
+    'host-embedded-suffix' =>
+      'Un dominio de primer nivel aparece como etiqueta intermedia: el dominio que manda es el del final.',
     'host-unicode' =>
       'La escritura internacional es válida, pero requiere comprobar el nombre con cuidado.',
     'host-ip-literal' =>
@@ -115,6 +122,9 @@ abstract final class QrFindingText {
     'port' => 'Puerto',
     'extension' => 'Extensión',
     'subdomainLabels' => 'Etiquetas del dominio',
+    'registrableDomain' => 'Dominio registrable',
+    'embeddedSuffix' => 'Sufijo incrustado',
+    'skeleton' => 'Lectura latina equivalente',
     'length' => 'Longitud',
     'redirectHost' => 'Host redirigido',
     'redirectParameter' => 'Parámetro de redirección',

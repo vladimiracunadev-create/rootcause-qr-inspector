@@ -18,10 +18,18 @@
     },
     "product": {
       "type": "object",
-      "required": ["name", "version"],
+      "required": [
+        "name",
+        "version"
+      ],
       "properties": {
-        "name": { "const": "RootCause QR Inspector" },
-        "version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" }
+        "name": {
+          "const": "RootCause QR Inspector"
+        },
+        "version": {
+          "type": "string",
+          "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+        }
       },
       "additionalProperties": false
     },
@@ -45,29 +53,63 @@
         "redaction"
       ],
       "properties": {
-        "source": { "type": "string" },
-        "symbology": { "type": "string" },
-        "contentKind": { "type": "string" },
-        "sensitive": { "type": "boolean" },
-        "payloadBytes": { "type": "integer", "minimum": 0 },
-        "payloadSha256": { "$ref": "#/$defs/sha256" },
-        "redaction": {
-          "enum": ["payload-omitted", "none-user-authorized"]
+        "source": {
+          "type": "string"
         },
-        "rawPayload": { "type": "string" },
-        "parsed": { "type": "object" }
+        "symbology": {
+          "type": "string"
+        },
+        "contentKind": {
+          "type": "string"
+        },
+        "sensitive": {
+          "type": "boolean"
+        },
+        "payloadBytes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "payloadSha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "redaction": {
+          "enum": [
+            "payload-omitted",
+            "none-user-authorized"
+          ]
+        },
+        "rawPayload": {
+          "type": "string"
+        },
+        "parsed": {
+          "type": "object"
+        }
       },
       "allOf": [
         {
           "if": {
-            "properties": { "redaction": { "const": "payload-omitted" } },
-            "required": ["redaction"]
+            "properties": {
+              "redaction": {
+                "const": "payload-omitted"
+              }
+            },
+            "required": [
+              "redaction"
+            ]
           },
           "then": {
             "not": {
               "anyOf": [
-                { "required": ["rawPayload"] },
-                { "required": ["parsed"] }
+                {
+                  "required": [
+                    "rawPayload"
+                  ]
+                },
+                {
+                  "required": [
+                    "parsed"
+                  ]
+                }
               ]
             }
           }
@@ -80,12 +122,24 @@
     },
     "integrity": {
       "type": "object",
-      "required": ["algorithm", "assurance", "bundleHash"],
+      "required": [
+        "algorithm",
+        "assurance",
+        "bundleHash"
+      ],
       "properties": {
-        "algorithm": { "const": "SHA-256" },
-        "assurance": { "const": "checksum-only-not-authenticated" },
-        "previousEvidenceHash": { "$ref": "#/$defs/sha256" },
-        "bundleHash": { "$ref": "#/$defs/sha256" }
+        "algorithm": {
+          "const": "SHA-256"
+        },
+        "assurance": {
+          "const": "checksum-only-not-authenticated"
+        },
+        "previousEvidenceHash": {
+          "$ref": "#/$defs/sha256"
+        },
+        "bundleHash": {
+          "$ref": "#/$defs/sha256"
+        }
       },
       "additionalProperties": false
     }
@@ -122,26 +176,61 @@
         "tracking-excessive",
         "transport-http",
         "url-control-character",
-        "url-excessive-length"
+        "url-excessive-length",
+        "host-whole-script-confusable",
+        "host-embedded-suffix"
       ]
     },
     "evidenceFact": {
       "type": "object",
-      "required": ["id", "value"],
+      "required": [
+        "id",
+        "value"
+      ],
       "properties": {
-        "id": { "type": "string", "pattern": "^[A-Za-z][A-Za-z0-9]*$" },
-        "value": { "type": "string" }
+        "id": {
+          "type": "string",
+          "pattern": "^[A-Za-z][A-Za-z0-9]*$"
+        },
+        "value": {
+          "type": "string"
+        }
       },
       "additionalProperties": false
     },
     "finding": {
       "type": "object",
-      "required": ["id", "severity", "score", "confidence", "category", "evidence"],
+      "required": [
+        "id",
+        "severity",
+        "score",
+        "confidence",
+        "category",
+        "evidence"
+      ],
       "properties": {
-        "id": { "$ref": "#/$defs/findingId" },
-        "severity": { "enum": ["normal", "warning", "critical"] },
-        "score": { "type": "integer", "minimum": 0, "maximum": 100 },
-        "confidence": { "enum": ["low", "medium", "high"] },
+        "id": {
+          "$ref": "#/$defs/findingId"
+        },
+        "severity": {
+          "enum": [
+            "normal",
+            "warning",
+            "critical"
+          ]
+        },
+        "score": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "confidence": {
+          "enum": [
+            "low",
+            "medium",
+            "high"
+          ]
+        },
         "category": {
           "enum": [
             "transport",
@@ -156,7 +245,9 @@
         },
         "evidence": {
           "type": "array",
-          "items": { "$ref": "#/$defs/evidenceFact" }
+          "items": {
+            "$ref": "#/$defs/evidenceFact"
+          }
         }
       },
       "additionalProperties": false
@@ -175,39 +266,84 @@
         "limitations"
       ],
       "properties": {
-        "schema": { "const": "rootcause.qr-investigation.v1" },
-        "engineVersion": { "type": "string" },
-        "analyzedAt": { "type": "string", "format": "date-time" },
-        "payloadSha256": { "$ref": "#/$defs/sha256" },
+        "schema": {
+          "const": "rootcause.qr-investigation.v1"
+        },
+        "engineVersion": {
+          "type": "string"
+        },
+        "analyzedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "payloadSha256": {
+          "$ref": "#/$defs/sha256"
+        },
         "verdict": {
           "type": "object",
-          "required": ["severity", "score", "action"],
+          "required": [
+            "severity",
+            "score",
+            "action"
+          ],
           "properties": {
-            "severity": { "enum": ["normal", "warning", "critical"] },
-            "score": { "type": "integer", "minimum": 0, "maximum": 100 },
-            "action": { "enum": ["allow", "confirm", "inspectOnly", "block"] }
+            "severity": {
+              "enum": [
+                "normal",
+                "warning",
+                "critical"
+              ]
+            },
+            "score": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 100
+            },
+            "action": {
+              "enum": [
+                "allow",
+                "confirm",
+                "inspectOnly",
+                "block"
+              ]
+            }
           },
           "additionalProperties": false
         },
-        "normalizedHost": { "type": "string" },
-        "effectiveUri": { "type": "string", "format": "uri" },
+        "normalizedHost": {
+          "type": "string"
+        },
+        "effectiveUri": {
+          "type": "string",
+          "format": "uri"
+        },
         "findings": {
           "type": "array",
-          "items": { "$ref": "#/$defs/finding" }
+          "items": {
+            "$ref": "#/$defs/finding"
+          }
         },
         "hypotheses": {
           "type": "array",
-          "items": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]+$"
+          },
           "uniqueItems": true
         },
         "evaluatedRuleIds": {
           "type": "array",
-          "items": { "$ref": "#/$defs/findingId" },
+          "items": {
+            "$ref": "#/$defs/findingId"
+          },
           "uniqueItems": true
         },
         "limitations": {
           "type": "array",
-          "items": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]+$"
+          },
           "uniqueItems": true
         }
       },
@@ -220,17 +356,27 @@
         "properties": {
           "observation": {
             "properties": {
-              "redaction": { "const": "payload-omitted" }
+              "redaction": {
+                "const": "payload-omitted"
+              }
             },
-            "required": ["redaction"]
+            "required": [
+              "redaction"
+            ]
           }
         },
-        "required": ["observation"]
+        "required": [
+          "observation"
+        ]
       },
       "then": {
         "properties": {
           "investigation": {
-            "not": { "required": ["effectiveUri"] }
+            "not": {
+              "required": [
+                "effectiveUri"
+              ]
+            }
           }
         }
       }

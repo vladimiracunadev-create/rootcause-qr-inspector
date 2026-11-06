@@ -5,6 +5,8 @@ import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:rootcause_qr_inspector/core/localization/app_localizations.dart';
 import 'package:rootcause_qr_inspector/features/help/tab_guide_screen.dart';
 import 'package:rootcause_qr_inspector/features/scanner/data/mobile_scanner_engine.dart';
+import 'package:rootcause_qr_inspector/features/scanner/widgets/inventory_viewport_geometry.dart';
+import 'package:rootcause_qr_inspector/features/scanner/widgets/reading_area_pinch.dart';
 import 'package:rootcause_qr_inspector/features/scanner/widgets/scan_status_bar.dart';
 import 'package:rootcause_qr_inspector/models/inventory_session.dart';
 import 'package:rootcause_qr_inspector/models/scan_record.dart';
@@ -42,7 +44,10 @@ class InventoryScreen extends StatefulWidget {
 }
 
 class _InventoryScreenState extends State<InventoryScreen>
-    with WidgetsBindingObserver {
+    with WidgetsBindingObserver, ReadingAreaPinchMixin<InventoryScreen> {
+  @override
+  SettingsStore get readingAreaSettings => widget.settings;
+
   final TextEditingController _nameController = TextEditingController();
   final ScanFeedback _feedback = ScanFeedback();
   late MobileScannerController _controller;
@@ -84,6 +89,7 @@ class _InventoryScreenState extends State<InventoryScreen>
     widget.store.removeListener(_refresh);
     _nameController.dispose();
     _countedTimer?.cancel();
+    disposeReadingAreaPinch();
     unawaited(_controller.dispose());
     unawaited(_feedback.dispose());
     super.dispose();
@@ -110,6 +116,7 @@ class _InventoryScreenState extends State<InventoryScreen>
   Future<void> _startCamera() async {
     try {
       await _controller.start();
+      showReadingAreaHint();
     } on Object {
       // The status bar already offers the restart action.
     }
@@ -383,21 +390,27 @@ class _InventoryScreenState extends State<InventoryScreen>
           ),
         ),
         SizedBox(
-          height: 230,
+          // El alto del visor es la zona de lectura de esta pantalla: aquí la
+          // cámara comparte sitio con la lista de unidades, así que ampliar
+          // significa crecer el visor y cederle alto a la lista, no ocupar la
+          // pestaña entera.
+          height: InventoryViewportGeometry.previewHeightFor(
+            availableHeight: MediaQuery.sizeOf(context).height,
+            readingArea: readingArea,
+          ),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(22),
               child: LayoutBuilder(
                 builder: (BuildContext context, BoxConstraints constraints) {
-                  final Rect scanWindow = Rect.fromCenter(
-                    center: Offset(
-                      constraints.maxWidth / 2,
-                      constraints.maxHeight / 2,
-                    ),
-                    width: constraints.maxWidth.clamp(180, 260).toDouble(),
-                    height: 120,
-                  );
+                  final InventoryViewportGeometry geometry =
+                      InventoryViewportGeometry.forPreview(
+                        availableHeight: MediaQuery.sizeOf(context).height,
+                        previewWidth: constraints.maxWidth,
+                        readingArea: readingArea,
+                      );
+                  final Rect scanWindow = geometry.frame;
                   return ValueListenableBuilder<MobileScannerState>(
                     valueListenable: _controller,
                     builder:
@@ -418,17 +431,30 @@ class _InventoryScreenState extends State<InventoryScreen>
                           return Stack(
                             fit: StackFit.expand,
                             children: <Widget>[
-                              MobileScanner(
-                                key: _previewKey,
-                                // No `scanWindow`: as in the inspector, the guide
-                                // must not silently discard a code the person can
-                                // see perfectly well.
-                                controller: _controller,
-                                tapToFocus: true,
-                                onDetect: _onDetect,
+                              // Pellizcar amplía o reduce el visor, como en
+                              // el inspector y con la misma preferencia. El
+                              // detector envuelve solo la vista previa y va al
+                              // fondo de la pila: los botones y la barra de
+                              // estado, por encima, conservan sus gestos.
+                              GestureDetector(
+                                onScaleStart: onReadingAreaScaleStart,
+                                onScaleUpdate: onReadingAreaScaleUpdate,
+                                onScaleEnd: (ScaleEndDetails details) =>
+                                    unawaited(onReadingAreaScaleEnd()),
+                                child: MobileScanner(
+                                  key: _previewKey,
+                                  // No `scanWindow`: as in the inspector, the
+                                  // guide must not silently discard a code the
+                                  // person can see perfectly well.
+                                  controller: _controller,
+                                  tapToFocus: true,
+                                  onDetect: _onDetect,
+                                ),
                               ),
                               if (widget.settings.value.useScanWindow)
-                                Center(
+                                Positioned(
+                                  left: scanWindow.left,
+                                  top: scanWindow.top,
                                   child: Container(
                                     width: scanWindow.width,
                                     height: scanWindow.height,
@@ -447,6 +473,23 @@ class _InventoryScreenState extends State<InventoryScreen>
                                     ),
                                   ),
                                 ),
+                              // Porcentaje de la zona de lectura: aparece
+                              // con el gesto y se va solo, por encima de la
+                              // barra de estado para no taparla.
+                              Positioned(
+                                left: 0,
+                                right: 0,
+                                bottom: InventoryViewportGeometry.statusReserve,
+                                child: Center(
+                                  child: ReadingAreaBadge(
+                                    readingArea: readingArea,
+                                    hint: readingAreaNoticeIsHint,
+                                    visible: readingAreaNoticeVisible,
+                                    animate:
+                                        !widget.settings.value.reduceMotion,
+                                  ),
+                                ),
+                              ),
                               Positioned(
                                 left: 12,
                                 right: 12,

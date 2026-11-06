@@ -19,7 +19,7 @@ puntaje_global   = min(100, suma de puntos)
 
 El puntaje no es probabilidad. La severidad no se obtiene del puntaje.
 
-## Las 26 reglas
+## Las 28 reglas
 
 | # | Id | Condición | Sev. | Pts. | Confianza | Evidencia |
 |---:|---|---|---|---:|---|---|
@@ -49,6 +49,62 @@ El puntaje no es probabilidad. La severidad no se obtiene del puntaje.
 | 24 | `sensitive-secret` | OTP o `otpauth:` | warning | 5 | alta | tipo de contenido |
 | 25 | `payment-instruction` | pago EMV/EPC/Swiss/cripto | warning | 5 | alta | tipo de contenido |
 | 26 | `opaque-binary-payload` | carga binaria/Base64 sin interpretación | warning | 8 | alta | id de regla |
+| 27 | `host-whole-script-confusable` | host no ASCII cuyo esqueleto UTS #39 es ASCII puro y usa alguna escritura no latina | critical | 28 | alta | host normalizado + lectura latina equivalente |
+| 28 | `host-embedded-suffix` | sufijo público ICANN de ≥ 3 caracteres, o de dos etiquetas, escrito antes del dominio registrable | warning | 12 | media | host + sufijo incrustado + dominio registrable |
+
+## Identidad del dominio: las dos reglas de 0.2.0
+
+Ambas responden a la misma pregunta con datos que antes el motor no tenía: el
+host **es** el que la persona cree que es.
+
+### `host-whole-script-confusable`
+
+`host-mixed-script` detecta la **mezcla**: una `о` cirílica dentro de una
+palabra latina. No ve el caso contrario, que es más limpio y más eficaz: un host
+escrito **entero** en una sola escritura no latina que se lee como una marca
+latina. Ese host no mezcla nada y hasta 0.1.4 solo producía `host-unicode`, de
+confianza baja, el mismo hallazgo que un dominio internacional legítimo.
+
+La regla calcula el esqueleto de UTS #39 —cada carácter sustituido por su
+equivalente ASCII declarado por Unicode— y dispara cuando el esqueleto es ASCII
+puro y al menos un carácter viene de una escritura no latina.
+
+Límites declarados:
+
+- la tabla incluye **solo** las equivalencias cuyo destino es ASCII, porque una
+  equivalencia entre dos escrituras no latinas no suplanta a una marca latina;
+- **no** hay normalización NFD: Dart no la trae, así que un carácter
+  precompuesto ausente de la tabla se queda como está;
+- el latín con diacríticos —`café`, `piñón`— **no** es confuso. Es escritura
+  legítima del idioma, y tratarla como engaño volvería sospechosa a media
+  internet hispanohablante.
+
+### `host-embedded-suffix`
+
+El patrón es `pago.com.atacante.example`: el dominio de primer nivel que la
+persona reconoce aparece como etiqueta intermedia, donde no manda nada. Con la
+Public Suffix List el motor ya sabe cuál es el dominio registrable —el que
+alguien registró de verdad— y puede afirmar que el resto es decorado.
+
+Límite declarado: **no** se disparan los ccTLD de dos letras. `es.`, `de.`,
+`uk.` y `cl.` son subdominios de idioma o de región completamente normales
+—`es.ejemplo.com`—, y tratarlos como suplantación convertiría el hallazgo en
+ruido. Se pierden así los ataques que incrustan un ccTLD corto; a cambio, lo que
+el hallazgo afirma se sostiene.
+
+### Lo que la lista de sufijos cambió además
+
+`redirect-nested-domain` comparaba «familias» de host por texto: un host era
+familia de otro si uno terminaba en el otro. Eso daba por familia a
+`ejemplo.com` y `malo-ejemplo.com.atacante.example`, y separaba a dos
+subdominios del mismo dueño. Ahora compara **dominios registrables**.
+
+`brand-domain-mismatch` compara el token de marca con el esqueleto del host, así
+que una marca escrita en cirílico deja de esquivar su propio token.
+
+El dominio registrable se adjunta como evidencia en `host-deep-subdomains` y en
+`host-embedded-suffix`: es el dato que contesta la pregunta que el hallazgo
+plantea.
 
 ## Catálogo de descarga
 

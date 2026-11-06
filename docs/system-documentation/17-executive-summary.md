@@ -67,7 +67,7 @@ versiones y, en el futuro, reutilizarlo desde otro producto. Todo lo demás
 | Aspecto | Estado |
 |---|---|
 | Código fuente | Completo y coherente; verificadores automáticos en verde |
-| Integración continua | Verde: análisis estricto, 107 pruebas; compilaciones web, Android e iOS son gates del release |
+| Integración continua | Verde: análisis estricto, 163 pruebas; compilaciones web, Android e iOS son gates del release |
 | Distribución Android | **Publicada**: APK con SHA-256 y atestación de procedencia |
 | Firma de tienda | **Pendiente**: se firma con la clave de depuración de Flutter |
 | iOS | Compila para simulador; sin paquete instalable ni firma |
@@ -116,8 +116,7 @@ recomendación.
 
 **Coste bajo, valor alto**
 
-1. Ejecutar los 12 fixtures contra el motor en una prueba automática.
-2. Cubrir la migración de datos heredados con pruebas.
+1. Cubrir la migración de datos heredados con pruebas.
 3. Decidir explícitamente qué hacer con los contactos.
 
 **Coste medio**

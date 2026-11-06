@@ -50,6 +50,13 @@ class SettingsRepository {
       privateMode: await _preferences.getBool('private_mode') ?? false,
       autoTorch: await _preferences.getBool('auto_torch') ?? false,
       useScanWindow: await _preferences.getBool('use_scan_window') ?? true,
+      // El valor se recorta al leerlo: una preferencia escrita por una versión
+      // futura —o corrupta— no puede dejar el marco fuera de la vista previa.
+      readingAreaScale:
+          (await _preferences.getDouble('reading_area_scale') ?? 0).clamp(
+            0.0,
+            1.0,
+          ),
       confirmBeforeOpen:
           await _preferences.getBool('confirm_before_open') ?? true,
       hideSensitiveValues:
@@ -76,6 +83,10 @@ class SettingsRepository {
       _preferences.setBool('private_mode', value.privateMode),
       _preferences.setBool('auto_torch', value.autoTorch),
       _preferences.setBool('use_scan_window', value.useScanWindow),
+      _preferences.setDouble(
+        'reading_area_scale',
+        value.readingAreaScale.clamp(0.0, 1.0),
+      ),
       _preferences.setBool('confirm_before_open', value.confirmBeforeOpen),
       _preferences.setBool('hide_sensitive_values', value.hideSensitiveValues),
       _preferences.setBool('biometric_lock', value.biometricLock),
@@ -102,6 +113,7 @@ class SettingsRepository {
       'vibration_enabled',
       'auto_torch',
       'use_scan_window',
+      'reading_area_scale',
       'confirm_before_open',
       'hide_sensitive_values',
       'high_contrast',

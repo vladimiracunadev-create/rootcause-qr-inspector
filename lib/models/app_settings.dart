@@ -24,6 +24,7 @@ class AppSettings {
     this.privateMode = false,
     this.autoTorch = false,
     this.useScanWindow = true,
+    this.readingAreaScale = 0,
     this.confirmBeforeOpen = true,
     this.hideSensitiveValues = true,
     this.biometricLock = false,
@@ -51,6 +52,19 @@ class AppSettings {
   /// perfectly well on screen. The preference key is unchanged so existing
   /// installations keep their choice.
   final bool useScanWindow;
+
+  /// How wide the reading area is, from 0 (smallest frame) to 1 (full screen).
+  ///
+  /// It is set with the gesture the phone already uses for this —pinch out to
+  /// maximise, pinch in to minimise— over the camera preview, and the chosen
+  /// amount is remembered: someone inspecting codes on a wall or on a receipt
+  /// wants the same framing on the next read. Past the maximised threshold of
+  /// `ScannerViewportGeometry` the header folds away and the preview takes over
+  /// the whole tab.
+  ///
+  /// It is stored as a number, not as a maximised/minimised flag, because the
+  /// gesture is continuous: the percentage shown while pinching is this value.
+  final double readingAreaScale;
   final bool confirmBeforeOpen;
   final bool hideSensitiveValues;
   final bool biometricLock;
@@ -79,6 +93,7 @@ class AppSettings {
     bool? privateMode,
     bool? autoTorch,
     bool? useScanWindow,
+    double? readingAreaScale,
     bool? confirmBeforeOpen,
     bool? hideSensitiveValues,
     bool? biometricLock,
@@ -97,6 +112,7 @@ class AppSettings {
     privateMode: privateMode ?? this.privateMode,
     autoTorch: autoTorch ?? this.autoTorch,
     useScanWindow: useScanWindow ?? this.useScanWindow,
+    readingAreaScale: readingAreaScale ?? this.readingAreaScale,
     confirmBeforeOpen: confirmBeforeOpen ?? this.confirmBeforeOpen,
     hideSensitiveValues: hideSensitiveValues ?? this.hideSensitiveValues,
     biometricLock: biometricLock ?? this.biometricLock,

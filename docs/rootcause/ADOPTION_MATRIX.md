@@ -11,7 +11,7 @@ transformó para RootCause y qué se dejó fuera deliberadamente.
 | Imágenes y PDF por lotes | Conservar | Permite investigar material recibido sin apuntar otra cámara |
 | Soporte QR, 2D y 1D | Conservar | El producto se orienta a QR, pero no pierde la superficie de códigos existente |
 | Parser de formatos estructurados | Conservar y conectar | `ParsedContent` entra al motor para distinguir OTP, pagos, binario y acciones |
-| Analizador local de URL de 16 señales | Sustituir con compatibilidad | Motor de 26 reglas, ids estables y `RiskLevel` como adaptador heredado |
+| Analizador local de URL de 16 señales | Sustituir con compatibilidad | Motor de 28 reglas, ids estables y `RiskLevel` como adaptador heredado |
 | Confirmación antes de abrir | Conservar y formalizar | Decisión tipada `allow/confirm/inspectOnly/block` |
 | Historial e inventario AES-256-GCM | Conservar | La investigación completa se persiste dentro del registro cifrado |
 | Keychain/Keystore, biometría y modo temporal | Conservar | Mantiene la frontera local de privacidad y recuperación |

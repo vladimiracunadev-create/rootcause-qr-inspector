@@ -85,12 +85,19 @@ una cadena autenticada.
 
 ### Archivos locales
 
-- Nativo: análisis y 107 pruebas están correctos; los builds web/APK son gates
+- Nativo: análisis y 163 pruebas están correctos; los builds web/APK son gates
   del release y la matriz
   funcional completa de fixtures en dispositivo continúa **PENDIENTE**.
-- Web: **PLANIFICADO**. `pdfrx` puede rasterizar en navegador, pero eso no
-  aporta decodificación de códigos y `mobile_scanner 7.4.0` no implementa
-  `analyzeImage` allí.
+- Web: **NO EXISTE, y es una decisión, no una tarea atrasada.**
+  `mobile_scanner 7.4.2` no implementa `analyzeImage` en navegador, y `pdfrx`
+  rasteriza pero no decodifica. Las dos vías disponibles son la API
+  `BarcodeDetector` del navegador —solo Chromium, ausente en Firefox y en
+  Safari de escritorio— o empaquetar un decodificador WebAssembly. Ninguna se
+  incorpora: la web de este producto es un canal de demostración, y un camino
+  que funciona en un navegador de cada tres produciría exactamente el silencio
+  ambiguo que este producto existe para eliminar. La interfaz lo dice en el
+  propio botón —«en el navegador no hay decodificación local, usa el APK de
+  Android»— en lugar de prometer que llegará.
 - Un host mostrado es el host parseado localmente. RootCause no conoce el
   destino final tras redirecciones HTTP sin una navegación consentida, que no
   forma parte de esta capacidad.

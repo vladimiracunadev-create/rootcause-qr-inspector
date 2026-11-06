@@ -10,8 +10,10 @@ import 'package:rootcause_qr_inspector/features/result/scan_result_sheet.dart';
 import 'package:rootcause_qr_inspector/features/scanner/data/mobile_scanner_engine.dart';
 import 'package:rootcause_qr_inspector/features/scanner/data/native_file_code_decoder.dart';
 import 'package:rootcause_qr_inspector/features/scanner/domain/file_inspection_coordinator.dart';
+import 'package:rootcause_qr_inspector/features/scanner/domain/idle_reading_coach.dart';
 import 'package:rootcause_qr_inspector/features/scanner/domain/scanner_engine.dart';
 import 'package:rootcause_qr_inspector/features/scanner/domain/scan_persistence_policy.dart';
+import 'package:rootcause_qr_inspector/features/scanner/widgets/reading_area_pinch.dart';
 import 'package:rootcause_qr_inspector/features/scanner/widgets/scan_status_bar.dart';
 import 'package:rootcause_qr_inspector/features/scanner/widgets/scanner_overlay.dart';
 import 'package:rootcause_qr_inspector/features/scanner/widgets/scanner_viewport_geometry.dart';
@@ -53,7 +55,10 @@ class ScannerScreen extends StatefulWidget {
 }
 
 class _ScannerScreenState extends State<ScannerScreen>
-    with WidgetsBindingObserver {
+    with WidgetsBindingObserver, ReadingAreaPinchMixin<ScannerScreen> {
+  @override
+  SettingsStore get readingAreaSettings => widget.settings;
+
   late ScannerEngine _engine;
   final ImagePicker _imagePicker = ImagePicker();
   final ScanFeedback _feedback = ScanFeedback();
@@ -73,6 +78,12 @@ class _ScannerScreenState extends State<ScannerScreen>
   /// Transient explanation shown when the same code is skipped as a repeat.
   String? _repeatNotice;
   Timer? _repeatNoticeTimer;
+
+  /// Nivel de ayuda alcanzado por una lectura que no progresa, y los avisos
+  /// pendientes. Se reinicia en cada arranque y en cada captura: el consejo
+  /// habla del intento en curso, no de la sesión.
+  int _coachLevel = IdleReadingCoach.quiet;
+  final List<Timer> _coachTimers = <Timer>[];
 
   /// How long the same payload keeps being treated as a repetition.
   ///
@@ -104,6 +115,8 @@ class _ScannerScreenState extends State<ScannerScreen>
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     _repeatNoticeTimer?.cancel();
+    _cancelIdleCoaching();
+    disposeReadingAreaPinch();
     unawaited(_engine.dispose());
     unawaited(_feedback.dispose());
     super.dispose();
@@ -134,6 +147,8 @@ class _ScannerScreenState extends State<ScannerScreen>
     try {
       await _engine.start();
       if (mounted) setState(() => _startFailure = null);
+      showReadingAreaHint();
+      _scheduleIdleCoaching();
     } on MobileScannerException catch (error) {
       if (mounted) setState(() => _startFailure = _describe(error));
     } on Object {
@@ -143,7 +158,35 @@ class _ScannerScreenState extends State<ScannerScreen>
     }
   }
 
+  /// Programa los avisos de una lectura que no avanza.
+  ///
+  /// Un temporizador por aviso en lugar de uno periódico: la pantalla no tiene
+  /// nada que redibujar entre un consejo y el siguiente, y un `Timer.periodic`
+  /// detrás de una cámara activa reconstruye la vista sin motivo.
+  void _scheduleIdleCoaching() {
+    _cancelIdleCoaching();
+    for (int index = 0; index < IdleReadingCoach.schedule.length; index++) {
+      final int level = index + 1;
+      _coachTimers.add(
+        Timer(IdleReadingCoach.schedule[index], () {
+          if (mounted) setState(() => _coachLevel = level);
+        }),
+      );
+    }
+  }
+
+  void _cancelIdleCoaching() {
+    for (final Timer timer in _coachTimers) {
+      timer.cancel();
+    }
+    _coachTimers.clear();
+    if (_coachLevel != IdleReadingCoach.quiet) {
+      _coachLevel = IdleReadingCoach.quiet;
+    }
+  }
+
   Future<void> _stopCamera() async {
+    _cancelIdleCoaching();
     try {
       await _engine.stop();
     } on Object {
@@ -194,107 +237,121 @@ class _ScannerScreenState extends State<ScannerScreen>
         final bool compactFileAction =
             viewport.maxWidth < 430 ||
             MediaQuery.textScalerOf(context).scale(1) > 1.3;
+        final double area = readingArea;
+        final bool maximized = readingAreaMaximized;
         return Column(
           children: <Widget>[
-            Padding(
-              padding: EdgeInsets.fromLTRB(
-                20,
-                compactHeader ? 10 : 18,
-                20,
-                compactHeader ? 8 : 14,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: <Widget>[
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      const _RootCauseMark(),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            AppText(
-                              'ROOTCAUSE · SEGURIDAD QR',
-                              style: Theme.of(context).textTheme.labelSmall
-                                  ?.copyWith(
-                                    color: Theme.of(
-                                      context,
-                                    ).colorScheme.primary,
-                                    fontWeight: FontWeight.w900,
-                                    letterSpacing: 1.25,
-                                  ),
-                            ),
-                            const SizedBox(height: 3),
-                            AppText(
-                              context.strings.scannerTitle,
-                              style: compactHeader
-                                  ? Theme.of(context).textTheme.titleMedium
-                                        ?.copyWith(fontWeight: FontWeight.w800)
-                                  : Theme.of(context).textTheme.titleLarge,
-                            ),
-                            if (!compactHeader) ...<Widget>[
+            if (!maximized)
+              Padding(
+                padding: EdgeInsets.fromLTRB(
+                  20,
+                  compactHeader ? 10 : 18,
+                  20,
+                  compactHeader ? 8 : 14,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: <Widget>[
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        const _RootCauseMark(),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              AppText(
+                                'ROOTCAUSE · SEGURIDAD QR',
+                                style: Theme.of(context).textTheme.labelSmall
+                                    ?.copyWith(
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.primary,
+                                      fontWeight: FontWeight.w900,
+                                      letterSpacing: 1.25,
+                                    ),
+                              ),
                               const SizedBox(height: 3),
                               AppText(
-                                context.strings.scannerSubtitle,
-                                style: TextStyle(
-                                  color: Theme.of(
-                                    context,
-                                  ).colorScheme.onSurfaceVariant,
-                                ),
+                                context.strings.scannerTitle,
+                                style: compactHeader
+                                    ? Theme.of(
+                                        context,
+                                      ).textTheme.titleMedium?.copyWith(
+                                        fontWeight: FontWeight.w800,
+                                      )
+                                    : Theme.of(context).textTheme.titleLarge,
                               ),
+                              if (!compactHeader) ...<Widget>[
+                                const SizedBox(height: 3),
+                                AppText(
+                                  context.strings.scannerSubtitle,
+                                  style: TextStyle(
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.onSurfaceVariant,
+                                  ),
+                                ),
+                              ],
                             ],
-                          ],
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      Semantics(
-                        button: true,
-                        label: kIsWeb
-                            ? 'Analizar archivo, planificado para web'
-                            : 'Analizar archivo local: imagen o PDF',
-                        child: OutlinedButton.icon(
-                          onPressed: kIsWeb ? null : _showFileSourcePicker,
-                          style: OutlinedButton.styleFrom(
-                            minimumSize: const Size(48, 48),
-                            padding: const EdgeInsets.symmetric(horizontal: 10),
-                          ),
-                          icon: const Icon(Icons.add_photo_alternate_outlined),
-                          label: AppText(
-                            compactFileAction ? 'Archivo' : 'Analizar archivo',
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                  if (!compactHeader) ...<Widget>[
-                    const SizedBox(height: 12),
-                    const Wrap(
-                      spacing: 8,
-                      runSpacing: 8,
-                      children: <Widget>[
-                        _SecurityCapability(
-                          icon: Icons.phonelink_lock_outlined,
-                          label: 'Análisis local',
-                        ),
-                        _SecurityCapability(
-                          icon: Icons.rule_outlined,
-                          label: '26 señales',
-                        ),
-                        _SecurityCapability(
-                          icon: Icons.visibility_off_outlined,
-                          label: 'Telemetría cero',
+                        const SizedBox(width: 8),
+                        Semantics(
+                          button: true,
+                          label: kIsWeb
+                              ? 'Analizar archivo: en el navegador no hay decodificación local, usa el APK de Android'
+                              : 'Analizar archivo local: imagen o PDF',
+                          child: OutlinedButton.icon(
+                            onPressed: kIsWeb ? null : _showFileSourcePicker,
+                            style: OutlinedButton.styleFrom(
+                              minimumSize: const Size(48, 48),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 10,
+                              ),
+                            ),
+                            icon: const Icon(
+                              Icons.add_photo_alternate_outlined,
+                            ),
+                            label: AppText(
+                              compactFileAction
+                                  ? 'Archivo'
+                                  : 'Analizar archivo',
+                            ),
+                          ),
                         ),
                       ],
                     ),
+                    if (!compactHeader) ...<Widget>[
+                      const SizedBox(height: 12),
+                      const Wrap(
+                        spacing: 8,
+                        runSpacing: 8,
+                        children: <Widget>[
+                          _SecurityCapability(
+                            icon: Icons.phonelink_lock_outlined,
+                            label: 'Análisis local',
+                          ),
+                          _SecurityCapability(
+                            icon: Icons.rule_outlined,
+                            label: '28 señales',
+                          ),
+                          _SecurityCapability(
+                            icon: Icons.visibility_off_outlined,
+                            label: 'Telemetría cero',
+                          ),
+                        ],
+                      ),
+                    ],
                   ],
-                ],
+                ),
               ),
-            ),
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                padding: maximized
+                    ? EdgeInsets.zero
+                    : const EdgeInsets.fromLTRB(16, 0, 16, 16),
                 child: DecoratedBox(
                   decoration: BoxDecoration(
                     gradient: const LinearGradient(
@@ -306,7 +363,7 @@ class _ScannerScreenState extends State<ScannerScreen>
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                     ),
-                    borderRadius: BorderRadius.circular(32),
+                    borderRadius: BorderRadius.circular(maximized ? 0 : 32),
                     boxShadow: <BoxShadow>[
                       BoxShadow(
                         color: Theme.of(
@@ -318,9 +375,11 @@ class _ScannerScreenState extends State<ScannerScreen>
                     ],
                   ),
                   child: Padding(
-                    padding: const EdgeInsets.all(3),
+                    padding: maximized
+                        ? EdgeInsets.zero
+                        : const EdgeInsets.all(3),
                     child: ClipRRect(
-                      borderRadius: BorderRadius.circular(29),
+                      borderRadius: BorderRadius.circular(maximized ? 0 : 29),
                       child: LayoutBuilder(
                         builder: (BuildContext context, BoxConstraints constraints) {
                           final ScannerViewportGeometry geometry =
@@ -329,6 +388,7 @@ class _ScannerScreenState extends State<ScannerScreen>
                                   constraints.maxWidth,
                                   constraints.maxHeight,
                                 ),
+                                readingArea: area,
                               );
                           final bool compactPreview = geometry.compact;
                           final Rect window = geometry.scanWindow;
@@ -346,32 +406,45 @@ class _ScannerScreenState extends State<ScannerScreen>
                                   return Stack(
                                     fit: StackFit.expand,
                                     children: <Widget>[
-                                      MobileScanner(
-                                        key: _previewKey,
-                                        controller: _engine.controller,
-                                        // No `scanWindow`: the frame is a guide, not a
-                                        // gate. As a gate it discarded every code whose
-                                        // bounding box fell outside the central square,
-                                        // and it did so in silence — a QR the person could
-                                        // read perfectly well on screen simply produced
-                                        // nothing. Detection now covers the whole preview
-                                        // and the frame only helps to aim.
-                                        tapToFocus: true,
-                                        onDetect: (BarcodeCapture capture) =>
-                                            unawaited(
-                                              _handleCapture(
-                                                capture,
-                                                source: 'Cámara',
+                                      // El detector envuelve solo la vista
+                                      // previa y va al fondo de la pila: el
+                                      // deslizador de zoom y los botones están
+                                      // por encima, así que el pellizco no les
+                                      // roba sus gestos. `tapToFocus` sigue
+                                      // funcionando porque el toque lo reclama
+                                      // el hijo, no este detector.
+                                      GestureDetector(
+                                        onScaleStart: onReadingAreaScaleStart,
+                                        onScaleUpdate: onReadingAreaScaleUpdate,
+                                        onScaleEnd: (ScaleEndDetails details) =>
+                                            unawaited(onReadingAreaScaleEnd()),
+                                        child: MobileScanner(
+                                          key: _previewKey,
+                                          controller: _engine.controller,
+                                          // No `scanWindow`: the frame is a guide, not a
+                                          // gate. As a gate it discarded every code whose
+                                          // bounding box fell outside the central square,
+                                          // and it did so in silence — a QR the person could
+                                          // read perfectly well on screen simply produced
+                                          // nothing. Detection now covers the whole preview
+                                          // and the frame only helps to aim.
+                                          tapToFocus: true,
+                                          onDetect: (BarcodeCapture capture) =>
+                                              unawaited(
+                                                _handleCapture(
+                                                  capture,
+                                                  source: 'Cámara',
+                                                ),
                                               ),
-                                            ),
-                                        errorBuilder:
-                                            (
-                                              BuildContext context,
-                                              MobileScannerException error,
-                                            ) => _ScannerError(
-                                              error: error,
-                                              onRetry: _restartCamera,
-                                            ),
+                                          errorBuilder:
+                                              (
+                                                BuildContext context,
+                                                MobileScannerException error,
+                                              ) => _ScannerError(
+                                                error: error,
+                                                onRetry: _restartCamera,
+                                              ),
+                                        ),
                                       ),
                                       if (_settings.useScanWindow &&
                                           phase != ScanPhase.unavailable)
@@ -400,11 +473,54 @@ class _ScannerScreenState extends State<ScannerScreen>
                                       Positioned(
                                         top: compactPreview ? 10 : 18,
                                         left: compactPreview ? 10 : 18,
-                                        right: compactPreview ? 10 : 18,
+                                        // A pantalla completa la entrada por
+                                        // archivo vive en esta esquina: la
+                                        // barra de estado le deja el sitio en
+                                        // lugar de quedar debajo del botón.
+                                        right: maximized
+                                            ? (compactPreview ? 10 : 18) + 58
+                                            : (compactPreview ? 10 : 18),
                                         child: ScanStatusBar(
                                           phase: phase,
                                           message: _messageFor(phase),
                                           animate: !_settings.reduceMotion,
+                                        ),
+                                      ),
+                                      // El botón del encabezado no existe a
+                                      // pantalla completa, así que la entrada
+                                      // por archivo se traslada aquí en lugar
+                                      // de desaparecer con el encabezado.
+                                      if (maximized)
+                                        Positioned(
+                                          top: compactPreview ? 10 : 18,
+                                          right: compactPreview ? 10 : 18,
+                                          child: _CameraButton(
+                                            tooltip: kIsWeb
+                                                ? 'Analizar archivo: en el navegador no hay decodificación local, usa el APK de Android'
+                                                : 'Analizar archivo local: imagen o PDF',
+                                            onPressed: kIsWeb
+                                                ? null
+                                                : _showFileSourcePicker,
+                                            icon: Icons
+                                                .add_photo_alternate_outlined,
+                                          ),
+                                        ),
+                                      // Porcentaje de la tarea en curso: el
+                                      // pellizco no deja ningún control a la
+                                      // vista, así que esta es la única señal
+                                      // de cuánto se está ampliando y de
+                                      // cuándo se alcanza el máximo.
+                                      Positioned(
+                                        left: 0,
+                                        right: 0,
+                                        bottom: compactPreview ? 112 : 124,
+                                        child: Center(
+                                          child: ReadingAreaBadge(
+                                            readingArea: area,
+                                            hint: readingAreaNoticeIsHint,
+                                            visible: readingAreaNoticeVisible,
+                                            animate: !_settings.reduceMotion,
+                                          ),
                                         ),
                                       ),
                                       Positioned(
@@ -551,8 +667,13 @@ class _ScannerScreenState extends State<ScannerScreen>
 
   String _messageFor(ScanPhase phase) => switch (phase) {
     ScanPhase.starting => 'Iniciando cámara',
+    // Orden deliberado: la repetición describe lo que acaba de pasar, el
+    // consejo describe lo que no está pasando, y el texto normal es el estado
+    // de fondo.
     ScanPhase.scanning =>
-      _repeatNotice ?? 'Lectura automática en toda la imagen',
+      _repeatNotice ??
+          IdleReadingCoach.messageFor(_coachLevel) ??
+          'Lectura automática en toda la imagen',
     ScanPhase.captured => 'Abriendo el análisis local',
     ScanPhase.paused => 'Lectura detenida',
     ScanPhase.unavailable =>

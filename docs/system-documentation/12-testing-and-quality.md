@@ -6,7 +6,7 @@
 
 | Comando | Resultado |
 |---|---|
-| `python tool/verify_rootcause_contract.py` | Correcto: 26 reglas coherentes entre motor, esquema, textos, fixtures, política, versión y redacción |
+| `python tool/verify_rootcause_contract.py` | Correcto: 28 reglas coherentes entre motor, esquema, textos, fixtures, política, versión y redacción |
 | `python tool/validate_structure.py --require-lock` | Correcto |
 | Recuento de casos sobre `test/` e `integration_test/` | 103 declarados |
 | `flutter analyze --fatal-infos` | Sin hallazgos con Flutter 3.44.7 |
@@ -34,47 +34,60 @@ sobre el commit `a7ebf2c`:
 
 | Tipo | Archivos | Casos | Necesita dispositivo |
 |---|---|---|---|
-| Unitarias puras | 19 | 68 | No |
-| De widget | 6 | 17 | No |
-| Con base de datos en memoria | 3 | 17 | No |
-| De integración | 1 | 1 | **Sí** |
+| Unitarias puras | 25 | 138 | No |
+| De widget | 6 | 20 | No |
+| Con base de datos o preferencias en memoria | 3 | 5 | No |
+| De integración | 2 | 2 | **Sí** |
 
-`flutter test` ejecuta los 102 de `test/`. El caso de `integration_test/` exige
-un dispositivo o emulador y no forma parte del gate de CI.
+`flutter test` ejecuta los 163 de `test/`. Los dos casos de
+`integration_test/` —arranque y pellizco de la zona de lectura— exigen un
+dispositivo o emulador y no forman parte del gate de CI.
 
 ## Inventario por área
 
+Conteos reales de `flutter test --reporter=json`, no de contar `test(` a ojo:
+`qr_fixtures_test` genera un caso por fixture del manifiesto.
+
 | Área | Archivo | Casos |
 |---|---|---|
+| Identidad de dominio | `test/core/domain_identity_test.dart` | 24 |
+| Banco de regresión ejecutado | `test/core/qr_fixtures_test.dart` | 17 |
 | Motor de reglas | `test/core/qr_investigation_engine_test.dart` | 13 |
+| Geometría de la zona de lectura | `test/features/scanner_viewport_geometry_test.dart` | 9 |
 | Adaptador de riesgo | `test/scan_security_analyzer_test.dart` | 9 |
 | Barra de estado y overlay | `test/features/scan_status_bar_test.dart` | 7 |
-| Confirmación de lectura | `test/services/scan_feedback_test.dart` | 6 |
 | Intérprete de contenido | `test/content_interpreter_test.dart` | 6 |
+| Coordinador de archivos | `test/features/file_inspection_coordinator_test.dart` | 6 |
+| Confirmación de lectura | `test/services/scan_feedback_test.dart` | 6 |
 | Cifrado | `test/core/payload_cipher_test.dart` | 5 |
+| Visor del inventario | `test/features/inventory_viewport_geometry_test.dart` | 5 |
 | Importación | `test/services/import_service_test.dart` | 5 |
-| Evidencia | `test/core/qr_evidence_exporter_test.dart` | 4 |
-| Registro de lectura | `test/scan_record_test.dart` | 4 |
-| Localización | `test/core/localization_test.dart` | 4 |
 | Marco de teléfono | `test/core/handheld_frame_test.dart` | 4 |
+| Localización | `test/core/localization_test.dart` | 4 |
+| Evidencia | `test/core/qr_evidence_exporter_test.dart` | 4 |
+| Aviso de lectura sin progreso | `test/features/idle_reading_coach_test.dart` | 4 |
+| Destino semántico | `test/features/resolved_scan_target_test.dart` | 4 |
+| Registro de lectura | `test/scan_record_test.dart` | 4 |
 | Rotación de llave | `test/core/data_maintenance_test.dart` | 3 |
-| Geometría del visor | `test/features/scanner_viewport_geometry_test.dart` | 3 |
+| Resultado adaptable | `test/features/scan_result_file_target_test.dart` | 3 |
 | Configuración del motor de captura | `test/features/scanner_engine_config_test.dart` | 3 |
+| Limpieza de PDF | `test/services/pdf_page_renderer_cleanup_test.dart` | 3 |
 | Cola de escrituras | `test/core/async_write_queue_test.dart` | 2 |
 | Cancelación y progreso | `test/core/cancellation_token_test.dart` | 2 |
-| Migración de esquema | `test/core/schema_migrator_test.dart` | 1 |
-| Recuperación | `test/core/recovery_service_test.dart` | 1 |
-| Diagnóstico | `test/core/diagnostics_test.dart` | 1 |
+| Exportación | `test/services/export_service_test.dart` | 2 |
 | Accesibilidad | `test/core/accessibility_test.dart` | 1 |
-| Historial | `test/services/history_repository_test.dart` | 1 |
-| Registro de parsers | `test/services/content_parser_registry_test.dart` | 1 |
-| Sesión de inventario | `test/inventory_session_test.dart` | 1 |
-| Coordinador de archivos | `test/features/file_inspection_coordinator_test.dart` | 5 |
-| Destino semántico | `test/features/resolved_scan_target_test.dart` | 4 |
+| Diagnóstico | `test/core/diagnostics_test.dart` | 1 |
+| Recuperación | `test/core/recovery_service_test.dart` | 1 |
+| Migración de esquema | `test/core/schema_migrator_test.dart` | 1 |
 | Persistencia de archivos | `test/features/scan_persistence_policy_test.dart` | 1 |
-| Resultado adaptable | `test/features/scan_result_file_target_test.dart` | 2 |
-| Limpieza PDF | `test/services/pdf_page_renderer_cleanup_test.dart` | 3 |
-| Arranque | `integration_test/app_launch_test.dart` | 1 |
+| Guía de pestañas | `test/features/tab_guide_screen_test.dart` | 1 |
+| Sesión de inventario | `test/inventory_session_test.dart` | 1 |
+| Registro de parsers | `test/services/content_parser_registry_test.dart` | 1 |
+| Historial | `test/services/history_repository_test.dart` | 1 |
+
+Total: **163 casos** en 34 archivos, más uno de integración de
+arranque y otro de pellizco en `integration_test/`, que exigen dispositivo o
+emulador y no forman parte del gate de CI.
 
 ## Cobertura observable
 
@@ -154,12 +167,15 @@ Reglas que el verificador impone a los fixtures:
   acortadores;
 - once reglas concretas deben tener al menos un fixture que las cubra.
 
-> **Hallazgo.** Los 12 fixtures **no los consume ninguna prueba Dart**. Los
-> valida el verificador Python, que comprueba su forma y su coherencia con el
-> motor, pero nadie ejecuta el motor contra ellos y compara el resultado con
-> `expectedSeverity` y `expectedAction`. Es la oportunidad de mejora más
-> rentable del repositorio. Registrado en
-> [15-risks-and-technical-debt.md](15-risks-and-technical-debt.md).
+> **Hallazgo resuelto en 0.2.0.** Los 16 fixtures ya los ejecuta
+> `test/core/qr_fixtures_test.dart`: cada caso pasa por el motor y se comparan
+> `expectedSeverity`, `expectedAction`, `mustInclude`, `mustExclude` y la
+> presencia del id en `evaluatedRuleIds`. Hasta entonces solo los validaba el
+> verificador Python, que comprueba la forma y no el comportamiento, y el
+> primer caso ejecutado delató el precio de esa diferencia:
+> `userinfo-host-confusion` declaraba `credential-lure-path` y el motor no lo
+> producía, porque el catálogo de rutas señuelo tenía `access` y no `acceso`.
+> El fixture llevaba razón desde el principio y nadie lo había ejecutado.
 
 Lo mismo ocurre con `test_assets/`: las imágenes existen y su manifiesto se
 valida, pero ninguna prueba las decodifica —haría falta el motor nativo de la
@@ -263,7 +279,6 @@ Ordenada por relación entre riesgo cubierto y esfuerzo.
 
 | Prueba | Por qué |
 |---|---|
-| **Ejecutar los 12 fixtures contra el motor** y comparar severidad, acción, `mustInclude` y `mustExclude` | El activo de regresión existe y nadie lo usa. Es la brecha más grande |
 | `HistoryRepository`: migración heredada completa | El procedimiento con más riesgo de pérdida de datos no tiene prueba propia |
 | `HistoryRepository`: registro ilegible se aísla y el resto carga | Propiedad de resiliencia central |
 | `HistoryRepository`: recorte a `maxItems` y poda por retención | Borran datos de la persona |
@@ -309,6 +324,6 @@ También se generaron:
 - `fixture_document.pdf` con QR en páginas 1, 3 y 5 y Code 128 compacto en la 2.
 
 El PDF fue renderizado y revisado visualmente. Pasaron el análisis estricto y
-las 107 pruebas; las compilaciones web/APK release forman parte del gate. Solo la
+las 163 pruebas; las compilaciones web/APK release forman parte del gate. Solo la
 decodificación con `mobile_scanner` en un dispositivo Android figura
 **PENDIENTE**.

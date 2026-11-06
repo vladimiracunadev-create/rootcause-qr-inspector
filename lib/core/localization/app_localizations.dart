@@ -139,14 +139,17 @@ class AppLocalizations {
   static const List<(String, List<String>)>
   _dynamicPrefixes = <(String, List<String>)>[
     ('Advertencia: ', <String>['Warning: ', 'Avertissement : ', 'Warnung: ']),
-        ('Críticos: ', <String>['Critical: ', 'Critiques : ', 'Kritisch: ']),
-        ('Duplicados: ', <String>['Duplicates: ', 'Doublons : ', 'Duplikate: ']),
-        ('Rechazados: ', <String>['Rejected: ', 'Rejetés : ', 'Abgelehnt: ']),
-        ('Registros válidos: ', <String>[
-          'Valid records: ',
-          'Enregistrements valides : ',
-          'Gültige Einträge: ',
-        ]),
+    ('Críticos: ', <String>['Critical: ', 'Critiques : ', 'Kritisch: ']),
+    ('Duplicados: ', <String>['Duplicates: ', 'Doublons : ', 'Duplikate: ']),
+    ('Rechazados: ', <String>['Rejected: ', 'Rejetés : ', 'Abgelehnt: ']),
+    (
+      'Registros válidos: ',
+      <String>[
+        'Valid records: ',
+        'Enregistrements valides : ',
+        'Gültige Einträge: ',
+      ],
+    ),
     ('Códigos: ', <String>['Codes: ', 'Codes : ', 'Codes: ']),
     ('Únicos: ', <String>['Unique: ', 'Uniques : ', 'Eindeutig: ']),
     ('Archivos: ', <String>['Files: ', 'Fichiers : ', 'Dateien: ']),

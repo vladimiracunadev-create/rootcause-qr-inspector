@@ -17,7 +17,7 @@ Permite seguir una funcionalidad desde la interfaz hasta el dato y su prueba.
 | F-05 | Tono y vibración | Nunca pueden romper una lectura | — | `services` | `ScanFeedback.success` | — | `scan_feedback_test` (6) | [06](06-deep-code-explanation.md) | 🟢 |
 | F-06 | Releer el mismo código | La repetición se explica, no se silencia | `ScannerScreen` | `features/scanner` | `_repeatWindow`, `_showRepeatNotice` | — | 🔴 | [`SCANNER_UX`](../quality/SCANNER_UX.md) | 🔴 |
 | F-07 | Interpretar el contenido | 17 familias reconocidas | `ScanRecordCard` | `services` | `ContentInterpreter.parse` | `parsed` | `content_interpreter_test` (6 de 17) | [06](06-deep-code-explanation.md) | 🟡 |
-| F-08 | Analizar con 26 reglas | Hechos, nunca veredictos | `_RiskBanner` | `core/investigation` | `QrInvestigationEngine.analyze` | `investigation` | `qr_investigation_engine_test` (13) | [`HEURISTICS`](../rootcause/HEURISTICS.md) | 🟢 |
+| F-08 | Analizar con 28 reglas | Hechos, nunca veredictos | `_RiskBanner` | `core/investigation` | `QrInvestigationEngine.analyze` | `investigation` | `qr_investigation_engine_test` (13) | [`HEURISTICS`](../rootcause/HEURISTICS.md) | 🟢 |
 | F-09 | Separar hipótesis de hechos | Las hipótesis no suman puntos | `_RiskBanner` | `core/investigation` | Bloque de hipótesis | `hypotheses` | `qr_investigation_engine_test` | [`HEURISTICS`](../rootcause/HEURISTICS.md) | 🟢 |
 | F-10 | Decidir la acción | `block` retira el botón; `confirm` exige diálogo | `ScanRecordCard` | `core/investigation` | `QrActionDecision` | `verdict.action` | 🔴 en la interfaz; `verify_rootcause_contract` la comprueba por texto | [03](03-architecture.md) | 🟡 |
 | F-11 | Declarar los límites | Un dato ausente nunca es favorable | `_RiskBanner` | `core/investigation` | `limitations` | `limitations` | `qr_investigation_engine_test` | [`LIMITATIONS`](../rootcause/LIMITATIONS.md) | 🟢 |
@@ -71,6 +71,14 @@ Permite seguir una funcionalidad desde la interfaz hasta el dato y su prueba.
 | F-59 | Limpiar temporales | Éxito, excepción y cancelación | — | `services` | `PdfPageRenderer.cleanup` | Temporal | `pdf_page_renderer_cleanup_test` | [`PERFORMANCE`](../quality/PERFORMANCE.md) | 🟢 |
 | F-60 | Informar sin códigos | No afirmar inexistencia | SnackBar | `features/scanner` | resultado vacío explícito | — | coordinador cubre vacío | [`SCANNER_UX`](../quality/SCANNER_UX.md) | 🟢 |
 | F-61 | Respetar límites | Cantidad, tamaño, páginas y raster | Progreso/mensaje | `features/scanner` + `services` | `FileInspectionLimits`, `PdfRenderBatch` | — | validación y truncación cubiertas | [`PERFORMANCE`](../quality/PERFORMANCE.md) | 🟢 |
+| F-62 | Ajustar la zona de lectura | El gesto del teléfono, no un botón | `ScannerScreen`, `InventoryScreen` | `features/scanner/widgets` | `ReadingAreaPinchMixin`, `ScannerViewportGeometry` | `reading_area_scale` | `scanner_viewport_geometry_test` (9), `reading_area_gesture_test` (emulador) | [`SCANNER_UX`](../quality/SCANNER_UX.md) | 🟡 📱 |
+| F-63 | Declarar cuánto se amplió | Información de la tarea, no un control fijo | `ReadingAreaBadge` | `features/scanner/widgets` | `percentageFor`, `isMaximized` | — | `scanner_viewport_geometry_test`, `reading_area_gesture_test` | [`SCANNER_UX`](../quality/SCANNER_UX.md) | 🟢 |
+| F-64 | Misma zona de lectura al contar | El inventario cede alto a la lista, no la tapa | `InventoryScreen` | `features/scanner/widgets` | `InventoryViewportGeometry` | `reading_area_scale` | `inventory_viewport_geometry_test` (5) | [`SCANNER_UX`](../quality/SCANNER_UX.md) | 🟢 |
+| F-65 | Avisar cuando no se lee nada | El silencio es indistinguible de una avería | `ScanStatusBar` | `features/scanner/domain` | `IdleReadingCoach` | — | `idle_reading_coach_test` (4) | [`SCANNER_UX`](../quality/SCANNER_UX.md) | 🟢 |
+| F-66 | Delimitar el dominio registrable | Dos hosts son familia por dueño, no por texto | Evidencia del hallazgo | `core/investigation` | `PublicSuffixList` | `evidence.registrableDomain` | `domain_identity_test` (9 de lista) | [`IDENTITY_DATA`](../rootcause/IDENTITY_DATA.md) | 🟢 |
+| F-67 | Ver una escritura que imita al latín | El esqueleto declara la lectura equivalente | `_RiskBanner` | `core/investigation` | `UnicodeSkeleton`, `host-whole-script-confusable` | `findings` | `domain_identity_test`, fixture `whole-script-confusable-host` | [`HEURISTICS`](../rootcause/HEURISTICS.md) | 🟢 |
+| F-68 | Detectar un TLD incrustado | El dominio que manda está al final | `_RiskBanner` | `core/investigation` | `host-embedded-suffix` | `findings` | `domain_identity_test`, fixture `embedded-public-suffix-host` | [`HEURISTICS`](../rootcause/HEURISTICS.md) | 🟢 |
+| F-69 | Ejecutar el banco de regresión | Un fixture que no se ejecuta no protege nada | — | `test` | `qr_fixtures_test` | — | 17 casos sobre los 16 fixtures | [12](12-testing-and-quality.md) | 🟢 |
 
 ## Reglas de negocio no negociables
 
@@ -158,3 +166,15 @@ ScanRecordCard → botón «Evidencia»
 | Una captura parecía una pausa | Reutilizaba `ScanPhase.paused` | `ScanPhase.captured` | `scan_status_bar_test` | Captura de pantalla real |
 | La confirmación llegaba tarde | Se esperaba el tono | `warmUp` + reproducción no bloqueante | `scan_feedback_test` | Latencia audible |
 | El inventario no contaba repetidos | `noDuplicates` | Mismo cambio de detector | 🔴 | Diez unidades en dispositivo |
+
+## Trazabilidad de la corrección 0.2.0
+
+| Síntoma | Causa | Corrección | Prueba | Falta |
+|---|---|---|---|---|
+| Un QR con dominio en otro alfabeto salía `normal`, sin hallazgos | `Uri` entrega el host percent-codificado y las reglas de identidad veían ASCII | El host se decodifica antes de analizar | `domain_identity_test` | — |
+| `credential-lure-path` no se disparaba con `/acceso` | El catálogo tenía `access` y no `acceso`, en un producto en español | Siete términos en español añadidos | `qr_fixtures_test` sobre `userinfo-host-confusion` | — |
+| `ejemplo.com` y `ejemplo.com.atacante.example` pasaban por familia | La familia se comparaba por sufijo textual | Comparación por dominio registrable | `domain_identity_test` | — |
+| Una marca escrita en cirílico esquivaba su token | La comparación no normalizaba la escritura | Comparación contra el esqueleto UTS #39 | `domain_identity_test` | — |
+| Los 16 fixtures no los ejecutaba nadie | Solo se validaba su forma, en Python | `qr_fixtures_test` los pasa por el motor | el propio test | — |
+| El marco del inventario quedaba bajo su barra de estado | Marco centrado en todo el visor | Centrado en la banda sobre la barra | `inventory_viewport_geometry_test` | Revisión visual en dispositivo |
+| No había forma de ampliar la zona de lectura | Encuadre fijo al 72 % del ancho | Pellizco de dos dedos con porcentaje y memoria | `scanner_viewport_geometry_test`, `reading_area_gesture_test` | Dos dedos reales en un teléfono |

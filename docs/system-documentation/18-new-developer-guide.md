@@ -23,7 +23,7 @@ En este orden. Unas tres horas en total.
 | 1 | [`../../README.md`](../../README.md) | 15 min | Qué promete el producto |
 | 2 | [01-system-overview.md](01-system-overview.md) | 20 min | Qué hace y qué no |
 | 3 | [03-architecture.md](03-architecture.md) | 30 min | Cómo está organizado |
-| 4 | [`../rootcause/HEURISTICS.md`](../rootcause/HEURISTICS.md) | 30 min | Las 26 reglas, que son el producto |
+| 4 | [`../rootcause/HEURISTICS.md`](../rootcause/HEURISTICS.md) | 30 min | Las 28 reglas, que son el producto |
 | 5 | [06-deep-code-explanation.md](06-deep-code-explanation.md) | 45 min | Por qué el código es así |
 | 6 | [`../quality/COMPATIBILITY_CONTRACT.md`](../quality/COMPATIBILITY_CONTRACT.md) | 15 min | Qué **no** se puede romper |
 | 7 | [15-risks-and-technical-debt.md](15-risks-and-technical-debt.md) | 20 min | Qué ya se sabe que está flojo |
@@ -286,7 +286,6 @@ reales del informe de riesgos.
 
 | # | Tarea | Dificultad | Cierra |
 |---|---|---|---|
-| 1 | Prueba que ejecute los 12 fixtures contra el motor y compare severidad, acción, `mustInclude` y `mustExclude` | Baja | **R-01**, el hallazgo de mayor valor |
 | 2 | Pruebas de `SettingsRepository`: valores por defecto y `resetNonSensitive` | Baja | Cobertura |
 | 3 | Aplicar la ocultación de sensibles también en la lista del historial | Baja | **R-10** |
 | 4 | Pruebas de `ContentInterpreter` para AAMVA, Swiss QR y EPC | Media | Cobertura de `sensitive` |

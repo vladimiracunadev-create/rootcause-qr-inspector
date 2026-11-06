@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="Producto de seguridad para QR: inspecciona antes de abrir, explica 26 señales locales, separa hechos de hipótesis y exporta evidencia redactada." />
+  <meta name="description" content="Producto de seguridad para QR: inspecciona antes de abrir, explica 28 señales locales, separa hechos de hipótesis y exporta evidencia redactada." />
   <meta property="og:title" content="RootCause QR Inspector — seguridad QR antes de actuar" />
-  <meta property="og:description" content="Inspector local de seguridad QR: 26 reglas explicables, decisión controlada, evidencia SHA-256 y telemetría cero." />
+  <meta property="og:description" content="Inspector local de seguridad QR: 28 reglas explicables, decisión controlada, evidencia SHA-256 y telemetría cero." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://vladimiracunadev-create.github.io/rootcause-qr-inspector/" />
   <meta property="og:image" content="https://vladimiracunadev-create.github.io/rootcause-qr-inspector/assets/icon-512.png" />
@@ -56,8 +56,8 @@
         </p>
         <div class="badges" aria-label="Datos del proyecto">
           <img src="https://github.com/vladimiracunadev-create/rootcause-qr-inspector/actions/workflows/flutter-ci.yml/badge.svg" alt="Estado de integración continua" />
-          <img src="https://img.shields.io/badge/version-0.1.4-blue.svg" alt="Versión 0.1.4" />
-          <img src="https://img.shields.io/badge/reglas_locales-26-12847b.svg" alt="26 reglas locales" />
+          <img src="https://img.shields.io/badge/version-0.2.0-blue.svg" alt="Versión 0.2.0" />
+          <img src="https://img.shields.io/badge/reglas_locales-26-12847b.svg" alt="28 reglas locales" />
           <img src="https://img.shields.io/badge/telemetr%C3%ADa-cero-success.svg" alt="Telemetría cero" />
           <img src="https://img.shields.io/badge/licencia-MIT-blue.svg" alt="Licencia MIT" />
         </div>
@@ -137,7 +137,7 @@
 
     <section id="senales" class="section section-alt">
       <div class="container">
-        <h2 class="section-title">26 reglas locales, agrupadas por causa observable</h2>
+        <h2 class="section-title">28 reglas locales, agrupadas por causa observable</h2>
         <p class="section-sub">El puntaje ordena señales; no representa una probabilidad de fraude.</p>
         <div class="table-wrap">
           <table>
@@ -176,7 +176,7 @@
         <h2 class="section-title">Lo que se afirma tiene una comprobación visible</h2>
         <p class="section-sub">
           La validación distingue la coherencia offline de las pruebas de runtime.
-          La CI pública vuelve a ejecutar el contrato, el análisis, 107 pruebas y los builds.
+          La CI pública vuelve a ejecutar el contrato, el análisis, 163 pruebas y los builds.
         </p>
         <div class="table-wrap">
           <table>
@@ -184,7 +184,7 @@
             <tbody>
               <tr><td><strong>Contrato causal</strong></td><td>26 ids entre motor, textos, esquema, fixtures y política</td><td class="ok">Validado offline</td></tr>
               <tr><td><strong>Privacidad de evidencia</strong></td><td>Omisión de carga, campos y URL efectiva por defecto</td><td class="ok">Cubierto por contrato</td></tr>
-              <tr><td><strong>Apps móviles</strong></td><td>Análisis, 107 pruebas y builds Android/iOS</td><td class="ok">CI pública en verde</td></tr>
+              <tr><td><strong>Apps móviles</strong></td><td>Análisis, 163 pruebas y builds Android/iOS</td><td class="ok">CI pública en verde</td></tr>
               <tr><td><strong>Dispositivo físico</strong></td><td>Cámara, biometría, poca luz y ciclo de vida</td><td class="warn">Pendiente antes de tienda</td></tr>
             </tbody>
           </table>
@@ -200,14 +200,15 @@
           <li><strong>Sin reputación remota</strong>No consulta listas de bloqueo, edad o dueño de un dominio.</li>
           <li><strong>Sin navegación</strong>No resuelve DNS, certificados, redirecciones HTTP ni contenido final.</li>
           <li><strong>Sin contexto físico</strong>No detecta si una etiqueta falsa cubre el QR auténtico.</li>
-          <li><strong>Unicode heurístico</strong>No implementa todavía skeleton completo UTS #39.</li>
+          <li><strong>Unicode parcial</strong>Aplica el esqueleto UTS #39 solo con las equivalencias cuyo destino es ASCII, y sin normalización NFD.</li>
           <li><strong>Política por API</strong>La carga y administración visual de políticas queda para una versión posterior.</li>
           <li><strong>Resultado normal</strong>“Sin señales locales” nunca significa “destino seguro”.</li>
         </ul>
         <div class="note" style="margin-top:1.5rem">
-          <strong>Estado 0.1.4:</strong> contrato, estructura, análisis, 107 pruebas
-          y builds Android/iOS en verde. El APK Android v0.1.4 está
-          publicado; la matriz amplia de hardware físico y las tiendas siguen pendientes.
+          <strong>Estado 0.2.0:</strong> contrato de 28 reglas, estructura, formato,
+          análisis, 163 pruebas y builds Android/iOS en verde. El APK Android v0.2.0 está
+          publicado; el gesto de zona de lectura no se ha probado en un teléfono real, y
+          la matriz amplia de hardware físico y las tiendas siguen pendientes.
         </div>
       </div>
     </section>
@@ -216,14 +217,14 @@
       <div class="container">
         <p class="eyebrow">Usar RootCause QR Inspector</p>
         <h2 class="section-title">Instala la aplicación móvil Android</h2>
-        <p class="section-sub">El APK público se construye desde el tag v0.1.4, incluye SHA-256 y procedencia atestada. Android e iOS son las únicas plataformas del producto.</p>
+        <p class="section-sub">El APK público se construye desde el tag v0.2.0, incluye SHA-256 y procedencia atestada. Android e iOS son las únicas plataformas del producto.</p>
         <div class="download-grid">
           <article class="download-card primary">
             <span class="dl-badge">Android 7+</span>
-            <h3>APK v0.1.4</h3>
+            <h3>APK v0.2.0</h3>
             <p>Descarga directa para revisar el producto en un teléfono Android. Es una distribución por GitHub, no por Play Store.</p>
             <p class="dl-meta">APK · SHA-256 · procedencia pública</p>
-            <a class="btn-primary" href="https://github.com/vladimiracunadev-create/rootcause-qr-inspector/releases/download/v0.1.4/rootcause-qr-inspector-v0.1.4-android.apk">Descargar APK</a>
+            <a class="btn-primary" href="https://github.com/vladimiracunadev-create/rootcause-qr-inspector/releases/download/v0.2.0/rootcause-qr-inspector-v0.2.0-android.apk">Descargar APK</a>
           </article>
           <article class="download-card">
             <h3>Demo técnica web</h3>
@@ -305,7 +306,7 @@
       <div class="footer-col"><h4>Proyecto</h4><ul><li><a href="https://github.com/vladimiracunadev-create/rootcause-qr-inspector">Código fuente</a></li><li><a href="app/">Demo web</a></li><li><a href="privacidad.html">Privacidad</a></li></ul></div>
       <div class="footer-col"><h4>Base y seguridad</h4><ul><li><a href="https://github.com/vladimiracunadev-create/universal-code-scanner">Universal Code Scanner</a></li><li><a href="https://github.com/vladimiracunadev-create/rootcause-qr-inspector/security/policy">Reportar vulnerabilidad</a></li><li><a href="https://opensource.org/license/mit">Licencia MIT</a></li></ul></div>
     </div>
-    <div class="footer-bottom"><p>© 2026 Vladimir Acuña · RootCause QR Inspector 0.1.4</p></div>
+    <div class="footer-bottom"><p>© 2026 Vladimir Acuña · RootCause QR Inspector 0.2.0</p></div>
   </footer>
 </body>
 </html>

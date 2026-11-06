@@ -14,6 +14,11 @@ from urllib.parse import urlsplit
 
 ROOT = Path(__file__).resolve().parents[1]
 
+# Número de reglas del motor. Subirlo es parte de añadir una regla: obliga a
+# tocar el esquema, los textos, los fixtures y la documentación en el mismo
+# cambio, que es justo lo que este verificador existe para exigir.
+EXPECTED_RULE_COUNT = 28
+
 
 def fail(message: str) -> None:
     print(f"ERROR: {message}", file=sys.stderr)
@@ -33,8 +38,14 @@ def engine_rule_ids() -> set[str]:
         encoding="utf-8"
     )
     ids = set(re.findall(r"evaluate\('([a-z0-9-]+)'\)", text))
-    if len(ids) != 26:
-        fail(f"El motor 0.1.0 debe declarar 26 reglas; encontró {len(ids)}")
+    version = re.search(r"engineVersion = '([0-9.]+)'", text)
+    if version is None:
+        fail("El motor no declara engineVersion")
+    if len(ids) != EXPECTED_RULE_COUNT:
+        fail(
+            f"El motor {version.group(1)} debe declarar {EXPECTED_RULE_COUNT} "
+            f"reglas; encontró {len(ids)}"
+        )
     return ids
 
 
@@ -111,10 +122,14 @@ def check_fixtures(ids: set[str]) -> None:
         if payload.startswith(("http://", "https://")):
             host = (urlsplit(payload).hostname or "").lower()
             allowed_real_fixture_hosts = {"bit.ly"}
+            # Un subdominio de example.com está tan reservado como el propio
+            # example.com (RFC 2606): `es.example.com` no apunta a nadie, y
+            # la regla de sufijo incrustado necesita justo un fixture así.
             if (
                 host not in allowed_real_fixture_hosts
                 and not host.endswith(".example")
                 and host != "example.com"
+                and not host.endswith(".example.com")
                 and not host.startswith("192.168.")
                 and "@" not in payload.split("/", 3)[2]
             ):

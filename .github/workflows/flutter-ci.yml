@@ -35,12 +35,18 @@ jobs:
         run: |
           uv run --with pyyaml python tool/validate_structure.py --require-lock
           python3 tool/verify_rootcause_contract.py
+          python3 tool/generate_identity_data.py --check
       - name: Generate Android project and web demo
         run: python3 tool/bootstrap.py --platforms android,web
       - name: Verify dependency resolution
         run: |
           test -f pubspec.lock
           flutter pub deps --style=compact
+      - name: Format
+        # El formato era la única puerta que el repositorio no cerraba, y dos
+        # archivos ya estaban dentro sin formatear. Un gate que no se ejecuta
+        # no es un gate.
+        run: dart format --output=none --set-exit-if-changed lib test tool
       - name: Analyze
         run: flutter analyze --fatal-infos
       - name: Unit and widget tests

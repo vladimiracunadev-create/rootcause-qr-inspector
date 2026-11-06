@@ -18,7 +18,7 @@ Historial, inventarios, contraseñas Wi-Fi, semillas OTP, información de pagos,
 
 | Amenaza | Control |
 |---|---|
-| QR dirige a phishing o ejecutable | 26 reglas locales, hechos e hipótesis separados, dominio visible, confirmación y bloqueo de URI ambiguas |
+| QR dirige a phishing o ejecutable | 28 reglas locales, hechos e hipótesis separados, dominio visible, confirmación y bloqueo de URI ambiguas |
 | Acción no web inyecta controles | controles crudos o porcentuales se detectan en toda URI accionable y eliminan la acción externa |
 | Archivo importado impone un veredicto o id | límite de tamaño, esquema versionado, vista previa y recálculo obligatorio de todo campo derivado |
 | Pérdida de llave | incidencias de recuperación, respaldo cifrado, no recrear la llave durante descifrado y no borrar registros automáticamente |

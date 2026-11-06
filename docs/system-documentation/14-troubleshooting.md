@@ -70,12 +70,12 @@ orientada a quien **usa** la aplicación está en
 | **Solución** | Igualar ambos valores |
 | **Riesgo** | Ninguno. La comprobación existe porque esa deriva ya ocurrió antes |
 
-### `El motor 0.1.0 debe declarar 26 reglas; encontró N`
+### `El motor 0.2.0 debe declarar 28 reglas; encontró N`
 
 | Aspecto | Detalle |
 |---|---|
 | **Causa** | Se añadió o quitó una llamada a `evaluate('...')` |
-| **Solución** | Completar la entrega: motor, `QrFindingText`, esquema, `HEURISTICS.md`, fixture, pruebas y `engineVersion`. Si el número cambia a propósito, actualizar también el verificador |
+| **Solución** | Completar la entrega: motor, `QrFindingText`, esquema, `HEURISTICS.md`, fixture, pruebas y `engineVersion`. Si el número cambia a propósito, actualizar `EXPECTED_RULE_COUNT` en el verificador |
 | **Archivos** | `tool/verify_rootcause_contract.py`, motor, textos, esquema, heurísticas |
 | **Riesgo** | Cambiar solo el verificador para que pase **oculta** una regla huérfana |
 

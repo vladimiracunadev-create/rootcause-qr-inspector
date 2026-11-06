@@ -50,5 +50,5 @@ En 0.1.1 los pasos son manuales. El contrato futuro se bosqueja en
   producto.
 - El sensor QR trabaja antes de la acción. No sustituye la observación posterior
   del navegador ni del sistema.
-- Sus 26 reglas son específicas de cargas QR/códigos; no deben reutilizarse como
+- Sus 28 reglas son específicas de cargas QR/códigos; no deben reutilizarse como
   si fueran reglas de procesos, contratos o custodia.

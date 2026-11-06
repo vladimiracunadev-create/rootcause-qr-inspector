@@ -1,8 +1,10 @@
 import 'dart:convert';
 
 import 'package:crypto/crypto.dart';
+import 'package:rootcause_qr_inspector/core/investigation/public_suffix_list.dart';
 import 'package:rootcause_qr_inspector/core/investigation/qr_analysis_policy.dart';
 import 'package:rootcause_qr_inspector/core/investigation/qr_investigation.dart';
+import 'package:rootcause_qr_inspector/core/investigation/unicode_skeleton.dart';
 import 'package:rootcause_qr_inspector/models/parsed_content.dart';
 
 /// Motor local, puro y determinista de observaciones sobre cargas QR.
@@ -10,7 +12,11 @@ import 'package:rootcause_qr_inspector/models/parsed_content.dart';
 /// No consulta DNS, reputación, certificados ni redirecciones. Separa hechos
 /// observados de hipótesis y nunca emite el veredicto "seguro".
 abstract final class QrInvestigationEngine {
-  static const String engineVersion = '0.1.0';
+  // Dos reglas nuevas en 0.2.0: `host-whole-script-confusable` y
+  // `host-embedded-suffix`. Subir la versión del motor es obligatorio: sin
+  // ella, una evidencia exportada antes y otra después se declararían
+  // comparables sin serlo.
+  static const String engineVersion = '0.2.0';
 
   static const Set<String> _safeActionSchemes = <String>{
     'mailto',
@@ -132,7 +138,11 @@ abstract final class QrInvestigationEngine {
     ParsedContent? parsed,
     QrAnalysisPolicy policy = const QrAnalysisPolicy(),
     DateTime? analyzedAt,
+    PublicSuffixList? suffixes,
   }) {
+    // La lista incluida es la de la aplicación; una organización puede
+    // analizar con su propia copia, más reciente, sin tocar el motor.
+    final PublicSuffixList suffixList = suffixes ?? PublicSuffixList.bundled;
     // La carga observada se conserva byte por byte para la huella forense. Solo
     // la copia de trabajo se recorta para que el parser de URI sea tolerante a
     // espacios accidentales alrededor de un código.
@@ -259,7 +269,13 @@ abstract final class QrInvestigationEngine {
 
     String? host;
     if (webUri != null) {
-      final String webHost = webUri.host.toLowerCase();
+      // `Uri` devuelve el host percent-codificado: un host escrito en
+      // cirílico llegaba aquí como `%d1%80%d0%b0…`, puro ASCII. Así,
+      // `host-unicode` y `host-mixed-script` no se disparaban nunca con un
+      // host en otro alfabeto —justo el caso que dicen cubrir—, y la
+      // evidencia mostraba a la persona una cadena de porcentajes en lugar
+      // del nombre que tiene delante. Se decodifica antes de analizar.
+      final String webHost = _decodedHost(webUri.host);
       host = webHost;
       final String authority = _rawAuthority(value);
       final String authorityLower = authority.toLowerCase();
@@ -329,6 +345,25 @@ abstract final class QrInvestigationEngine {
         );
       }
 
+      // Va después de `host-mixed-script` y antes de `host-unicode` a
+      // propósito: es el caso que la mezcla no ve —un host escrito entero en
+      // otra escritura— y tiene que pesar más que el aviso genérico de un
+      // dominio internacional legítimo.
+      evaluate('host-whole-script-confusable');
+      if (UnicodeSkeleton.isWholeScriptConfusable(webHost)) {
+        add(
+          'host-whole-script-confusable',
+          QrSeverity.critical,
+          28,
+          QrFindingConfidence.high,
+          QrFindingCategory.identity,
+          <QrEvidenceFact>[
+            QrEvidenceFact(id: 'normalizedHost', value: webHost),
+            QrEvidenceFact(id: 'skeleton', value: UnicodeSkeleton.of(webHost)),
+          ],
+        );
+      }
+
       evaluate('host-unicode');
       if (webHost.runes.any((int rune) => rune > 127)) {
         add(
@@ -380,6 +415,7 @@ abstract final class QrInvestigationEngine {
       }
 
       final int domainLabels = webHost.isEmpty ? 0 : webHost.split('.').length;
+      final String? registrableDomain = suffixList.registrableDomainOf(webHost);
       evaluate('host-deep-subdomains');
       if (domainLabels > policy.maxDomainLabels) {
         add(
@@ -390,6 +426,28 @@ abstract final class QrInvestigationEngine {
           QrFindingCategory.identity,
           <QrEvidenceFact>[
             QrEvidenceFact(id: 'subdomainLabels', value: '$domainLabels'),
+            // El dato que resuelve la pregunta que el hallazgo plantea: entre
+            // tanta etiqueta, cuál es el dominio que alguien registró.
+            if (registrableDomain != null)
+              QrEvidenceFact(id: 'registrableDomain', value: registrableDomain),
+          ],
+        );
+      }
+
+      evaluate('host-embedded-suffix');
+      final String? embeddedSuffix = _embeddedPublicSuffix(webHost, suffixList);
+      if (embeddedSuffix != null) {
+        add(
+          'host-embedded-suffix',
+          QrSeverity.warning,
+          12,
+          QrFindingConfidence.medium,
+          QrFindingCategory.identity,
+          <QrEvidenceFact>[
+            QrEvidenceFact(id: 'host', value: webHost),
+            QrEvidenceFact(id: 'embeddedSuffix', value: embeddedSuffix),
+            if (registrableDomain != null)
+              QrEvidenceFact(id: 'registrableDomain', value: registrableDomain),
           ],
         );
       }
@@ -547,7 +605,11 @@ abstract final class QrInvestigationEngine {
       }
 
       evaluate('redirect-nested-domain');
-      final _NestedRedirect? nested = _nestedRedirect(webUri, webHost);
+      final _NestedRedirect? nested = _nestedRedirect(
+        webUri,
+        webHost,
+        suffixList,
+      );
       if (nested != null) {
         add(
           'redirect-nested-domain',
@@ -564,6 +626,7 @@ abstract final class QrInvestigationEngine {
 
       evaluate('brand-domain-mismatch');
       final _BrandMismatch? brand = _brandMismatch(
+        webHost,
         webUri,
         policy.trustedBrands,
       );
@@ -613,9 +676,11 @@ abstract final class QrInvestigationEngine {
     const Set<String> phishingSignals = <String>{
       'authority-userinfo',
       'brand-domain-mismatch',
+      'host-embedded-suffix',
       'host-mixed-script',
       'host-punycode',
       'host-shortener',
+      'host-whole-script-confusable',
       'redirect-nested-domain',
     };
     if (ids.any(phishingSignals.contains)) {
@@ -733,6 +798,13 @@ abstract final class QrInvestigationEngine {
         (parts[0] == 169 && parts[1] == 254);
   }
 
+  /// Host decodificado y en minúsculas.
+  ///
+  /// Una secuencia porcentual malformada se deja tal cual: el host sigue
+  /// siendo analizable y el resto de las reglas lo ven igual que antes.
+  static String _decodedHost(String host) =>
+      _safeDecode(host).toLowerCase().trim();
+
   static bool _hasMixedScripts(String host) {
     bool latin = false;
     bool cyrillic = false;
@@ -776,15 +848,26 @@ abstract final class QrInvestigationEngine {
 
   static bool _looksLikeCredentialLure(Uri uri) {
     final String value = '${uri.path}?${uri.query}'.toLowerCase();
+    // El catálogo mezcla inglés y español a propósito: el producto se usa en
+    // español y la ruta señuelo también viene en español. Hasta 0.1.4 estaba
+    // `access` pero no `acceso`, así que el fixture `userinfo-host-confusion`
+    // declaraba un hallazgo que el motor nunca producía —y nadie lo notaba,
+    // porque los fixtures se verificaban por estructura y no se ejecutaban—.
     return const <String>[
       'access',
+      'acceso',
       'account',
       'auth',
       'banco',
       'bank',
       'clave',
+      'contrasena',
+      'contraseña',
       'cuenta',
       'credential',
+      'desbloquear',
+      'ingresar',
+      'ingreso',
       'login',
       'mfa',
       'oauth',
@@ -795,15 +878,21 @@ abstract final class QrInvestigationEngine {
       'signin',
       'sso',
       'token',
+      'restablecer',
       'unlock',
       'validar',
+      'verificar',
       'verification',
       'verify',
       'wallet',
     ].any(value.contains);
   }
 
-  static _NestedRedirect? _nestedRedirect(Uri uri, String visibleHost) {
+  static _NestedRedirect? _nestedRedirect(
+    Uri uri,
+    String visibleHost,
+    PublicSuffixList suffixes,
+  ) {
     for (final MapEntry<String, String> entry in uri.queryParameters.entries) {
       final String key = entry.key.toLowerCase();
       if (!_redirectParameters.contains(key)) continue;
@@ -813,21 +902,48 @@ abstract final class QrInvestigationEngine {
       final Uri? nested = _toWebUri(candidate);
       if (nested == null || nested.host.isEmpty) continue;
       final String nestedHost = nested.host.toLowerCase();
-      if (!_sameHostFamily(visibleHost, nestedHost)) {
+      if (!suffixes.sameRegistrableDomain(visibleHost, nestedHost)) {
         return _NestedRedirect(parameter: entry.key, host: nestedHost);
       }
     }
     return null;
   }
 
-  static bool _sameHostFamily(String first, String second) =>
-      first == second ||
-      first.endsWith('.$second') ||
-      second.endsWith('.$first');
+  /// Sufijo público escrito dentro del host, antes del dominio registrable.
+  ///
+  /// Es el patrón `pago.com.atacante.example`: el dominio de primer nivel que
+  /// la persona reconoce aparece como etiqueta intermedia, donde no manda
+  /// nada. El dominio real es el registrable, y va al final.
+  ///
+  /// Límite declarado: **no** se disparan los ccTLD de dos letras. `es.`,
+  /// `de.`, `uk.` y `cl.` son subdominios de idioma o de región completamente
+  /// normales —`es.ejemplo.com`—, y tratarlos como suplantación convertiría
+  /// el hallazgo en ruido. Se pierden así los ataques que incrustan un ccTLD
+  /// corto; a cambio, lo que el hallazgo afirma se sostiene.
+  static String? _embeddedPublicSuffix(String host, PublicSuffixList suffixes) {
+    final String? registrable = suffixes.registrableDomainOf(host);
+    if (registrable == null) return null;
+    final List<String> labels = host.toLowerCase().split('.');
+    final int prefixLength = labels.length - registrable.split('.').length;
+    if (prefixLength <= 0) return null;
+    final List<String> prefix = labels.sublist(0, prefixLength);
+    // Dos etiquetas primero: `com.br` incrustado dice más que `br` suelto.
+    for (int size = 2; size >= 1; size--) {
+      for (int start = 0; start + size <= prefix.length; start++) {
+        final String candidate = prefix.sublist(start, start + size).join('.');
+        final bool longEnough = size > 1 || candidate.length >= 3;
+        if (longEnough && suffixes.isPublicSuffix(candidate)) return candidate;
+      }
+    }
+    return null;
+  }
 
-  static _BrandMismatch? _brandMismatch(Uri uri, List<QrTrustedBrand> brands) {
-    if (brands.isEmpty || uri.host.isEmpty) return null;
-    final String host = uri.host.toLowerCase();
+  static _BrandMismatch? _brandMismatch(
+    String host,
+    Uri uri,
+    List<QrTrustedBrand> brands,
+  ) {
+    if (brands.isEmpty || host.isEmpty) return null;
     final String comparable = _comparable('$host${uri.path}');
     for (final QrTrustedBrand brand in brands) {
       final bool allowed = brand.allowedHosts
@@ -845,8 +961,12 @@ abstract final class QrInvestigationEngine {
     return null;
   }
 
-  static String _comparable(String value) =>
-      value.toLowerCase().replaceAll(RegExp(r'[^a-z0-9]'), '');
+  /// Forma comparable de un valor: esqueleto UTS #39 sin signos.
+  ///
+  /// Pasa por el esqueleto para que una marca escrita en cirílico deje de
+  /// esquivar su propio token: el token latino y su copia cirílica llegan al
+  /// mismo valor comparable.
+  static String _comparable(String value) => UnicodeSkeleton.comparable(value);
 }
 
 class _FindingCollector {

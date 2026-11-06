@@ -21,9 +21,9 @@ Los PDF mayores de 50 páginas muestran el total y dejan claro que solo se
 inspeccionan las primeras 50. En web esta capacidad está **PLANIFICADA**.
 
 Para Android 7 o posterior, descarga el APK público desde
-[`GitHub Release v0.1.4`](https://github.com/vladimiracunadev-create/rootcause-qr-inspector/releases/tag/v0.1.4)
+[`GitHub Release v0.2.0`](https://github.com/vladimiracunadev-create/rootcause-qr-inspector/releases/tag/v0.2.0)
 o usa la
-[`descarga directa`](https://github.com/vladimiracunadev-create/rootcause-qr-inspector/releases/download/v0.1.4/rootcause-qr-inspector-v0.1.4-android.apk).
+[`descarga directa`](https://github.com/vladimiracunadev-create/rootcause-qr-inspector/releases/download/v0.2.0/rootcause-qr-inspector-v0.2.0-android.apk).
 Android puede pedir autorización para instalar desde el navegador o gestor de
 archivos usado. El Release incluye el archivo `.sha256` para comprobar la
 descarga.
@@ -33,6 +33,35 @@ La demo técnica web está disponible en
 No se considera una aplicación soportada ni sustituye las pruebas móviles. Las
 únicas aplicaciones objetivo son Android e iOS, con cámara, imágenes y PDF
 según las capacidades de cada sistema.
+
+## Ajustar la zona de lectura
+
+La zona de lectura es el recuadro central de la cámara. **Pellizca sobre la
+imagen con dos dedos**: al separarlos crece y, pasado cierto punto, la cámara
+ocupa toda la pantalla; al juntarlos vuelve al tamaño pequeño.
+
+- Mientras ajustas aparece el porcentaje —«Zona de lectura 78 %»— y avisa
+  cuándo llegas al máximo. Se va solo a los pocos segundos.
+- Hace falta usar **dos dedos**. Con uno solo, tocar la imagen sigue siendo el
+  enfoque de la cámara.
+- El tamaño que elijas **se recuerda** para la próxima vez, y el mismo gesto
+  funciona en el visor de Inventario.
+- A pantalla completa, el botón para analizar una imagen o un PDF se mueve a la
+  esquina superior derecha de la cámara.
+- Si no puedes hacer el gesto, el mismo ajuste está en **Ajustes → Inspección
+  QR → Zona de lectura**, como deslizador, con su porcentaje locutado.
+
+El recuadro **encuadra, no filtra**: la lectura analiza toda la imagen, dentro y
+fuera del recuadro. Ampliarlo ayuda a apuntar y a ver, no cambia lo que el
+sensor es capaz de leer.
+
+## Si la cámara no lee nada
+
+Pasados unos segundos analizando sin resultado, el estado te lo dice y te
+propone qué hacer: primero acercarte al código, y después analizar una
+**fotografía ya tomada** con «Analizar archivo». Esa segunda vía no depende del
+pulso, de la luz ni de la distancia, y suele resolver el caso de un código
+pequeño, curvo o impreso en mal estado.
 
 ## Antes de inspeccionar
 

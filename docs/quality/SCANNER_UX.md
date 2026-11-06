@@ -188,3 +188,89 @@ comprobar que un QR lejano se lee en un teléfono real. Las pruebas de
 `test/features/scanner_engine_config_test.dart` solo impiden que la
 configuración vuelva a los valores que causaron el reporte. La comprobación en
 hardware sigue pendiente y está declarada como tal.
+
+---
+
+## 7. Maximizar y minimizar la zona de lectura
+
+Reporte textual: *«dar la opción de maximizar o minimizar la zona de lectura del
+código […] con el gesto por defecto de la pantalla táctil, no por un botón; y
+que salga un porcentaje a modo de información de la tarea»*.
+
+Antes de este cambio el encuadre era fijo: un cuadrado del 72 % del ancho de la
+vista previa (64 % en pantallas cortas o estrechas), y el único ajuste
+relacionado —«Marco de encuadre»— solo lo dibujaba o lo ocultaba. No había
+forma de darle más imagen a la cámara.
+
+### Qué hace el gesto
+
+| Gesto | Efecto | Señal |
+|---|---|---|
+| Pellizcar separando dos dedos sobre la vista previa | La amplitud sube hasta 1; el marco crece | Indicador «Zona de lectura N %» |
+| Cuadruplicar la distancia entre los dedos | Recorre el rango completo hacia arriba; reducirla a la cuarta parte lo recorre hacia abajo | — |
+| Pasar del 85 % de amplitud | El encabezado y las insignias se retiran, la vista previa pierde margen y esquinas redondeadas y ocupa toda la pestaña | «Zona de lectura 100 % · máxima» |
+| Pellizcar juntando los dedos | La amplitud baja; el encabezado vuelve | Indicador con el nuevo porcentaje |
+| Levantar los dedos | La amplitud se guarda en preferencias | El indicador se desvanece a los 1,6 s |
+
+La amplitud es **continua**, no un interruptor de dos posiciones, porque el
+gesto lo es: un pellizco a medias debe dejar un encuadre a medias. El
+porcentaje mostrado va de 50 % a 100 %; declarar 0 % en el extremo pequeño
+diría «sin zona de lectura», que es justo lo que no ocurre —el encuadre mínimo
+sigue cubriendo la mitad de la imagen—.
+
+El recorrido es **logarítmico**, y esa decisión la impuso el dispositivo. La
+primera versión restaba `scale - 1`: separar los dedos multiplica la distancia
+sin techo, así que maximizar salía de un gesto; juntarlos, en cambio, nunca baja
+de cero, de modo que la resta no podía bajar más de un punto y **volver del
+máximo al mínimo exigía varios pellizcos**. El pellizco real en el emulador lo
+destapó en su segundo paso: el encabezado no volvía. Con el logaritmo, ir y
+volver cuestan el mismo gesto.
+
+### Decisiones y por qué
+
+| Decisión | Motivo |
+|---|---|
+| Pellizco de **dos dedos**, y el detector al fondo de la pila | Un dedo sobre la vista previa es el toque de enfoque de `MobileScanner`, y el deslizador de zoom y los botones están por encima del detector: ninguno pierde su gesto |
+| El pellizco ajusta la **zona de lectura**, no el zoom de la cámara | Es lo pedido. El zoom conserva su deslizador propio, visible y etiquetado, así que no se pierde ninguna de las dos funciones. Queda anotado como riesgo de descubrimiento: en muchas aplicaciones de cámara el pellizco significa zoom |
+| La pista «Pellizca para ampliar la zona» aparece una vez, al arrancar la cámara, en el mismo indicador | Una función que solo existe como gesto no se descubre. No va en la barra de estado porque su línea secundaria se recorta a un renglón: un texto más largo saldría con puntos suspensivos. La pista cede el sitio al porcentaje en cuanto empieza el gesto |
+| Control equivalente en **Ajustes → Inspección QR** | Un gesto de dos dedos no es operable con lector de pantalla ni con control por conmutador. El deslizador de Ajustes expone el mismo valor y su porcentaje |
+| El indicador **no** es un control | No acepta toques, así que no compite con la cámara ni introduce un objetivo táctil que tape imagen; aparece con el gesto y se va solo |
+| La amplitud se **recuerda** | Quien inspecciona códigos pequeños o lejanos quiere el mismo encuadre en la lectura siguiente. Se guarda al terminar el gesto, no en cada cuadro |
+| Pantalla completa a partir de 0,85 y no de 1 exacto | Un pellizco rara vez termina en el extremo justo; exigirlo convertiría «pantalla completa» en algo casi inalcanzable |
+| A pantalla completa, «Analizar archivo» se traslada a la esquina superior derecha | El botón vivía en el encabezado, que ya no se dibuja. La barra de estado reserva ese hueco en lugar de quedar debajo del botón |
+
+### Qué comprueban las pruebas y qué no
+
+`test/features/scanner_viewport_geometry_test.dart` fija que el marco nunca
+invade la barra de estado ni la banda de controles **en toda la amplitud** y en
+cuatro tamaños de vista previa, que crecer el pellizco nunca encoge el marco,
+que el umbral de pantalla completa es el declarado y que el porcentaje va de 50
+a 100 incluso con una preferencia fuera de rango.
+
+Lo que **no** demuestran: que el pellizco se sienta natural en un teléfono real,
+que no compita con el toque de enfoque en hardware ni que el porcentaje se lea
+sin esfuerzo a pleno sol. Eso exige la matriz física, que sigue pendiente y
+declarada como tal.
+
+### El mismo gesto en el Inventario
+
+El inventario cuenta unidades en serie, así que su zona de lectura no es un
+recuadro dentro de la cámara: **es el alto del visor**. Hasta 0.1.4 medía 230 px
+fijos, con la lista de unidades debajo. Contar treinta cajas por esa franja era
+la operación más incómoda del producto.
+
+Ahora el mismo pellizco, con la misma preferencia, lleva el visor hasta el 58 %
+de la pantalla y le cede alto a la lista. El techo no es un capricho: por debajo
+del visor siguen la lista y la barra de navegación, y un visor que se las coma
+deja la pantalla sin salida.
+
+Dos diferencias deliberadas con el inspector:
+
+| Inspector | Inventario |
+|---|---|
+| Al máximo retira el encabezado y ocupa la pestaña entera | Nunca ocupa la pestaña entera: la lista de unidades es parte de la tarea |
+| Marco cuadrado, para QR | Marco **rectangular ancho**, y su alto nunca pasa del 62 % de su ancho: un inventario lee códigos de barras lineales |
+
+Corregido de paso: el marco fijo se metía parcialmente debajo de la barra de
+estado del propio visor. Ahora se centra en la banda que queda por encima de
+ella.

@@ -11,7 +11,7 @@
 ║  ╚═╝  ╚═╝ ╚═════╝  ╚═════╝    ╚═╝    ╚═════╝ ╚═╝  ╚═╝ ╚═════╝╚══════╝╚══════╝     ║
 ║                                                                                   ║
 ║                         Q R   I N S P E C T O R                                   ║
-║            Sensor de seguridad QR · Flutter · local-first · v0.1.4                ║
+║            Sensor de seguridad QR · Flutter · local-first · v0.2.0                ║
 ╚═══════════════════════════════════════════════════════════════════════════════════╝
 ```
 
@@ -19,14 +19,14 @@
   <img src="assets/launcher/icon-1024.png" width="112" alt="Icono RootCause QR Inspector: escudo con señal QR" />
 </p>
 
-[![Version](https://img.shields.io/badge/version-0.1.4-blue.svg)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-0.2.0-blue.svg)](CHANGELOG.md)
 [![Flutter](https://img.shields.io/badge/Flutter-3.44.7-02569B.svg?logo=flutter)](pubspec.yaml)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Telemetry](https://img.shields.io/badge/telemetry-zero-success.svg)](docs/PRIVACY_POLICY.md)
 [![CI](https://github.com/vladimiracunadev-create/rootcause-qr-inspector/actions/workflows/flutter-ci.yml/badge.svg)](https://github.com/vladimiracunadev-create/rootcause-qr-inspector/actions/workflows/flutter-ci.yml)
 [![Landing](https://img.shields.io/badge/landing-GitHub%20Pages-12847b.svg?logo=github)](https://vladimiracunadev-create.github.io/rootcause-qr-inspector/)
 
-📱 **[Descargar Android →](https://github.com/vladimiracunadev-create/rootcause-qr-inspector/releases/latest/download/rootcause-qr-inspector-v0.1.4-android.apk)** ·
+📱 **[Descargar Android →](https://github.com/vladimiracunadev-create/rootcause-qr-inspector/releases/latest/download/rootcause-qr-inspector-v0.2.0-android.apk)** ·
 🌐 **[Página del producto →](https://vladimiracunadev-create.github.io/rootcause-qr-inspector/)** ·
 📘 **[Manual de usuario →](docs/MANUAL_USUARIO.md)**
 
@@ -43,22 +43,27 @@ No es un lector que abre enlaces con una advertencia añadida. Es un **sensor de
 apoyo a la decisión**: nunca ejecuta la carga al detectarla, explica por qué un
 QR puede ser peligroso y deja que la persona decida después de ver la evidencia.
 
-> **Estado de 0.1.4:** mejora preparada como **APK Android** mediante GitHub
+> **Estado de 0.2.0:** mejora preparada como **APK Android** mediante GitHub
 > Releases, con checksum SHA-256 y verificación técnica del paquete APK. Esta
-> entrega mejora la lectura de códigos pequeños en PDF, confirma con sonido y
-> vibración los archivos válidos, exporta Historial/Inventario a HTML y abre
-> enlaces web en el navegador o una pestaña nueva.
-> Conserva la descarga PNG/SVG del generador y las correcciones de lectura de
-> 0.1.1. La firma comercial de tienda, Play
-> Store/App Store, iOS y la matriz física móvil completa siguen pendientes. La
-> web es un canal de demostración, no una aplicación objetivo.
+> entrega pone la **zona de lectura** en manos de la persona —se maximiza y se
+> minimiza pellizcando, con el porcentaje a la vista, también en Inventario— y
+> le da al motor los datos que le faltaban para hablar de identidad de dominio:
+> Public Suffix List completa y esqueleto de confusión UTS #39, con dos reglas
+> nuevas (28 en total) y el dominio registrable como evidencia visible.
+> Corrige además tres huecos reales: un host Unicode se analizaba
+> percent-codificado y no disparaba ningún hallazgo de identidad, el catálogo de
+> rutas señuelo no tenía `acceso`, y la redirección anidada comparaba dominios
+> por texto. Conserva todo lo de 0.1.4. **El gesto no está probado en un
+> teléfono real.** La firma comercial de tienda, Play Store/App Store, iOS y la
+> matriz física móvil completa siguen pendientes. La web es un canal de
+> demostración, no una aplicación objetivo.
 
 ## 🔍 Qué problema resuelve
 
 Un QR es una instrucción opaca: a simple vista no permite distinguir el sitio
 real de una copia ni un pago legítimo de una sustitución. RootCause QR
 Inspector captura la carga, la interpreta, registra hechos observables y aplica
-un motor local de 26 reglas con ids estables. Solo después ofrece una acción.
+un motor local de 28 reglas con ids estables. Solo después ofrece una acción.
 
 El producto **no se llama “RootCause QR Phishing”** porque RootCause se organiza
 por superficie observable. El QR es la superficie; `qr-phishing-suspected` es
@@ -121,7 +126,7 @@ capacidades y sus cambios está en
 flowchart TD
     A["Cámara · imagen · PDF"] --> B["Captura y parser"]
     B --> C["Observaciones locales"]
-    C --> D["26 reglas aplicables"]
+    C --> D["28 reglas aplicables"]
     D --> E["Hallazgos + evidencia"]
     E --> F["Hipótesis separadas"]
     F --> G{"Política de acción"}
@@ -170,7 +175,7 @@ Las imágenes se limitan a 20 por lote y 50 MiB por archivo; los PDF a 50 MiB y
 entrada está **PLANIFICADA**, no soportada, porque el decodificador actual no
 analiza imágenes en navegador.
 
-> Estado de 0.1.4: análisis estricto, 107 pruebas, web release y APK release
+> Estado de 0.2.0: análisis estricto, 163 pruebas, web release y APK release
 > correctos. La decodificación de la matriz completa de fixtures en hardware
 > físico continúa como validación pendiente, no como una promesa ya cumplida.
 
@@ -235,12 +240,12 @@ La cámara virtual del AVD entregó imagen: se verificaron lectura automática,
 `Pausar`, `Reanudar` y retorno efectivo a `Inspección activa`. La jerarquía
 accesible no contiene la antigua instrucción de tocar la pantalla.
 
-## 🛡️ Las señales que observa en 0.1.4
+## 🛡️ Las señales que observa en 0.2.0
 
 | Familia | Hallazgos principales |
 |---|---|
 | Transporte | HTTP sin TLS, puerto inusual |
-| Identidad del host | Punycode, alfabetos mezclados, Unicode, IP literal, dominio profundo, punto final, densidad de guiones |
+| Identidad del host | Punycode, alfabetos mezclados, **escritura completa que se lee como latina**, Unicode, IP literal, dominio profundo, **dominio de primer nivel incrustado**, punto final, densidad de guiones |
 | Destino | host vacío, red privada/local, acortador |
 | Ofuscación | usuario antes del host, controles invisibles, barras/espacios/@ ambiguos, separadores codificados, longitud excesiva |
 | Credenciales | rutas de acceso, verificación, cuenta, banco, contraseña o MFA |
@@ -250,7 +255,12 @@ accesible no contiene la antigua instrucción de tocar la pantalla.
 | Acciones sensibles | OTP, pagos interoperables y criptomonedas |
 | Contenido opaco | carga binaria no interpretable |
 
-La especificación exacta de los 26 ids, severidades, pesos, evidencia y falsos
+Cada hallazgo de identidad lleva ahora el **dominio registrable** como
+evidencia: entre tantas etiquetas, cuál es el dominio que alguien registró de
+verdad. Sale de la Public Suffix List incluida, con su fecha declarada en
+[`docs/rootcause/IDENTITY_DATA.md`](docs/rootcause/IDENTITY_DATA.md).
+
+La especificación exacta de los 28 ids, severidades, pesos, evidencia y falsos
 positivos está en [`docs/rootcause/HEURISTICS.md`](docs/rootcause/HEURISTICS.md).
 
 ## 🔬 Hallazgo no es hipótesis
@@ -289,7 +299,7 @@ Incluirlos requiere una decisión explícita porque pueden contener OTP,
 contraseñas Wi-Fi, identidad, datos personales o instrucciones de pago.
 Contrato: [`schemas/rootcause-qr-evidence.schema.json`](schemas/rootcause-qr-evidence.schema.json).
 
-La interfaz 0.1.4 comparte únicamente la variante redactada. La inclusión de
+La interfaz 0.2.0 comparte únicamente la variante redactada. La inclusión de
 carga completa existe para integraciones mediante el parámetro explícito
 `includeRawPayload`; no hay un botón que la active por accidente.
 
@@ -376,14 +386,14 @@ El estado comprobado y lo pendiente se declara en [`VALIDATION.md`](VALIDATION.m
 La CI conserva artefactos técnicos de verificación —cobertura, SBOM CycloneDX,
 inventario de licencias y checksums— y el APK instalable de release. Un tag
 `vX.Y.Z` publica el APK Android y su SHA-256 en un GitHub Release verificable;
-el último es [`v0.1.4`](https://github.com/vladimiracunadev-create/rootcause-qr-inspector/releases/tag/v0.1.4).
+el último es [`v0.2.0`](https://github.com/vladimiracunadev-create/rootcause-qr-inspector/releases/tag/v0.2.0).
 Otros targets que compile Flutter no se presentan como producto publicado.
 
 ## 📱 Plataformas móviles y firmas
 
-| Plataforma | Estado 0.1.4 | Limitación principal |
+| Plataforma | Estado 0.2.0 | Limitación principal |
 |---|---|---|
-| Teléfono Android 7+ | **producto publicado** como [APK v0.1.4](https://github.com/vladimiracunadev-create/rootcause-qr-inspector/releases/tag/v0.1.4) | SHA-256 publicado por CI; la matriz amplia de dispositivos y Play Store siguen pendientes |
+| Teléfono Android 7+ | **producto publicado** como [APK v0.2.0](https://github.com/vladimiracunadev-create/rootcause-qr-inspector/releases/tag/v0.2.0) | SHA-256 publicado por CI; la matriz amplia de dispositivos y Play Store siguen pendientes |
 | iPhone / iOS | objetivo móvil, no publicado | firma, App Store y validación en iPhone pendientes |
 | Tablet Android | layout móvil grande verificado en emulación 1600×2560/320 dpi | falta confirmar cámara, galería y rotación en tablet física |
 | iPad | candidato móvil, no declarado compatible | instalación, cámara, galería, rotación y diseño adaptable pendientes |
@@ -405,10 +415,10 @@ prueba en hardware físico de tablet.
 ### ✅ Incluye
 
 - fuente Flutter, lockfile y generación reproducible de proyectos nativos;
-- motor de 26 reglas, contrato JSON, fixtures y pruebas unitarias/widgets;
+- motor de 28 reglas, contrato JSON, fixtures y pruebas unitarias/widgets;
 - historial e inventario cifrados, modo temporal y recuperación;
 - CI, SBOM, licencias, checksums y landing;
-- GitHub Release `v0.1.4` con APK Android instalable y SHA-256 publicado;
+- GitHub Release `v0.2.0` con APK Android instalable y SHA-256 publicado;
 - documentación de arquitectura, operación, amenazas, privacidad y límites.
 
 ### ❌ Todavía no incluye
@@ -483,7 +493,7 @@ Los PDF se generan desde esos mismos Markdown con
 | [`docs/MANUAL_USUARIO.md`](docs/MANUAL_USUARIO.md) | Uso de inspección, resultados, historial, inventario y ajustes |
 | [`docs/DETECCION_AMENAZAS.md`](docs/DETECCION_AMENAZAS.md) | Cobertura local por amenaza y fronteras de interpretación |
 | [`docs/rootcause/ARCHITECTURE.md`](docs/rootcause/ARCHITECTURE.md) | Flujo causal, fronteras, contratos y decisiones |
-| [`docs/rootcause/HEURISTICS.md`](docs/rootcause/HEURISTICS.md) | Las 26 reglas, pesos, evidencia y falsos positivos |
+| [`docs/rootcause/HEURISTICS.md`](docs/rootcause/HEURISTICS.md) | Las 28 reglas, pesos, evidencia y falsos positivos |
 | [`docs/rootcause/LIMITATIONS.md`](docs/rootcause/LIMITATIONS.md) | Lo que el análisis local no puede concluir |
 | [`schemas/rootcause-qr-evidence.schema.json`](schemas/rootcause-qr-evidence.schema.json) | Contrato JSON de evidencia exportable |
 | [`docs/security/THREAT_MODEL.md`](docs/security/THREAT_MODEL.md) | Activos, amenazas, controles y riesgo residual |
@@ -505,6 +515,16 @@ actualizar motor, textos, pruebas, documentación y contrato de evidencia.
 
 MIT · © 2026 Vladimir Acuña. Se conserva la procedencia del código derivado de
 Universal Code Scanner en el historial documental y en la licencia.
+
+Dos tablas de datos de terceros viajan dentro del producto y **conservan los
+términos de su origen**, no la licencia MIT de este repositorio: la
+[Public Suffix List](https://publicsuffix.org/) de Mozilla Foundation
+(MPL-2.0) y el archivo de confusables de
+[UTS #39](https://www.unicode.org/reports/tr39/) de Unicode, Inc.
+(`https://www.unicode.org/terms_of_use.html`). Los archivos originales están en
+`assets/data/` con su aviso intacto, y las tablas generadas declaran su
+procedencia en la cabecera. Detalle y alcance en
+[`docs/rootcause/IDENTITY_DATA.md`](docs/rootcause/IDENTITY_DATA.md).
 
 ## ✍️ Autor
 
