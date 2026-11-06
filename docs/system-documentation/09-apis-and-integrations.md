@@ -195,19 +195,19 @@ No son APIs de red: son servicios del sistema operativo a través de plugins.
 
 | Interfaz | Paquete | Qué pide | Permiso | Si falla |
 |---|---|---|---|---|
-| Cámara | `mobile_scanner` 7.4.0 | Cuadros para decodificar | `CAMERA` | Estado `unavailable` con acción de reintento |
-| Galería | `image_picker` 1.2.3 | Hasta 20 imágenes | Selector del sistema | Lote vacío, mensaje |
+| Cámara | `mobile_scanner` 7.4.2 | Cuadros para decodificar | `CAMERA` | Estado `unavailable` con acción de reintento |
+| Galería | `image_picker` 1.2.4 | Hasta 20 imágenes | Selector del sistema | Lote vacío, mensaje |
 | Archivos | `file_picker` 12.0.0 | JSON o PDF | Selector del sistema | Se cancela sin efecto |
 | Render de PDF | `pdfrx` 2.4.5 | Páginas a imagen | — | `UnsupportedError` en web |
-| Almacén seguro | `flutter_secure_storage` 11.0.0 | Guardar la llave | Keychain / Keystore | Arranque seguro y modo temporal |
+| Almacén seguro | `flutter_secure_storage` 11.2.0 | Guardar la llave | Keychain / Keystore | Arranque seguro y modo temporal |
 | Autenticación local | `local_auth` 3.0.2 | Huella, rostro o PIN | `USE_BIOMETRIC` | Devuelve `false`; la app sigue bloqueada |
 | Audio | `audioplayers` 6.8.1 | Reproducir el tono | — | Degrada al sonido del sistema |
 | Vibración | `flutter/services` | `heavyImpact` | — | Se ignora |
 | Portapapeles | `flutter/services` | Copiar y limpiar | — | Se ignora |
-| Compartir | `share_plus` 13.3.0 | Entregar un archivo | — | Excepción capturada por la pantalla |
-| Abrir URI | `url_launcher` 6.3.2 | Delegar la URI | — | Mensaje: no hay aplicación compatible |
+| Compartir | `share_plus` 13.3.1 | Entregar un archivo | — | Excepción capturada por la pantalla |
+| Abrir URI | `url_launcher` 6.3.3 | Delegar la URI | — | Mensaje: no hay aplicación compatible |
 | Directorios | `path_provider` 2.1.6 | Soporte y temporal | — | Arranque seguro |
-| Preferencias | `shared_preferences` 2.5.5 | Configuración | — | Valores por defecto |
+| Preferencias | `shared_preferences` 2.5.6 | Configuración | — | Valores por defecto |
 
 ### Permisos declarados
 

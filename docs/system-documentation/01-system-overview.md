@@ -145,10 +145,10 @@ depende de la decisión del motor y de una confirmación.
 |---|---|---|
 | Lenguaje | Dart | `>=3.12.0 <4.0.0` |
 | Framework | Flutter | `>=3.44.0`, fijado a 3.44.7 en `.fvmrc` |
-| Base de datos | Sembast (archivo) / sembast_web (IndexedDB) | 3.8.9+1 / 2.4.5+1 |
+| Base de datos | Sembast (archivo) / sembast_web (IndexedDB) | 3.10.0 / 2.4.6+1 |
 | Cifrado | `cryptography` (AES-GCM 256) | 2.9.0 |
-| Almacén de llaves | `flutter_secure_storage` | 11.0.0 |
-| Captura | `mobile_scanner` | 7.4.0 |
+| Almacén de llaves | `flutter_secure_storage` | 11.2.0 |
+| Captura | `mobile_scanner` | 7.4.2 |
 | Generación de códigos | `barcode_widget` | 2.0.4 |
 | PDF | `pdfrx` | 2.4.5 |
 | Hojas de cálculo | `excel` | 4.0.6 |

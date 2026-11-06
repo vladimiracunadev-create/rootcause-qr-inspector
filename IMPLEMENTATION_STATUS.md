@@ -17,7 +17,7 @@
 | Confirmación de lectura | **IMPLEMENTADA:** cámara, inventario, imágenes y PDF producen tono/vibración configurables; archivos confirman una vez por lote |
 | Exportación para navegador | **IMPLEMENTADA:** Historial e Inventario exportan HTML autocontenido, escapado y con enlaces en pestaña nueva |
 | Cámara, historial y acción externa | **SIN REGRESIONES EN SUITE:** se reutilizan motor, persistencia selectiva y política existentes; 163 pruebas aprobadas |
-| Decodificación en web | **PLANIFICADO:** `mobile_scanner 7.4.0` no implementa `analyzeImage` web; la UI no afirma soporte |
+| Decodificación en web | **PLANIFICADO:** `mobile_scanner 7.4.2` no implementa `analyzeImage` web; la UI no afirma soporte |
 | Idiomas | **IMPLEMENTADO:** sistema, español de Chile/internacional, inglés, francés y alemán; datos de usuario y cargas no se traducen |
 | Ayuda de pestañas | **IMPLEMENTADA:** guía de las cinco superficies y tutorial contextual de Inventario, probado a 320 px y texto al 160 % |
 

@@ -296,5 +296,5 @@ completa de la matriz hasta decodificar los cuatro fixtures con
 ### R-21 · Web sin decodificador de archivos
 
 **Severidad:** media. La abstracción permite un futuro motor local, pero
-`mobile_scanner 7.4.0` no ofrece `analyzeImage` web. La acción permanece
+`mobile_scanner 7.4.2` no ofrece `analyzeImage` web. La acción permanece
 deshabilitada y documentada como PLANIFICADA.
