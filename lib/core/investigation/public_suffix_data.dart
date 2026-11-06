@@ -15,6 +15,12 @@
 // copia, y docs/rootcause/IDENTITY_DATA.md dice como actualizarla.
 library;
 
+/// Version declarada por la fuente, para la pantalla «Acerca de».
+///
+/// Se emite aqui y no se escribe a mano en la interfaz: asi la pantalla no
+/// puede quedarse afirmando una version que ya no es la incluida.
+const String kPublicSuffixListVersion = '2026-11-04_19-07-29_UTC';
+
 /// Reglas de la seccion ICANN, una por linea.
 const String kIcannPublicSuffixRules =
     'ac\ncom.ac\nedu.ac\ngov.ac\nmil.ac\nnet.ac\norg.ac\nad\nae\nac.ae\nco.ae\ngov.ae\nmil.ae\nnet.ae\norg.ae\nsch.ae\naero\nairline.aero\nairport.aero\naccident-investigation.aero\naccident-prevention.aero\naerobatic.aero\naeroclub.aero\naerodrome.aero\n'

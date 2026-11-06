@@ -43,8 +43,9 @@ En 0.1.1 los pasos son manuales. El contrato futuro se bosqueja en
 
 ## Diferencias que no se disimulan
 
-- Este repositorio usa MIT por su procedencia; otras ediciones Inspector usan
-  Apache 2.0 y las de activos digitales también usan MIT.
+- **Toda la familia RootCause se licencia bajo Apache-2.0**, este repositorio
+  incluido. La procedencia MIT del código derivado de Universal Code Scanner se
+  conserva en `NOTICE`, no en la licencia del producto.
 - La demo web necesita red para recibir sus archivos desde GitHub Pages, aunque
   el análisis de la carga no envía telemetría. No cuenta como plataforma del
   producto.

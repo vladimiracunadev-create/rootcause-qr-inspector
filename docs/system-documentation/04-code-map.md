@@ -18,7 +18,7 @@ Inventario jerárquico de todo lo relevante del repositorio. La columna
 | `RELEASE_SOURCE.json` | Metadatos de la entrega y qué se validó | Activo |
 | `README.md` · `CHANGELOG.md` · `VALIDATION.md` · `IMPLEMENTATION_STATUS.md` | Documentación raíz | Activo |
 | `MASTER_PROMPT.md` | Instrucciones de estilo y límites del proyecto | Activo |
-| `SECURITY.md` · `CONTRIBUTING.md` · `LICENSE` | Política de seguridad, contribución y licencia MIT | Activo |
+| `SECURITY.md` · `CONTRIBUTING.md` · `LICENSE` · `NOTICE` | Política de seguridad, contribución, licencia Apache-2.0 y avisos de procedencia y de datos de terceros | Activo |
 | `assets/` | Iconos versionados y el tono `scan_success.wav` | Activo |
 | `config/rootcause-qr-policy.example.json` | Política de ejemplo, solo dominios `.example` | Activo · referencia |
 | `schemas/rootcause-qr-evidence.schema.json` | JSON Schema 2020-12 de la evidencia | Activo · contrato |

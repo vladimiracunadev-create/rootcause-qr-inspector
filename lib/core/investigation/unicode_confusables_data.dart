@@ -14,6 +14,12 @@
 // nadie en este producto y quedaria sin usar.
 library;
 
+/// Version de UTS #39 de la que salen las equivalencias.
+const String kConfusablesVersion = '18.0.0';
+
+/// Fecha declarada por la fuente.
+const String kConfusablesSourceDate = '2026-08-06, 01:05:35 GMT';
+
 /// Punto de codigo no ASCII y su equivalente ASCII segun UTS #39.
 const Map<int, String> kConfusableAsciiMap = <int, String>{
   0x00A1: 'i',

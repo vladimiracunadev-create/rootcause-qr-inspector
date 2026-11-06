@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:rootcause_qr_inspector/core/app_info.dart';
+import 'package:rootcause_qr_inspector/core/investigation/public_suffix_data.dart';
+import 'package:rootcause_qr_inspector/core/investigation/unicode_confusables_data.dart';
 import 'package:rootcause_qr_inspector/core/localization/app_localizations.dart';
 import 'package:rootcause_qr_inspector/core/recovery/recovery_repository.dart';
 import 'package:rootcause_qr_inspector/core/recovery/recovery_service.dart';
@@ -377,7 +379,22 @@ class _SettingsScreenState extends State<SettingsScreen> {
               leading: const Icon(Icons.verified_user_outlined),
               title: AppText('$appName $appVersion'),
               subtitle: const AppText(
-                'Sensor local con historial cifrado, inventario, generador y centro de recuperación. Licencia MIT.',
+                'Sensor local con historial cifrado, inventario, generador y centro de recuperación. Código propio con licencia Apache 2.0.',
+              ),
+            ),
+            // Dos tablas de terceros viajan dentro del binario y conservan los
+            // términos de su origen. La atribución tiene que estar donde la
+            // persona que instala la aplicación puede verla, no solo en el
+            // repositorio. Las versiones salen de los archivos generados, así
+            // que esta pantalla no puede quedarse desactualizada.
+            ListTile(
+              leading: const Icon(Icons.dataset_outlined),
+              title: const AppText('Datos de identidad incluidos'),
+              subtitle: AppText(
+                'Public Suffix List de Mozilla Foundation (MPL-2.0), versión '
+                '$kPublicSuffixListVersion. Equivalencias de confusión de '
+                'Unicode, Inc. (UTS #39 $kConfusablesVersion). Cada tabla '
+                'conserva los términos de su origen.',
               ),
             ),
           ],

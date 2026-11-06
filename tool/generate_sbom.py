@@ -73,7 +73,15 @@ def main() -> None:
         "specVersion": "1.5",
         "version": 1,
         "metadata": {
-            "component": {"type": "application", "name": "rootcause_qr_inspector", "version": application_version()},
+            "component": {
+                "type": "application",
+                "name": "rootcause_qr_inspector",
+                "version": application_version(),
+                # La familia RootCause se licencia bajo Apache-2.0. Declararlo
+                # en el SBOM evita que quien lo consuma tenga que ir a buscarlo
+                # al repositorio.
+                "licenses": [{"license": {"id": "Apache-2.0"}}],
+            },
             "properties": [{"name": "rcqr:completeness", "value": completeness}],
         },
         "components": components,

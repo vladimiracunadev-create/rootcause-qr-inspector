@@ -8,7 +8,7 @@ El repositorio se creó a partir de:
 - rama: `main`;
 - commit: `c1f98781575bf8223b19ad8344fdfddeaccef373`;
 - versión declarada: `1.1.0+2`;
-- licencia: MIT;
+- licencia de origen: MIT, conservada en `NOTICE`; el producto se distribuye bajo Apache-2.0;
 - fecha de extracción: 20 de agosto de 2026.
 
 ## Componentes conservados

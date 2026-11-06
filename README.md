@@ -21,7 +21,7 @@
 
 [![Version](https://img.shields.io/badge/version-0.2.0-blue.svg)](CHANGELOG.md)
 [![Flutter](https://img.shields.io/badge/Flutter-3.44.7-02569B.svg?logo=flutter)](pubspec.yaml)
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 [![Telemetry](https://img.shields.io/badge/telemetry-zero-success.svg)](docs/PRIVACY_POLICY.md)
 [![CI](https://github.com/vladimiracunadev-create/rootcause-qr-inspector/actions/workflows/flutter-ci.yml/badge.svg)](https://github.com/vladimiracunadev-create/rootcause-qr-inspector/actions/workflows/flutter-ci.yml)
 [![Landing](https://img.shields.io/badge/landing-GitHub%20Pages-12847b.svg?logo=github)](https://vladimiracunadev-create.github.io/rootcause-qr-inspector/)
@@ -513,11 +513,15 @@ actualizar motor, textos, pruebas, documentación y contrato de evidencia.
 
 ## 📄 Licencia
 
-MIT · © 2026 Vladimir Acuña. Se conserva la procedencia del código derivado de
-Universal Code Scanner en el historial documental y en la licencia.
+**Apache License 2.0** · © 2026 Vladimir Acuña. Toda la familia RootCause se
+licencia bajo Apache-2.0.
+
+El código derivado de Universal Code Scanner llegó bajo licencia MIT, que
+permite sublicenciar. Ese aviso de origen **no desaparece**: se conserva en
+[`NOTICE`](NOTICE), junto con la procedencia documental del repositorio.
 
 Dos tablas de datos de terceros viajan dentro del producto y **conservan los
-términos de su origen**, no la licencia MIT de este repositorio: la
+términos de su origen**, no la Apache-2.0 de este repositorio: la
 [Public Suffix List](https://publicsuffix.org/) de Mozilla Foundation
 (MPL-2.0) y el archivo de confusables de
 [UTS #39](https://www.unicode.org/reports/tr39/) de Unicode, Inc.

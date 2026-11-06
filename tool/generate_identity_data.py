@@ -138,6 +138,12 @@ def render_psl(text: str) -> str:
 // copia, y docs/rootcause/IDENTITY_DATA.md dice como actualizarla.
 library;
 
+/// Version declarada por la fuente, para la pantalla «Acerca de».
+///
+/// Se emite aqui y no se escribe a mano en la interfaz: asi la pantalla no
+/// puede quedarse afirmando una version que ya no es la incluida.
+const String kPublicSuffixListVersion = '{psl_version(text)}';
+
 /// Reglas de la seccion ICANN, una por linea.
 const String kIcannPublicSuffixRules =
 {chunked_literal(icann)};
@@ -178,6 +184,12 @@ def render_confusables(text: str) -> str:
 // tabla cubre; una equivalencia entre dos escrituras no latinas no suplanta a
 // nadie en este producto y quedaria sin usar.
 library;
+
+/// Version de UTS #39 de la que salen las equivalencias.
+const String kConfusablesVersion = '{version}';
+
+/// Fecha declarada por la fuente.
+const String kConfusablesSourceDate = '{date}';
 
 /// Punto de codigo no ASCII y su equivalente ASCII segun UTS #39.
 const Map<int, String> kConfusableAsciiMap = <int, String>{{

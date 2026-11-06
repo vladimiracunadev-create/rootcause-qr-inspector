@@ -14,7 +14,7 @@ dentro del archivo generado.
 Los dos archivos originales se conservan **sin modificar**, con su aviso de
 licencia intacto. Las tablas generadas derivan de ellos y conservan los
 términos de su origen —MPL-2.0 para la lista de sufijos, los términos de uso de
-Unicode para los confusables—, no la licencia MIT del repositorio; cada archivo
+Unicode para los confusables—, no la Apache-2.0 del repositorio; cada archivo
 generado lo declara en su cabecera.
 
 Los `.dat`/`.txt` no se declaran como assets de Flutter: no se leen en

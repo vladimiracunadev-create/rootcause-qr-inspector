@@ -223,8 +223,8 @@
     },
     {
       "path": "CHANGELOG.md",
-      "size": 18715,
-      "sha256": "315fd1add585ae66c2aed3267b70b7679e6de066c7c20298d05a759f83b24ed8"
+      "size": 19539,
+      "sha256": "66fa1c4fc52b2ced620ed2dea072e2feed73bc7806eaed13293d26b8b1234ba9"
     },
     {
       "path": "config/rootcause-qr-policy.example.json",
@@ -243,8 +243,8 @@
     },
     {
       "path": "docs/CATALOGO_PRODUCTO.md",
-      "size": 3847,
-      "sha256": "7969b624423db03a55b9ffd8e79605f951172c906f24357df9a82bd4de42b71c"
+      "size": 3900,
+      "sha256": "f51aa17f71a56665afcb93d3744fea665d77458c488fd990fc5761d76418c4fa"
     },
     {
       "path": "docs/CI_GITHUB.md",
@@ -258,8 +258,8 @@
     },
     {
       "path": "docs/FAMILIA_ROOTCAUSE.md",
-      "size": 3081,
-      "sha256": "37b741666da8597d1aa843cba66e3cfc467ccbc7813ba706a814c6edad03dc6e"
+      "size": 3160,
+      "sha256": "a0a575aa4a0808e61a5de387e554e0628f31ff1c91efd3fae6dc86f29602aad8"
     },
     {
       "path": "docs/images/android/android-analysis-result.png",
@@ -483,8 +483,8 @@
     },
     {
       "path": "docs/rootcause/IDENTITY_DATA.md",
-      "size": 3644,
-      "sha256": "922cf08ca6a2c73b4033e255631e0345869d0028f3dae40a0e518f59c853d14d"
+      "size": 3642,
+      "sha256": "145ae4e8966c534cdeb214cca8fab8c3d728277aad955e36bf90c2bca530cac8"
     },
     {
       "path": "docs/rootcause/INTEGRATION.md",
@@ -498,8 +498,8 @@
     },
     {
       "path": "docs/rootcause/PROVENANCE.md",
-      "size": 2736,
-      "sha256": "3d653d682eabba2c936260dbfca13327aefe8987987cf7bcadb187227ba538ab"
+      "size": 2891,
+      "sha256": "220298f2b6dc55d908cc6992e814972e9da44d7c3cc4e080a238477165a2bfa6"
     },
     {
       "path": "docs/rootcause/REFERENCES.md",
@@ -513,8 +513,8 @@
     },
     {
       "path": "docs/security/sbom-source.cdx.json",
-      "size": 6001,
-      "sha256": "0f111e8e9d2c0bbf525e67a74643c23ad7ebbeb4a7ae655852f0f34759922efb"
+      "size": 6123,
+      "sha256": "d2b737db7ee7d7ac5e063fe0f102edb433bdc489d000b344acabd9efaa49830d"
     },
     {
       "path": "docs/security/SECURITY_TEST_PLAN.md",
@@ -553,8 +553,8 @@
     },
     {
       "path": "docs/system-documentation/04-code-map.md",
-      "size": 19910,
-      "sha256": "fe86c6b81cd50b1c354199de7c666ad7567e4393f8441586dccd980ddccaa117"
+      "size": 19975,
+      "sha256": "b2d1e07f9d448bfbfce1fe82d3cc296d43aa4e61ded90194c6251b6b60594f4c"
     },
     {
       "path": "docs/system-documentation/05-technical-reference.md",
@@ -618,8 +618,8 @@
     },
     {
       "path": "docs/system-documentation/17-executive-summary.md",
-      "size": 8790,
-      "sha256": "81526e53d18b7ae1f19ec9a39a926a0c3921e05cb4f866b9894b4166427c5f30"
+      "size": 8797,
+      "sha256": "43c77d0257a2a3837bcfc1b8428cd69432bc644112c7d90240d6f8b19ac65bdd"
     },
     {
       "path": "docs/system-documentation/18-new-developer-guide.md",
@@ -918,8 +918,8 @@
     },
     {
       "path": "landing/index.html",
-      "size": 22553,
-      "sha256": "0d15d79b515da097b36afbdc60cea8aa510479c3860b733ca4f7dcea26c9d3a5"
+      "size": 22584,
+      "sha256": "f5e41eeb759530bcc120b29af60dcdcca4c6c2d713005001217456567eb98b8b"
     },
     {
       "path": "landing/privacidad.html",
@@ -998,8 +998,8 @@
     },
     {
       "path": "lib/core/investigation/public_suffix_data.dart",
-      "size": 163253,
-      "sha256": "ef444bf8b815a30c7fe61ea0e40a9ce88732f434378d2dc81108f5aff74704a2"
+      "size": 163543,
+      "sha256": "e4731057071824c0c28db5b8c42ce3202f3175bdff5ff1b4447e1bff552c32b3"
     },
     {
       "path": "lib/core/investigation/public_suffix_list.dart",
@@ -1033,8 +1033,8 @@
     },
     {
       "path": "lib/core/investigation/unicode_confusables_data.dart",
-      "size": 31907,
-      "sha256": "32eed1f619e08d6216d631c42c15b082d12f83a840ab4d3ed3f2a2c696f3f4e2"
+      "size": 32119,
+      "sha256": "4788517c0a45bffcc08899b5c51fd924e4e88457379ba9e1ed60940db7f68b78"
     },
     {
       "path": "lib/core/investigation/unicode_skeleton.dart",
@@ -1218,8 +1218,8 @@
     },
     {
       "path": "lib/features/settings/settings_screen.dart",
-      "size": 21926,
-      "sha256": "b00f51774ef2db5314c3356df50ed66a0ee671b3885f9dcb35d2656016bd6ddf"
+      "size": 23597,
+      "sha256": "1b90607d9edc48305f7ad56579c86c830d82a9e5897e24c9797c9e5de55b410a"
     },
     {
       "path": "lib/main.dart",
@@ -1338,13 +1338,18 @@
     },
     {
       "path": "LICENSE",
-      "size": 1072,
-      "sha256": "bf05942b75e05ec5dba0bf7ef7c745ad05d35cc9a476c63c1ff8b2ecacaf2526"
+      "size": 11358,
+      "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
     },
     {
       "path": "MASTER_PROMPT.md",
       "size": 5861,
       "sha256": "d98a296b6e09cc47363838281963b8f9b7ab63910b0b098a8d1e9bd80ce0c1d3"
+    },
+    {
+      "path": "NOTICE",
+      "size": 2965,
+      "sha256": "d3410a1064a5db7d12f8a631063fb6d41b5447029ca64303a0a9e66f83422d69"
     },
     {
       "path": "pubspec.lock",
@@ -1358,8 +1363,8 @@
     },
     {
       "path": "README.md",
-      "size": 30250,
-      "sha256": "463ef2a4d2265e9f1b6251cb8e3b1ebcc23e86b0b589f9829269949f0ea2aaa7"
+      "size": 30441,
+      "sha256": "35fd2d06bdd9bcf868f43888b9ccac1bf1dcc064d590cb18404e1c70080ebb41"
     },
     {
       "path": "RELEASE_SOURCE.json",
@@ -1753,8 +1758,8 @@
     },
     {
       "path": "tool/generate_identity_data.py",
-      "size": 8075,
-      "sha256": "695893da70b56be2b1466c4d7741de0ac0dda2ed1814c4515879c56bd9e97dc2"
+      "size": 8772,
+      "sha256": "0da3913c96f53b04d502b396cc198dc0000d67e4b7e3d247ec75e1f5f9ea172f"
     },
     {
       "path": "tool/generate_launcher_icons.py",
@@ -1768,8 +1773,8 @@
     },
     {
       "path": "tool/generate_sbom.py",
-      "size": 3149,
-      "sha256": "08862247d11f70088788688be928e441c2dde5ddaac73ca1fde1ec4079e0e77b"
+      "size": 3570,
+      "sha256": "3537fc8d202bf6c5abf0464a71737a8b714eeb112124bfbfa2b24157a56c3edd"
     },
     {
       "path": "tool/generate_scan_beep.py",

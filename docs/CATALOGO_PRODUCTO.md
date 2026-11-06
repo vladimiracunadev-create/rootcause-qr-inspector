@@ -16,7 +16,7 @@ landing, descripción o release promete más, prevalecen aquí los límites.
 | Evidencia | `rootcause.evidence.qr.v1`, redactada por defecto y con checksum SHA-256 |
 | Persistencia | Historial e inventarios locales cifrados con AES-256-GCM |
 | Privacidad | Sin cuenta, publicidad, analítica ni telemetría |
-| Licencia | MIT, coherente con la procedencia en Universal Code Scanner |
+| Licencia | Apache-2.0, como toda la familia RootCause; la procedencia MIT de Universal Code Scanner se conserva en `NOTICE` |
 
 ## Jerarquía del producto
 

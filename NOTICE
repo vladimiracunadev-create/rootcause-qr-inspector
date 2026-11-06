@@ -1,0 +1,61 @@
+RootCause QR Inspector
+Copyright 2026 Vladimir Acuña
+
+Este producto se distribuye bajo la Apache License, Version 2.0, incluida en
+el archivo LICENSE.
+
+================================================================================
+Procedencia del código
+================================================================================
+
+Parte del código deriva de Universal Code Scanner 1.1.0+2
+(https://github.com/vladimiracunadev-create/universal-code-scanner), commit
+c1f98781575bf8223b19ad8344fdfddeaccef373, recibido bajo licencia MIT. La
+licencia MIT permite sublicenciar, y por eso este producto se distribuye bajo
+Apache-2.0; el aviso de origen se conserva aquí:
+
+    MIT License
+
+    Copyright (c) 2026 Vladimir Acuña
+
+    Permission is hereby granted, free of charge, to any person obtaining a
+    copy of this software and associated documentation files (the "Software"),
+    to deal in the Software without restriction, including without limitation
+    the rights to use, copy, modify, merge, publish, distribute, sublicense,
+    and/or sell copies of the Software, and to permit persons to whom the
+    Software is furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in
+    all copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+    THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+    FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+    DEALINGS IN THE SOFTWARE.
+
+================================================================================
+Datos de terceros incluidos en el binario
+================================================================================
+
+Estas tablas NO se distribuyen bajo Apache-2.0: conservan los términos de su
+origen. Los archivos originales están en assets/data/ con su aviso intacto, y
+las tablas generadas declaran procedencia, versión y SHA-256 en su cabecera.
+Detalle y alcance en docs/rootcause/IDENTITY_DATA.md.
+
+Public Suffix List
+    Mozilla Foundation
+    https://publicsuffix.org/list/public_suffix_list.dat
+    Mozilla Public License, Version 2.0 (https://mozilla.org/MPL/2.0/)
+    Versión incluida: 2026-11-04_19-07-29_UTC
+
+Unicode Security Mechanisms (UTS #39), confusables.txt
+    Unicode, Inc.
+    https://www.unicode.org/Public/security/latest/confusables.txt
+    Términos de uso: https://www.unicode.org/terms_of_use.html
+    Versión incluida: 18.0.0 (fuente de 2026-08-06)
+
+Las licencias de las dependencias de Dart y Flutter se inventarían aparte con
+tool/generate_license_inventory.py.

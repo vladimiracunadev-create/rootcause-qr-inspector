@@ -49,7 +49,7 @@ lo dice explícitamente cada vez que no encuentra nada.
 
 Flutter 3.44.7 y Dart. Base de datos embebida Sembast, cifrado AES-256-GCM con
 la llave en el almacén seguro del sistema. Integración continua en GitHub
-Actions. Licencia MIT.
+Actions. Licencia Apache-2.0.
 
 Escala del código actual: 73 archivos fuente y 103 casos de prueba declarados;
 el inventario histórico de herramientas y documentos se conserva en la portada

@@ -112,6 +112,17 @@ datos que le faltaban para afirmar que un dominio es quien dice ser.
 
 ### Cambiado
 
+- **El producto pasa de MIT a Apache License 2.0**, que es la licencia de toda
+  la familia RootCause. El código derivado de Universal Code Scanner llegó bajo
+  MIT, que permite sublicenciar, así que su aviso de origen no desaparece: se
+  conserva en el nuevo archivo `NOTICE`, donde Apache-2.0 espera encontrar esa
+  atribución. `NOTICE` declara además las dos tablas de terceros incluidas en
+  el binario, que **no** se distribuyen bajo Apache-2.0 y conservan los
+  términos de su origen. El SBOM declara ahora la licencia del componente raíz.
+- La pantalla **Acerca de** declara los datos de identidad incluidos, con su
+  procedencia y su versión. Las versiones las emiten los propios archivos
+  generados, así que la pantalla no puede quedarse afirmando una tabla que ya no
+  es la que viaja dentro.
 - `QrInvestigationEngine.engineVersion` sube a `0.2.0`. Es obligatorio: sin
   ella, una evidencia exportada antes y otra después se declararían comparables
   sin serlo.
